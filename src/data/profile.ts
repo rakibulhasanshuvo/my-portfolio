@@ -7,6 +7,8 @@ export interface Project {
     liveUrl: string;
     codeUrl: string;
     image?: string;
+    video?: string;
+    gallery?: string[];
     content: string; // Markdown content for the details page
 }
 
@@ -115,13 +117,42 @@ export const profile = {
     // Projects Section
     projects: [
         {
+            id: "nexus-os",
+            title: "Nexus OS",
+            category: "Web",
+            description: "A fully functional web-based operating system built with React and Tailwind CSS. Featuring window management, terminal, and apps.",
+            tags: ["React", "TypeScript", "Tailwind", "Framer Motion"],
+            liveUrl: "#",
+            codeUrl: "#",
+            image: "https://images.unsplash.com/photo-1629131726692-1accd0c53ce0?auto=format&fit=crop&q=80&w=1600",
+            gallery: [
+                "https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&q=80&w=800",
+                "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&q=80&w=800"
+            ],
+            content: `
+# Nexus OS
+
+Nexus OS is an experimental project that pushes the boundaries of what's possible with web technologies.
+
+## Features
+-   **Window Management**: Drag, resize, and minimize windows just like a real desktop.
+-   **Terminal Emulator**: A functional terminal with basic Unix commands.
+-   **App Ecosystem**: Includes a calculator, notepad, and file explorer.
+
+## The Challenge
+Implementing a robust window management system in React required deep knowledge of the DOM and state management. I used Framer Motion for the fluid animations and a custom hook system for managing window focus and layering.
+            `
+        },
+        {
             id: "stockniche-ai",
             title: "StockNiche AI",
-            category: "AI & Finance",
+            category: "AI",
             description: "Intelligent market analysis platform for Adobe Stock contributors. Features live trend analysis using Google Gemini API.",
             tags: ["React", "Gemini API", "Tailwind", "Next.js"],
             liveUrl: "#",
             codeUrl: "#",
+            image: "https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&q=80&w=1600",
+            video: "https://assets.mixkit.co/videos/preview/mixkit-digital-animation-of-a-server-room-42880-large.mp4",
             content: `
 # StockNiche AI
 
@@ -146,11 +177,12 @@ We built an AI-powered dashboard that:
         {
             id: "cyber-portfolio",
             title: "Cyber Portfolio",
-            category: "Personal Brand",
+            category: "Web",
             description: "Experimental portfolio showcasing 'Vibe Coding' with advanced animations and immersive UI.",
             tags: ["React", "Framer Motion", "Tailwind", "Three.js"],
             liveUrl: "#",
             codeUrl: "#",
+            image: "https://images.unsplash.com/photo-1633356122544-f134324a6cee?auto=format&fit=crop&q=80&w=1600",
             content: `
 # Cyber Portfolio
 
@@ -168,11 +200,12 @@ This very website! A playground for advanced frontend techniques.
         {
             id: "ecodash",
             title: "EcoDash",
-            category: "SaaS Dashboard",
+            category: "Design",
             description: "Conceptual sustainability metrics dashboard designed for modern enterprise monitoring.",
             tags: ["Vue.js", "D3.js", "Firebase", "Nuxt"],
             liveUrl: "#",
             codeUrl: "#",
+            image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=1600",
             content: `
 # EcoDash
 

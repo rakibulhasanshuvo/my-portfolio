@@ -24,8 +24,8 @@ export const metadata: Metadata = {
     template: '%s | Vibe Coder',
     default: 'Rakibul Hasan Shuvo | Vibe Coder',
   },
-  description: "A multidisciplinary creative designing the future with code and intuition. Specialized in Next.js, React, and Motion.",
-  keywords: ["Vibe Coder", "Creative Developer", "Next.js Portfolio", "Rakibul Hasan Shuvo"],
+  description: "Rakibul Hasan Shuvo - A multidisciplinary creative developer specializing in building premium digital experiences with Next.js, React, and Motion.",
+  keywords: ["Rakibul Hasan Shuvo", "Vibe Coder", "Creative Developer", "Next.js Portfolio", "React Developer", "UI/UX Design", "Motion Graphics", "Bangladesh Developer"],
   openGraph: {
     title: 'Rakibul Hasan Shuvo | Vibe Coder',
     description: 'A multidisciplinary creative designing the future with code and intuition.',

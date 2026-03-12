@@ -1,12 +1,13 @@
 'use client';
 
-import { motion, useMotionTemplate, useMotionValue } from 'framer-motion';
-import { MouseEvent } from 'react';
-import { ExternalLink, Github } from 'lucide-react';
+import { motion, useMotionTemplate, useMotionValue, AnimatePresence } from 'framer-motion';
+import { MouseEvent, useState } from 'react';
+import { ExternalLink, Github, Play } from 'lucide-react';
 
 import { profile } from '@/data/profile';
 const projects = profile.projects;
 import Link from 'next/link';
+import Image from 'next/image';
 
 function Card({ project }: { project: typeof projects[0] }) {
     const mouseX = useMotionValue(0);
@@ -20,43 +21,68 @@ function Card({ project }: { project: typeof projects[0] }) {
 
     return (
         <motion.div
-            className="group relative border border-white/10 rounded-2xl bg-[#111] px-8 py-10 overflow-hidden flex flex-col h-full"
+            layout
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.9 }}
+            transition={{ duration: 0.3 }}
+            className="group relative border border-white/10 rounded-2xl bg-[#111] overflow-hidden flex flex-col h-full"
             onMouseMove={handleMouseMove}
             whileHover={{ y: -5 }}
-            transition={{ duration: 0.3 }}
         >
+            {/* Project Image/Video Preview */}
+            <div className="relative h-48 w-full overflow-hidden bg-white/5">
+                {project.image && (
+                    <Image
+                        src={project.image}
+                        alt={project.title}
+                        fill
+                        className="object-cover transition-transform duration-500 group-hover:scale-110"
+                    />
+                )}
+                {project.video && (
+                    <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <Play className="text-white fill-white" size={32} />
+                    </div>
+                )}
+                <div className="absolute inset-0 bg-gradient-to-t from-[#111] to-transparent" />
+            </div>
+
             <motion.div
                 className="pointer-events-none absolute -inset-px rounded-2xl opacity-0 transition duration-300 group-hover:opacity-100"
                 style={{
                     background: useMotionTemplate`
             radial-gradient(
               650px circle at ${mouseX}px ${mouseY}px,
-              rgba(120, 50, 255, 0.1),
+              rgba(120, 50, 255, 0.15),
               transparent 80%
             )
           `,
                 }}
             />
 
-            <div className="relative z-10 flex-grow">
-                <span className="text-xs font-bold text-purple-400 mb-2 block tracking-wider uppercase">{project.category}</span>
-                <h3 className="text-2xl font-bold mb-4">{project.title}</h3>
-                <p className="text-white/60 mb-6 leading-relaxed">
+            <div className="relative z-10 flex-grow px-8 py-6">
+                <span className="text-[10px] font-bold text-purple-400 mb-2 block tracking-widest uppercase">{project.category}</span>
+                <h3 className="text-xl font-bold mb-3">{project.title}</h3>
+                <p className="text-white/60 text-sm mb-6 leading-relaxed line-clamp-2">
                     {project.description}
                 </p>
-                <div className="flex flex-wrap gap-2 mb-8">
-                    {project.tags.map(tag => (
-                        <span key={tag} className="text-xs px-2 py-1 rounded bg-white/5 border border-white/5 text-white/50">
+                <div className="flex flex-wrap gap-2 mb-4">
+                    {project.tags.slice(0, 3).map(tag => (
+                        <span key={tag} className="text-[10px] px-2 py-0.5 rounded bg-white/5 border border-white/5 text-white/40">
                             {tag}
                         </span>
                     ))}
+                    {project.tags.length > 3 && (
+                        <span className="text-[10px] px-2 py-0.5 text-white/30">+{project.tags.length - 3} more</span>
+                    )}
                 </div>
             </div>
 
-            <div className="relative z-10 flex gap-4 mt-auto pt-6 border-t border-white/5">
+            <div className="relative z-10 flex gap-4 mt-auto px-8 pb-8 pt-4 border-t border-white/5">
                 <Link
                     href={`/work/${project.id}`}
-                    className="flex items-center gap-2 text-sm font-medium text-purple-400 hover:text-purple-300 transition-colors mr-auto"
+                    className="flex items-center gap-2 text-xs font-semibold text-purple-400 hover:text-purple-300 transition-colors mr-auto"
                 >
                     Case Study &rarr;
                 </Link>
@@ -64,17 +90,19 @@ function Card({ project }: { project: typeof projects[0] }) {
                     href={project.liveUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-2 text-sm font-medium text-white hover:text-purple-400 transition-colors"
+                    className="text-white/40 hover:text-white transition-colors"
+                    title="Live Demo"
                 >
-                    <ExternalLink size={16} /> Live Demo
+                    <ExternalLink size={18} />
                 </a>
                 <a
                     href={project.codeUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-2 text-sm font-medium text-white/60 hover:text-white transition-colors"
+                    className="text-white/40 hover:text-white transition-colors"
+                    title="Source Code"
                 >
-                    <Github size={16} /> Source Code
+                    <Github size={18} />
                 </a>
             </div>
         </motion.div>
@@ -82,32 +110,58 @@ function Card({ project }: { project: typeof projects[0] }) {
 }
 
 export default function Projects() {
-    return (
-        <section id="work" className="py-20 mt-40 px-6 max-w-7xl mx-auto">
-            <motion.h2
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6 }}
-                viewport={{ once: true }}
-                className="text-4xl font-bold mb-16 text-center"
-            >
-                Selected Works
-            </motion.h2>
+    const [filter, setFilter] = useState('All');
+    const categories = ['All', ...Array.from(new Set(projects.map(p => p.category)))];
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {projects.map((project, i) => (
-                    <motion.div
-                        key={project.title}
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.5, delay: i * 0.1 }}
-                        viewport={{ once: true }}
-                        className="h-full"
-                    >
-                        <Card project={project} />
-                    </motion.div>
-                ))}
+    const filteredProjects = filter === 'All'
+        ? projects
+        : projects.filter(p => p.category === filter);
+
+    return (
+        <section id="work" className="py-20 mt-20 px-6 max-w-7xl mx-auto">
+            <div className="flex flex-col items-center mb-16">
+                <motion.h2
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6 }}
+                    viewport={{ once: true }}
+                    className="text-4xl md:text-5xl font-bold mb-8 text-center"
+                >
+                    Selected Works
+                </motion.h2>
+
+                {/* Filter Tabs */}
+                <div className="flex flex-wrap justify-center gap-2 bg-white/5 p-1.5 rounded-full border border-white/5">
+                    {categories.map((cat) => (
+                        <button
+                            key={cat}
+                            onClick={() => setFilter(cat)}
+                            className={`px-6 py-2 rounded-full text-sm font-medium transition-all relative ${filter === cat ? 'text-white' : 'text-white/50 hover:text-white/80'
+                                }`}
+                        >
+                            {filter === cat && (
+                                <motion.div
+                                    layoutId="activeTab"
+                                    className="absolute inset-0 bg-purple-600 rounded-full -z-10"
+                                    transition={{ type: 'spring', duration: 0.5 }}
+                                />
+                            )}
+                            {cat}
+                        </button>
+                    ))}
+                </div>
             </div>
+
+            <motion.div
+                layout
+                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+            >
+                <AnimatePresence mode='popLayout'>
+                    {filteredProjects.map((project) => (
+                        <Card key={project.id} project={project} />
+                    ))}
+                </AnimatePresence>
+            </motion.div>
         </section>
     );
 }
