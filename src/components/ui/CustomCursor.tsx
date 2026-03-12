@@ -19,28 +19,18 @@ export default function CustomCursor() {
             cursorY.set(e.clientY - 16);
         };
 
-        const handleMouseEnter = () => setIsHovered(true);
-        const handleMouseLeave = () => setIsHovered(false);
-
-        // Attach listeners to clickable elements
-        const attachListeners = () => {
-            const clickables = document.querySelectorAll('a, button, .clickable');
-            clickables.forEach((el) => {
-                el.addEventListener('mouseenter', handleMouseEnter);
-                el.addEventListener('mouseleave', handleMouseLeave);
-            });
+        const handleOver = (e: MouseEvent) => {
+            const target = e.target as HTMLElement;
+            const isClickable = target.closest('a, button, .clickable, input, select, textarea');
+            setIsHovered(!!isClickable);
         };
 
         window.addEventListener('mousemove', moveCursor);
-        attachListeners();
-
-        // Re-attach listeners when DOM might change (simple polling for demo)
-        const observer = new MutationObserver(attachListeners);
-        observer.observe(document.body, { childList: true, subtree: true });
+        window.addEventListener('mouseover', handleOver);
 
         return () => {
             window.removeEventListener('mousemove', moveCursor);
-            observer.disconnect();
+            window.removeEventListener('mouseover', handleOver);
         };
     }, [cursorX, cursorY]);
 
