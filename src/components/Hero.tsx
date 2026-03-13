@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion';
 import AuroraBackground from './ui/AuroraBackground';
+import SplineScene from './ui/SplineScene';
 
 const skills = [
     "Vibe Coder", "Graphic Design", "React", "Motion", "UX/UI", "Next.js", "TypeScript", "Cyber Security"
@@ -14,6 +15,12 @@ export default function Hero() {
         <section className="min-h-screen flex flex-col justify-center items-center px-4 relative overflow-hidden pt-32">
 
             <AuroraBackground />
+
+            {/* 3D Spline Design - Hidden on mobile for performance */}
+            <SplineScene
+                scene="https://prod.spline.design/qF9apOu8tJv1sgOk/scene.splinecode"
+                className="absolute inset-0 z-0 pointer-events-none hidden lg:block"
+            />
 
             {/* Main Heading */}
             <h1 className="text-5xl md:text-8xl font-bold text-center tracking-tight mb-6 z-10 relative">
