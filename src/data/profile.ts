@@ -108,6 +108,72 @@ export const profile = {
         }
     ],
 
+    // Workflow Section
+    workflow: [
+        {
+            title: "Discovery",
+            description: "We start by diving deep into your goals, audience, and vision to establish a solid foundation."
+        },
+        {
+            title: "Strategy",
+            description: "Developing a roadmap that aligns your business objectives with technical and design requirements."
+        },
+        {
+            title: "Design",
+            description: "Creating high-fidelity visuals and interactive prototypes that bring your brand to life."
+        },
+        {
+            title: "Development",
+            description: "Building your project with clean, performant code while keeping you updated every step of the way."
+        },
+        {
+            title: "Launch",
+            description: "Rigorous testing followed by a smooth rollout and post-launch support to ensure success."
+        }
+    ],
+
+    // Experience Section
+    experience: [
+        {
+            year: "2023 - Present",
+            role: "Freelance Creative Developer",
+            company: "Self-Employed",
+            description: "Delivering high-end digital solutions for international clients, focusing on React and Next.js."
+        },
+        {
+            year: "2022 - 2023",
+            role: "Frontend Developer",
+            company: "Tech Solutions Ltd.",
+            description: "Collaborated with cross-functional teams to build complex web applications and internal tools."
+        },
+        {
+            year: "2021 - 2022",
+            role: "UI Designer",
+            company: "Creative Studio",
+            description: "Focused on user-centric design, creating intuitive interfaces for mobile and web platforms."
+        }
+    ],
+
+    // FAQ Section
+    faqs: [
+        {
+            question: "How long does a typical project take?",
+            answer: "Most projects take between 4 to 8 weeks, depending on the complexity and scope of the work."
+        },
+        {
+            question: "Do you offer post-launch support?",
+            answer: "Yes, I provide 30 days of free support after launch to ensure everything is running smoothly."
+        },
+        {
+            question: "What is your pricing model?",
+            answer: "I usually work with fixed-price project quotes, but I'm also open to hourly arrangements for ongoing work."
+        },
+        {
+            question: "Can you help with existing projects?",
+            answer: "Absolutely! I can help with feature additions, performance optimization, or UI/UX audits for existing apps."
+        }
+    ],
+
     // Contact Section
     contact: {
         heading: "Let's Work Together",
