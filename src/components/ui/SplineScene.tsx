@@ -11,12 +11,13 @@ const Spline = dynamic(() => import('@splinetool/react-spline'), {
 interface SplineSceneProps {
     scene: string;
     className?: string;
+    onLoad?: (spline: any) => void;
 }
 
-export default function SplineScene({ scene, className }: SplineSceneProps) {
+export default function SplineScene({ scene, className, onLoad }: SplineSceneProps) {
     return (
         <div className={className}>
-            <Spline scene={scene} />
+            <Spline scene={scene} onLoad={onLoad} />
         </div>
     );
 }

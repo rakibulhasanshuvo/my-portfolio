@@ -1,6 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import { useCallback } from 'react';
 import AuroraBackground from './ui/AuroraBackground';
 import SplineScene from './ui/SplineScene';
 
@@ -11,6 +12,28 @@ const skills = [
 export default function Hero() {
     const name = "Rakibul Hasan Shuvo".split("");
 
+    const handleSplineLoad = useCallback((spline: any) => {
+        // Find and hide all objects that appear to be text
+        // Based on the scene URL, it has "Clarity. Focus. Impact." and subtext
+        const objectsToHide = [
+            'Clarity. Focus. Impact.',
+            'A multidisciplinary creative designing the future with code and intuition.',
+            'Text',
+            'Text 2',
+            'Text 3'
+        ];
+
+        objectsToHide.forEach(objName => {
+            const obj = spline.findObjectByName(objName);
+            if (obj) {
+                obj.visible = false;
+            }
+        });
+
+        // Debug: log all object names to console if we still see text
+        // console.log(spline.getAllObjects().map((o: any) => o.name));
+    }, []);
+
     return (
         <section className="min-h-screen flex flex-col justify-center items-center px-4 relative overflow-hidden pt-32">
 
@@ -19,6 +42,7 @@ export default function Hero() {
             {/* 3D Spline Design - Hidden on mobile for performance */}
             <SplineScene
                 scene="https://prod.spline.design/qF9apOu8tJv1sgOk/scene.splinecode"
+                onLoad={handleSplineLoad}
                 className="absolute inset-0 z-0 pointer-events-none hidden lg:block"
             />
 
