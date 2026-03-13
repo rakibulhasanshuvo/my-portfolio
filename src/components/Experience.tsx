@@ -29,10 +29,10 @@ export default function Experience() {
                             whileInView={{ opacity: 1, x: 0 }}
                             transition={{ duration: 0.5, delay: index * 0.1 }}
                             viewport={{ once: true }}
-                            className="relative pl-12 border-l border-white/10"
+                            className="relative pl-12 border-l border-foreground/10"
                         >
                             {/* Icon */}
-                            <div className="absolute left-[-20px] top-0 w-10 h-10 rounded-full bg-black border border-white/10 flex items-center justify-center text-purple-500 shadow-xl">
+                            <div className="absolute left-[-20px] top-0 w-10 h-10 rounded-full bg-background border border-foreground/10 flex items-center justify-center text-purple-500 shadow-xl">
                                 <Briefcase size={18} />
                             </div>
 
@@ -44,12 +44,12 @@ export default function Experience() {
                             </div>
 
                             {/* Content */}
-                            <div className="bg-white/5 border border-white/5 rounded-2xl p-6 hover:bg-white/[0.07] transition-all group">
-                                <h3 className="text-xl font-bold text-white group-hover:text-purple-400 transition-colors">
+                            <div className="bg-foreground/5 border border-foreground/5 rounded-2xl p-6 hover:bg-foreground/[0.07] transition-all group">
+                                <h3 className="text-xl font-bold text-foreground group-hover:text-purple-400 transition-colors">
                                     {item.role}
                                 </h3>
                                 <p className="text-purple-300/60 font-medium mb-4">{item.company}</p>
-                                <p className="text-white/50 leading-relaxed">
+                                <p className="text-foreground/50 leading-relaxed">
                                     {item.description}
                                 </p>
                             </div>

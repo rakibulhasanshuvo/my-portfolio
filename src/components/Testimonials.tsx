@@ -31,21 +31,21 @@ export default function Testimonials() {
                             transition={{ duration: 0.6, delay: index * 0.15 }}
                             viewport={{ once: true }}
                             whileHover={{ y: -5 }}
-                            className="bg-white/5 border border-white/5 rounded-3xl p-8 backdrop-blur-sm relative"
+                            className="bg-foreground/5 border border-foreground/5 rounded-3xl p-8 backdrop-blur-sm relative"
                         >
                             <Quote size={32} className="text-purple-500/30 mb-6" />
 
-                            <p className="text-white/70 leading-relaxed mb-8 text-lg">
+                            <p className="text-foreground/70 leading-relaxed mb-8 text-lg">
                                 &quot;{testimonial.quote}&quot;
                             </p>
 
                             <div className="flex items-center gap-4">
-                                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-purple-500 to-blue-500 flex items-center justify-center font-bold text-sm">
+                                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-purple-500 to-blue-500 flex items-center justify-center font-bold text-sm text-white">
                                     {testimonial.avatar}
                                 </div>
                                 <div>
-                                    <p className="font-semibold">{testimonial.name}</p>
-                                    <p className="text-white/40 text-sm">{testimonial.title}</p>
+                                    <p className="font-semibold text-foreground">{testimonial.name}</p>
+                                    <p className="text-foreground/40 text-sm">{testimonial.title}</p>
                                 </div>
                             </div>
                         </motion.div>

@@ -35,9 +35,9 @@ export default function Services() {
                         transition={{ duration: 0.5, delay: index * 0.1 }}
                         viewport={{ once: true }}
                         whileHover={{ y: -5 }}
-                        className="p-8 rounded-2xl bg-white/5 border border-white/5 backdrop-blur-sm hover:bg-white/10 transition-colors"
+                        className="p-8 rounded-2xl bg-foreground/5 border border-foreground/5 backdrop-blur-sm hover:bg-foreground/10 transition-colors"
                     >
-                        <div className="mb-6 p-4 rounded-full bg-white/5 w-fit">
+                        <div className="mb-6 p-4 rounded-full bg-foreground/5 w-fit">
                             {(() => {
                                 const Icon = iconMap[service.icon as keyof typeof iconMap] || Code2;
                                 const colors = ["text-purple-400", "text-blue-400", "text-pink-400"];
@@ -46,7 +46,7 @@ export default function Services() {
                             })()}
                         </div>
                         <h3 className="text-xl font-bold mb-4">{service.title}</h3>
-                        <p className="text-white/60 leading-relaxed">
+                        <p className="text-foreground/60 leading-relaxed">
                             {service.description}
                         </p>
                     </motion.div>

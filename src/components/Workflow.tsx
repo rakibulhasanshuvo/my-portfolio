@@ -36,10 +36,10 @@ export default function Workflow() {
                             >
                                 {/* Content */}
                                 <div className={`flex-1 ${index % 2 === 0 ? 'md:text-right' : 'md:text-left'}`}>
-                                    <div className="bg-white/5 border border-white/5 rounded-3xl p-8 backdrop-blur-md hover:border-purple-500/30 transition-colors group">
-                                        <span className="text-5xl font-black text-white/5 mb-4 block group-hover:text-purple-500/20 transition-colors">0{index + 1}</span>
-                                        <h3 className="text-2xl font-bold mb-4 text-white group-hover:text-purple-400 transition-colors">{step.title}</h3>
-                                        <p className="text-white/60 leading-relaxed max-w-md mx-auto md:mx-0">
+                                    <div className="bg-foreground/5 border border-foreground/5 rounded-3xl p-8 backdrop-blur-md hover:border-purple-500/30 transition-colors group">
+                                        <span className="text-5xl font-black text-foreground/5 mb-4 block group-hover:text-purple-500/20 transition-colors">0{index + 1}</span>
+                                        <h3 className="text-2xl font-bold mb-4 text-foreground group-hover:text-purple-400 transition-colors">{step.title}</h3>
+                                        <p className="text-foreground/60 leading-relaxed max-w-md mx-auto md:mx-0">
                                             {step.description}
                                         </p>
                                     </div>
@@ -47,7 +47,7 @@ export default function Workflow() {
 
                                 {/* Center Dot */}
                                 <div className="relative z-10 flex items-center justify-center">
-                                    <div className="w-12 h-12 rounded-full bg-black border-4 border-purple-500/30 flex items-center justify-center shadow-[0_0_20px_rgba(168,85,247,0.4)]">
+                                    <div className="w-12 h-12 rounded-full bg-background border-4 border-purple-500/30 flex items-center justify-center shadow-[0_0_20px_rgba(168,85,247,0.4)]">
                                         <div className="w-3 h-3 rounded-full bg-purple-500" />
                                     </div>
                                 </div>

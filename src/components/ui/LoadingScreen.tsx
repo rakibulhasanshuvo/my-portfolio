@@ -31,14 +31,14 @@ export default function LoadingScreen() {
                         y: '-100%',
                         transition: { duration: 0.8, ease: [0.76, 0, 0.24, 1] }
                     }}
-                    className="fixed inset-0 z-[9999] bg-[#050505] flex flex-col items-center justify-center"
+                    className="fixed inset-0 z-[9999] bg-background flex flex-col items-center justify-center"
                 >
                     <div className="relative flex flex-col items-center">
                         {/* Counter */}
                         <motion.div
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
-                            className="text-[12rem] md:text-[18rem] font-black text-white/5 absolute -top-40 md:-top-60 select-none pointer-events-none"
+                            className="text-[12rem] md:text-[18rem] font-black text-foreground/5 absolute -top-40 md:-top-60 select-none pointer-events-none"
                         >
                             {Math.min(progress, 100)}%
                         </motion.div>
@@ -50,7 +50,7 @@ export default function LoadingScreen() {
                             transition={{ duration: 0.8, ease: "easeOut" }}
                             className="mb-12 relative"
                         >
-                            <span className="text-5xl md:text-7xl font-bold tracking-tighter">
+                            <span className="text-5xl md:text-7xl font-bold tracking-tighter text-foreground">
                                 Rakibul<span className="text-purple-600">.</span>
                             </span>
                             <motion.div
@@ -77,7 +77,7 @@ export default function LoadingScreen() {
                             <motion.p
                                 initial={{ opacity: 0 }}
                                 animate={{ opacity: 1 }}
-                                className="text-white/20 text-xs tracking-[0.3em] uppercase font-bold"
+                                className="text-foreground/20 text-xs tracking-[0.3em] uppercase font-bold"
                             >
                                 {progress < 100 ? "Initializing Experience" : "Ready to Vibe"}
                             </motion.p>
@@ -91,7 +91,7 @@ export default function LoadingScreen() {
                             scale: [1, 1.2, 1],
                         }}
                         transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
-                        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80vw] h-[80vw] border border-white/5 rounded-full -z-10"
+                        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80vw] h-[80vw] border border-foreground/5 rounded-full -z-10"
                     />
                     <motion.div
                         animate={{
@@ -99,7 +99,7 @@ export default function LoadingScreen() {
                             scale: [1, 1.3, 1],
                         }}
                         transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
-                        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[60vw] h-[60vw] border border-white/[0.02] rounded-full -z-10"
+                        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[60vw] h-[60vw] border border-foreground/[0.02] rounded-full -z-10"
                     />
                 </motion.div>
             )}

@@ -53,7 +53,7 @@ export default function MobileNav() {
         <div className="md:hidden">
             <button
                 onClick={() => setIsOpen(true)}
-                className="p-2 text-white/70 hover:text-white transition-colors"
+                className="p-2 text-foreground/70 hover:text-foreground transition-colors"
                 aria-label="Open menu"
             >
                 <Menu size={24} />
@@ -66,12 +66,12 @@ export default function MobileNav() {
                         initial="initial"
                         animate="animate"
                         exit="exit"
-                        className="fixed inset-0 bg-[#050505] origin-top z-[9999] flex flex-col justify-center items-center p-10"
+                        className="fixed inset-0 bg-background origin-top z-[9999] flex flex-col justify-center items-center p-10"
                     >
                         <div className="absolute top-6 right-6">
                             <button
                                 onClick={() => setIsOpen(false)}
-                                className="p-2 text-white/70 hover:text-white transition-colors"
+                                className="p-2 text-foreground/70 hover:text-foreground transition-colors"
                                 aria-label="Close menu"
                             >
                                 <X size={32} />
@@ -91,7 +91,7 @@ export default function MobileNav() {
                                         <Link
                                             href={link.href}
                                             onClick={() => setIsOpen(false)}
-                                            className="text-white hover:text-purple-400 transition-colors"
+                                            className="text-foreground hover:text-purple-400 transition-colors"
                                         >
                                             {link.name}
                                         </Link>
@@ -104,7 +104,7 @@ export default function MobileNav() {
                                     <Link
                                         href="/resume.pdf"
                                         target="_blank"
-                                        className="text-lg font-medium text-white/50 hover:text-white transition-colors"
+                                        className="text-lg font-medium text-foreground/50 hover:text-foreground transition-colors"
                                     >
                                         View Resume
                                     </Link>

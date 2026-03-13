@@ -47,7 +47,7 @@ export default function Hero() {
             />
 
             {/* Main Heading */}
-            <h1 className="text-5xl md:text-8xl font-bold text-center tracking-tight mb-6 z-10 relative">
+            <h1 className="text-5xl md:text-8xl font-bold text-center tracking-tight mb-6 z-10 relative text-foreground">
                 <span className="absolute inset-0 blur-2xl bg-purple-500/10 rounded-full -z-10" />
                 {name.map((char, i) => (
                     <motion.span
@@ -71,7 +71,7 @@ export default function Hero() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 1, duration: 0.8 }}
-                className="text-lg md:text-xl text-white/60 mb-12 text-center max-w-2xl px-6 glow-text z-10"
+                className="text-lg md:text-xl text-foreground/60 mb-12 text-center max-w-2xl px-6 glow-text z-10"
             >
                 A multidisciplinary creative designing the future with code and intuition.
             </motion.p>
@@ -99,7 +99,7 @@ export default function Hero() {
                                 ease: "easeInOut",
                                 delay: index * 0.2 // Deterministic delay
                             }}
-                            className="px-6 py-3 rounded-full border border-white/5 bg-white/5 backdrop-blur-md text-sm font-medium text-white/80 hover:bg-white/10 transition-colors cursor-default hover:border-white/20"
+                            className="px-6 py-3 rounded-full border border-foreground/10 bg-foreground/5 backdrop-blur-md text-sm font-medium text-foreground/80 hover:bg-foreground/10 transition-colors cursor-default hover:border-foreground/20"
                         >
                             {skill}
                         </motion.div>

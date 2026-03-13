@@ -32,20 +32,20 @@ export default function FAQ() {
                             whileInView={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.5, delay: index * 0.1 }}
                             viewport={{ once: true }}
-                            className="border border-white/5 rounded-2xl overflow-hidden bg-white/5 backdrop-blur-sm"
+                            className="border border-foreground/5 rounded-2xl overflow-hidden bg-foreground/5 backdrop-blur-sm"
                         >
                             <button
                                 onClick={() => setActiveIndex(activeIndex === index ? null : index)}
-                                className="w-full flex items-center justify-between p-6 text-left hover:bg-white/5 transition-colors group"
+                                className="w-full flex items-center justify-between p-6 text-left hover:bg-foreground/5 transition-colors group"
                             >
-                                <span className="font-semibold text-lg text-white group-hover:text-purple-400 transition-colors">
+                                <span className="font-semibold text-lg text-foreground group-hover:text-purple-400 transition-colors">
                                     {faq.question}
                                 </span>
                                 <div className={`flex-shrink-0 ml-4 transition-transform duration-300 ${activeIndex === index ? 'rotate-180' : ''}`}>
                                     {activeIndex === index ? (
                                         <Minus className="text-purple-500" size={20} />
                                     ) : (
-                                        <Plus className="text-white/40 group-hover:text-purple-500" size={20} />
+                                        <Plus className="text-foreground/40 group-hover:text-purple-500" size={20} />
                                     )}
                                 </div>
                             </button>
@@ -58,7 +58,7 @@ export default function FAQ() {
                                         exit={{ height: 0, opacity: 0 }}
                                         transition={{ duration: 0.3, ease: 'easeInOut' }}
                                     >
-                                        <div className="px-6 pb-6 text-white/60 leading-relaxed border-t border-white/5 pt-4">
+                                        <div className="px-6 pb-6 text-foreground/60 leading-relaxed border-t border-foreground/5 pt-4">
                                             {faq.answer}
                                         </div>
                                     </motion.div>
