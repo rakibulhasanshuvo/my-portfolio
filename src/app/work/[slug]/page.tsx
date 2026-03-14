@@ -5,6 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Metadata } from 'next';
 import { ExternalLink, Github } from 'lucide-react';
+import { ShareButtons } from '@/components/work/ShareButtons';
 
 interface Props {
     params: Promise<{ slug: string }>;
@@ -139,6 +140,11 @@ export default async function ProjectPage({ params }: Props) {
                                 ))}
                             </div>
                         )}
+
+                        <div className="pt-12 border-t border-white/10">
+                            <h4 className="text-sm font-bold text-white/40 uppercase tracking-widest mb-6">Share this project</h4>
+                            <ShareButtons title={project.title} />
+                        </div>
                     </div>
                 </div>
             </div>
