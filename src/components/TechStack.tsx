@@ -8,7 +8,7 @@ const technologies = profile.techStack;
 
 export default function TechStack() {
     return (
-        <section className="py-20 overflow-hidden border-y border-white/5">
+        <section className="py-20 overflow-hidden border-y border-foreground/5">
             <div className="relative">
                 {/* First Row - Left to Right */}
                 <div className="flex mb-6 overflow-hidden">
@@ -27,10 +27,10 @@ export default function TechStack() {
                         {[...technologies, ...technologies, ...technologies].map((tech, i) => (
                             <div
                                 key={i}
-                                className="flex items-center gap-3 px-6 py-3 bg-white/5 border border-white/5 rounded-full hover:bg-white/10 transition-colors cursor-default"
+                                className="flex items-center gap-3 px-6 py-3 bg-foreground/5 border border-foreground/5 rounded-full hover:bg-foreground/10 transition-colors cursor-default"
                             >
                                 <span className="text-xl">{tech.icon}</span>
-                                <span className="font-medium text-white/70">{tech.name}</span>
+                                <span className="font-medium text-foreground/70">{tech.name}</span>
                             </div>
                         ))}
                     </motion.div>
@@ -53,18 +53,18 @@ export default function TechStack() {
                         {[...technologies.slice().reverse(), ...technologies, ...technologies].map((tech, i) => (
                             <div
                                 key={i}
-                                className="flex items-center gap-3 px-6 py-3 bg-white/5 border border-white/5 rounded-full hover:bg-white/10 transition-colors cursor-default"
+                                className="flex items-center gap-3 px-6 py-3 bg-foreground/5 border border-foreground/5 rounded-full hover:bg-foreground/10 transition-colors cursor-default"
                             >
                                 <span className="text-xl">{tech.icon}</span>
-                                <span className="font-medium text-white/70">{tech.name}</span>
+                                <span className="font-medium text-foreground/70">{tech.name}</span>
                             </div>
                         ))}
                     </motion.div>
                 </div>
 
                 {/* Edge Fades */}
-                <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-[#050505] to-transparent pointer-events-none z-10" />
-                <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-[#050505] to-transparent pointer-events-none z-10" />
+                <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-background to-transparent pointer-events-none z-10" />
+                <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-background to-transparent pointer-events-none z-10" />
             </div>
         </section>
     );

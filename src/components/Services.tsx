@@ -16,15 +16,25 @@ const services = profile.services;
 export default function Services() {
     return (
         <section className="py-32 px-6 max-w-7xl mx-auto">
-            <motion.h2
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6 }}
-                viewport={{ once: true }}
-                className="text-4xl font-bold mb-16 text-center"
-            >
-                What I Do
-            </motion.h2>
+            <div className="text-center mb-20">
+                <motion.span
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    className="overline-label"
+                >
+                    Expertise
+                </motion.span>
+                <motion.h2
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, delay: 0.1 }}
+                    viewport={{ once: true }}
+                    className="text-5xl md:text-7xl font-bold uppercase italic tracking-tighter"
+                >
+                    Solutions & Services
+                </motion.h2>
+            </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                 {services.map((service, index) => (
@@ -35,9 +45,9 @@ export default function Services() {
                         transition={{ duration: 0.5, delay: index * 0.1 }}
                         viewport={{ once: true }}
                         whileHover={{ y: -5 }}
-                        className="p-8 rounded-2xl bg-white/5 border border-white/5 backdrop-blur-sm hover:bg-white/10 transition-colors"
+                        className="p-8 rounded-2xl bg-foreground/5 border border-foreground/5 backdrop-blur-sm hover:bg-foreground/10 transition-colors"
                     >
-                        <div className="mb-6 p-4 rounded-full bg-white/5 w-fit">
+                        <div className="mb-6 p-4 rounded-full bg-foreground/5 w-fit">
                             {(() => {
                                 const Icon = iconMap[service.icon as keyof typeof iconMap] || Code2;
                                 const colors = ["text-purple-400", "text-blue-400", "text-pink-400"];
@@ -45,8 +55,8 @@ export default function Services() {
                                 return <Icon size={32} className={color} />;
                             })()}
                         </div>
-                        <h3 className="text-xl font-bold mb-4">{service.title}</h3>
-                        <p className="text-white/60 leading-relaxed">
+                        <h3 className="text-2xl font-bold mb-4 uppercase italic tracking-tight">{service.title}</h3>
+                        <p className="text-foreground/60 leading-relaxed">
                             {service.description}
                         </p>
                     </motion.div>

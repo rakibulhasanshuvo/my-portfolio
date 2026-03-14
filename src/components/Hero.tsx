@@ -1,32 +1,72 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import { useCallback } from 'react';
 import AuroraBackground from './ui/AuroraBackground';
+import SplineScene from './ui/SplineScene';
+import { profile } from '@/data/profile';
 
-const skills = [
-    "Vibe Coder", "Graphic Design", "React", "Motion", "UX/UI", "Next.js", "TypeScript", "Cyber Security"
-];
+const skills = profile.hero.skills;
 
 export default function Hero() {
     const name = "Rakibul Hasan Shuvo".split("");
+
+    const handleSplineLoad = useCallback((spline: any) => {
+        // Find and hide all objects that appear to be text
+        // Based on the scene URL, it has "Clarity. Focus. Impact." and subtext
+        const objectsToHide = [
+            'Clarity. Focus. Impact.',
+            'A multidisciplinary creative designing the future with code and intuition.',
+            'Text',
+            'Text 2',
+            'Text 3'
+        ];
+
+        objectsToHide.forEach(objName => {
+            const obj = spline.findObjectByName(objName);
+            if (obj) {
+                obj.visible = false;
+            }
+        });
+
+        // Debug: log all object names to console if we still see text
+        // console.log(spline.getAllObjects().map((o: any) => o.name));
+    }, []);
 
     return (
         <section className="min-h-screen flex flex-col justify-center items-center px-4 relative overflow-hidden pt-32">
 
             <AuroraBackground />
 
+            {/* 3D Spline Design - Hidden on mobile for performance */}
+            <SplineScene
+                scene="https://prod.spline.design/qF9apOu8tJv1sgOk/scene.splinecode"
+                onLoad={handleSplineLoad}
+                className="absolute inset-0 z-0 pointer-events-none hidden lg:block"
+            />
+
+            {/* Overline label */}
+            <motion.span
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5, duration: 0.8 }}
+                className="overline-label z-10"
+            >
+                Digital Architect & Developer
+            </motion.span>
+
             {/* Main Heading */}
-            <h1 className="text-5xl md:text-8xl font-bold text-center tracking-tight mb-6 z-10 relative">
-                <span className="absolute inset-0 blur-2xl bg-purple-500/10 rounded-full -z-10" />
+            <h1 className="text-6xl md:text-[120px] font-extrabold text-center leading-[0.9] tracking-tighter mb-8 z-10 relative text-foreground uppercase italic">
+                <span className="absolute inset-0 blur-3xl bg-purple-500/20 rounded-full -z-10" />
                 {name.map((char, i) => (
                     <motion.span
                         key={i}
-                        initial={{ opacity: 0, y: 100 }}
-                        animate={{ opacity: 1, y: 0 }}
+                        initial={{ opacity: 0, y: 100, rotateX: -90 }}
+                        animate={{ opacity: 1, y: 0, rotateX: 0 }}
                         transition={{
-                            duration: 0.8,
-                            delay: i * 0.05,
-                            ease: [0.2, 0.65, 0.3, 0.9]
+                            duration: 1,
+                            delay: i * 0.03,
+                            ease: [0.16, 1, 0.3, 1]
                         }}
                         className="inline-block"
                     >
@@ -39,10 +79,10 @@ export default function Hero() {
             <motion.p
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 1, duration: 0.8 }}
-                className="text-lg md:text-xl text-white/60 mb-12 text-center max-w-2xl px-6 glow-text z-10"
+                transition={{ delay: 1.2, duration: 0.8 }}
+                className="text-lg md:text-2xl text-foreground/60 mb-16 text-center max-w-3xl px-6 z-10 font-medium leading-relaxed"
             >
-                A multidisciplinary creative designing the future with code and intuition.
+                {profile.hero.tagline}
             </motion.p>
 
             {/* Floating Skill Tags & Infinite Marquee */}
@@ -68,7 +108,7 @@ export default function Hero() {
                                 ease: "easeInOut",
                                 delay: index * 0.2 // Deterministic delay
                             }}
-                            className="px-6 py-3 rounded-full border border-white/5 bg-white/5 backdrop-blur-md text-sm font-medium text-white/80 hover:bg-white/10 transition-colors cursor-default hover:border-white/20"
+                            className="px-6 py-3 rounded-full border border-foreground/10 bg-foreground/5 backdrop-blur-md text-sm font-medium text-foreground/80 hover:bg-foreground/10 transition-colors cursor-default hover:border-foreground/20"
                         >
                             {skill}
                         </motion.div>

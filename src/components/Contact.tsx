@@ -75,9 +75,10 @@ export default function Contact() {
                 viewport={{ once: true }}
                 className="text-center mb-16"
             >
-                <h2 className="text-4xl font-bold mb-6">Let&apos;s Work Together</h2>
-                <p className="text-white/60 text-lg mb-4">
-                    Have a project in mind? Let&apos;s build something extraordinary.
+                <span className="overline-label">Contact</span>
+                <h2 className="text-5xl md:text-7xl font-bold mb-8 uppercase italic tracking-tighter">Let&apos;s Connect</h2>
+                <p className="text-foreground/60 text-xl mb-8 font-medium">
+                    Have a vision? Let&apos;s bring it to life with precision and style.
                 </p>
                 <a
                     href={`mailto:${YOUR_EMAIL}`}
@@ -92,7 +93,7 @@ export default function Contact() {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.2 }}
                 viewport={{ once: true }}
-                className="bg-white/5 border border-white/5 rounded-3xl p-8 md:p-12 backdrop-blur-sm"
+                className="bg-foreground/5 border border-foreground/5 rounded-3xl p-8 md:p-12 backdrop-blur-sm"
             >
                 {formState === 'success' ? (
                     <div className="flex flex-col items-center justify-center h-[300px] text-center">
@@ -103,11 +104,11 @@ export default function Contact() {
                         >
                             <CheckCircle size={48} />
                         </motion.div>
-                        <h3 className="text-2xl font-bold mb-2">Message Sent!</h3>
-                        <p className="text-white/60">I&apos;ll get back to you as soon as possible.</p>
+                        <h3 className="text-2xl font-bold mb-2 text-foreground">Message Sent!</h3>
+                        <p className="text-foreground/60">I&apos;ll get back to you as soon as possible.</p>
                         <button
                             onClick={resetForm}
-                            className="mt-8 text-sm text-white/40 hover:text-white transition-colors"
+                            className="mt-8 text-sm text-foreground/40 hover:text-foreground transition-colors"
                         >
                             Send another message
                         </button>
@@ -121,8 +122,8 @@ export default function Contact() {
                         >
                             <AlertCircle size={48} />
                         </motion.div>
-                        <h3 className="text-2xl font-bold mb-2">Something Went Wrong</h3>
-                        <p className="text-white/60 mb-4">{errorMessage}</p>
+                        <h3 className="text-2xl font-bold mb-2 text-foreground">Something Went Wrong</h3>
+                        <p className="text-foreground/60 mb-4">{errorMessage}</p>
                         <a
                             href={`mailto:${YOUR_EMAIL}`}
                             className="text-purple-400 hover:text-purple-300 transition-colors"
@@ -131,7 +132,7 @@ export default function Contact() {
                         </a>
                         <button
                             onClick={resetForm}
-                            className="mt-4 text-sm text-white/40 hover:text-white transition-colors"
+                            className="mt-4 text-sm text-foreground/40 hover:text-foreground transition-colors"
                         >
                             Try again
                         </button>
@@ -140,37 +141,37 @@ export default function Contact() {
                     <form ref={formRef} onSubmit={handleSubmit} className="flex flex-col gap-6">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div className="flex flex-col gap-2">
-                                <label htmlFor="user_name" className="text-sm font-medium text-white/60 ml-1">Name</label>
+                                <label htmlFor="user_name" className="text-sm font-medium text-foreground/60 ml-1">Name</label>
                                 <input
                                     type="text"
                                     id="user_name"
                                     name="user_name"
                                     required
-                                    className="bg-black/20 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-purple-500/50 focus:bg-white/5 transition-all"
+                                    className="bg-foreground/5 border border-foreground/10 rounded-xl px-4 py-3 focus:outline-none focus:border-purple-500/50 focus:bg-foreground/10 text-foreground transition-all"
                                     placeholder="John Doe"
                                 />
                             </div>
                             <div className="flex flex-col gap-2">
-                                <label htmlFor="user_email" className="text-sm font-medium text-white/60 ml-1">Email</label>
+                                <label htmlFor="user_email" className="text-sm font-medium text-foreground/60 ml-1">Email</label>
                                 <input
                                     type="email"
                                     id="user_email"
                                     name="user_email"
                                     required
-                                    className="bg-black/20 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-purple-500/50 focus:bg-white/5 transition-all"
+                                    className="bg-foreground/5 border border-foreground/10 rounded-xl px-4 py-3 focus:outline-none focus:border-purple-500/50 focus:bg-foreground/10 text-foreground transition-all"
                                     placeholder="john@example.com"
                                 />
                             </div>
                         </div>
 
                         <div className="flex flex-col gap-2">
-                            <label htmlFor="message" className="text-sm font-medium text-white/60 ml-1">Message</label>
+                            <label htmlFor="message" className="text-sm font-medium text-foreground/60 ml-1">Message</label>
                             <textarea
                                 id="message"
                                 name="message"
                                 required
                                 rows={5}
-                                className="bg-black/20 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-purple-500/50 focus:bg-white/5 transition-all resize-none"
+                                className="bg-foreground/5 border border-foreground/10 rounded-xl px-4 py-3 focus:outline-none focus:border-purple-500/50 focus:bg-foreground/10 text-foreground transition-all resize-none"
                                 placeholder="Tell me about your project..."
                             />
                         </div>
@@ -178,7 +179,7 @@ export default function Contact() {
                         <button
                             type="submit"
                             disabled={formState === 'submitting'}
-                            className="mt-2 bg-white text-black font-bold py-4 rounded-xl hover:bg-gray-200 transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="mt-2 bg-foreground text-background font-bold py-4 rounded-xl hover:opacity-90 transition-opacity flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                             {formState === 'submitting' ? (
                                 <>

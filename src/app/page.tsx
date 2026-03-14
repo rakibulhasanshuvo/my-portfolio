@@ -3,6 +3,10 @@ import Projects from '@/components/Projects';
 import Services from '@/components/Services';
 import About from '@/components/About';
 import TechStack from '@/components/TechStack';
+import Workflow from '@/components/Workflow';
+import Experience from '@/components/Experience';
+import FAQ from '@/components/FAQ';
+import Testimonials from '@/components/Testimonials';
 import Contact from '@/components/Contact';
 import Footer from '@/components/Footer';
 
@@ -11,9 +15,13 @@ export default function Home() {
     <main className="min-h-screen">
       <Hero />
       <TechStack />
-      <Projects />
       <About />
       <Services />
+      <Workflow />
+      <Projects />
+      <Experience />
+      <Testimonials />
+      <FAQ />
       <Contact />
       <Footer />
     </main>

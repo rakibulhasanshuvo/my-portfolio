@@ -14,11 +14,11 @@ export interface Project {
 
 export const profile = {
     name: "Rakibul Hasan Shuvo",
-    role: "Multidisciplinary Creative Developer",
+    role: "Creative Technologist & Digital Architect",
     location: "Bangladesh",
     email: "m.rakibul.h45@gmail.com",
-    resumeUrl: "/resume.pdf", // Path in public folder
-    avatarUrl: "/rakibul.jpeg", // Path in public folder
+    resumeUrl: "/resume.pdf",
+    avatarUrl: "/rakibul.jpeg",
 
     // Social Links
     social: {
@@ -30,24 +30,24 @@ export const profile = {
 
     // Hero Section
     hero: {
-        tagline: "A multidisciplinary creative designing the future with code and intuition.",
+        tagline: "Designing immersive digital experiences through the lens of aesthetic precision and technical excellence.",
         skills: [
-            "Vibe Coder", "Graphic Design", "React", "Motion", "UX/UI", "Next.js", "TypeScript", "Cyber Security"
+            "Creative Engineering", "Visual Design", "Motion Systems", "Next.js Architecture", "TypeScript", "Cyber Intelligence"
         ]
     },
 
     // About Section
     about: {
-        title: "Crafting Digital Experiences with Passion",
+        title: "Merging Visionary Design with Engineering Excellence",
         description: [
-            "I'm Rakibul Hasan Shuvo, a multidisciplinary creative developer based in Bangladesh. I specialize in building premium digital experiences that blend clean code with intuitive design.",
-            "My journey started with a curiosity for how things work on the web. Today, I transform that curiosity into impactful products — from sleek portfolios to complex web applications.",
-            "When I'm not coding, you'll find me exploring cybersecurity, creating motion graphics, or vibing to new music. I believe the best work comes from passion and flow."
+            "I am Rakibul Hasan Shuvo, a digital craftsman dedicated to building premium web experiences that resonate. My approach sits at the intersection of sophisticated design and high-performance engineering.",
+            "Driven by a philosophy of 'Vibe Coding,' I transform abstract concepts into tangible digital products—ranging from high-fidelity interfaces to complex, scalable web ecosystems.",
+            "Outside the editor, I explore the frontiers of cybersecurity and motion art, always seeking the perfect balance between security, functionality, and visual storytelling."
         ],
         stats: [
-            { label: "Years Experience", value: "3+" },
-            { label: "Projects Completed", value: "20+" },
-            { label: "Happy Clients", value: "15+" }
+            { label: "Years of Craft", value: "3+" },
+            { label: "Bespoke Projects", value: "20+" },
+            { label: "Global Collaborations", value: "15+" }
         ]
     },
 
@@ -70,19 +70,19 @@ export const profile = {
     // Services Section
     services: [
         {
-            icon: "Code2", // Matches lucide-react component name
-            title: "Engineering",
-            description: "Building robust, scalable applications with modern technologies like React, Next.js, and Node.js."
+            icon: "Code2",
+            title: "Digital Engineering",
+            description: "Architecting robust, performance-optimized applications using modern frameworks and scalable patterns."
         },
         {
             icon: "Palette",
-            title: "Design",
-            description: "Crafting intuitive user experiences and pixel-perfect high-fidelity UI designs using Figma."
+            title: "Creative Design",
+            description: "Crafting bespoke visual identities and high-fidelity user interfaces that prioritize both form and function."
         },
         {
             icon: "TrendingUp",
-            title: "Strategy",
-            description: "Optimizing for growth, SEO, and performance to ensure your digital presence makes an impact."
+            title: "Strategic Growth",
+            description: "Leveraging data-driven insights and SEO optimization to ensure your digital presence achieves maximum impact."
         }
     ],
 
@@ -108,10 +108,76 @@ export const profile = {
         }
     ],
 
+    // Workflow Section
+    workflow: [
+        {
+            title: "Strategic Discovery",
+            description: "We begin by dissecting your objectives, audience, and market landscape to build a bulletproof foundation."
+        },
+        {
+            title: "Architectural Planning",
+            description: "Designing a comprehensive roadmap that harmonizes technical feasibility with ambitious business goals."
+        },
+        {
+            title: "Bespoke Design",
+            description: "Engineering immersive visual languages and interactive prototypes that elevate your brand narrative."
+        },
+        {
+            title: "Precision Development",
+            description: "Bringing the vision to life with clean, performant code, maintaining absolute transparency throughout the build."
+        },
+        {
+            title: "Seamless Launch",
+            description: "Meticulous quality assurance followed by a strategic rollout and continuous post-launch optimization."
+        }
+    ],
+
+    // Experience Section
+    experience: [
+        {
+            year: "2023 - Present",
+            role: "Independent Creative Developer",
+            company: "Global Clientele",
+            description: "Delivering high-end digital solutions for international brands, specializing in immersive Next.js experiences."
+        },
+        {
+            year: "2022 - 2023",
+            role: "Senior Frontend Engineer",
+            company: "Tech Solutions Ltd.",
+            description: "Architecting complex web systems and leading frontend initiatives for enterprise-level applications."
+        },
+        {
+            year: "2021 - 2022",
+            role: "Experience Designer",
+            company: "Creative Studio",
+            description: "Pioneering user-centric design strategies and crafting intuitive interfaces for high-growth startups."
+        }
+    ],
+
+    // FAQ Section
+    faqs: [
+        {
+            question: "What is the typical timeline for a bespoke project?",
+            answer: "Most engagements span between 4 to 10 weeks, ensuring ample time for deep discovery, precision design, and robust engineering."
+        },
+        {
+            question: "Do you provide ongoing technical partnership?",
+            answer: "Yes, I offer dedicated support and optimization phases post-launch to ensure your product continues to evolve and perform."
+        },
+        {
+            question: "How do you approach project pricing?",
+            answer: "Projects are typically value-priced based on scope and complexity, though I offer flexible arrangements for long-term collaborations."
+        },
+        {
+            question: "Can you assist with scaling existing platforms?",
+            answer: "Absolutely. I specialize in performance audits, UI/UX modernization, and implementing scalable frontend architectures for established apps."
+        }
+    ],
+
     // Contact Section
     contact: {
-        heading: "Let's Work Together",
-        subheading: "Have a project in mind? Let's build something extraordinary."
+        heading: "Let's Build Something Extraordinary",
+        subheading: "Ready to elevate your digital presence? Let's start a conversation."
     },
 
     // Projects Section
@@ -119,8 +185,8 @@ export const profile = {
         {
             id: "nexus-os",
             title: "Nexus OS",
-            category: "Web",
-            description: "A fully functional web-based operating system built with React and Tailwind CSS. Featuring window management, terminal, and apps.",
+            category: "Platform",
+            description: "A sophisticated web-based operating system. Orchestrating complex window management and system-level interactions in the browser.",
             tags: ["React", "TypeScript", "Tailwind", "Framer Motion"],
             liveUrl: "#",
             codeUrl: "#",
@@ -146,8 +212,8 @@ Implementing a robust window management system in React required deep knowledge 
         {
             id: "stockniche-ai",
             title: "StockNiche AI",
-            category: "AI",
-            description: "Intelligent market analysis platform for Adobe Stock contributors. Features live trend analysis using Google Gemini API.",
+            category: "Intelligence",
+            description: "AI-driven market analysis platform for digital assets. Real-time trend forecasting powered by Google Gemini.",
             tags: ["React", "Gemini API", "Tailwind", "Next.js"],
             liveUrl: "#",
             codeUrl: "#",
@@ -177,8 +243,8 @@ We built an AI-powered dashboard that:
         {
             id: "cyber-portfolio",
             title: "Cyber Portfolio",
-            category: "Web",
-            description: "Experimental portfolio showcasing 'Vibe Coding' with advanced animations and immersive UI.",
+            category: "Experimental",
+            description: "A showcase of high-end frontend craftsmanship. Immersive UI, fluid motion, and boutique aesthetics.",
             tags: ["React", "Framer Motion", "Tailwind", "Three.js"],
             liveUrl: "#",
             codeUrl: "#",
@@ -200,8 +266,8 @@ This very website! A playground for advanced frontend techniques.
         {
             id: "ecodash",
             title: "EcoDash",
-            category: "Design",
-            description: "Conceptual sustainability metrics dashboard designed for modern enterprise monitoring.",
+            category: "Enterprise",
+            description: "Sustainability metrics dashboard for modern infrastructure. Interactive data storytelling with D3.js.",
             tags: ["Vue.js", "D3.js", "Firebase", "Nuxt"],
             liveUrl: "#",
             codeUrl: "#",
