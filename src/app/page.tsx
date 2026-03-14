@@ -9,20 +9,27 @@ import FAQ from '@/components/FAQ';
 import Testimonials from '@/components/Testimonials';
 import Contact from '@/components/Contact';
 import Footer from '@/components/Footer';
+import InteractiveAurora from '@/components/ui/InteractiveAurora';
 
 export default function Home() {
   return (
     <main className="min-h-screen">
       <Hero />
-      <TechStack />
-      <About />
-      <Services />
-      <Workflow />
-      <Projects />
-      <Experience />
-      <Testimonials />
-      <FAQ />
-      <Contact />
+
+      {/* Interactive Global Background for middle sections */}
+      <div className="relative">
+        <InteractiveAurora />
+        <TechStack />
+        <About />
+        <Services />
+        <Workflow />
+        <Projects />
+        <Experience />
+        <Testimonials />
+        <FAQ />
+        <Contact />
+      </div>
+
       <Footer />
     </main>
   );
