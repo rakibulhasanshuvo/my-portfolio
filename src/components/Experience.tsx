@@ -17,8 +17,8 @@ export default function Experience() {
                     viewport={{ once: true }}
                     className="text-center mb-20"
                 >
-                    <span className="text-purple-400 font-medium tracking-wider uppercase text-sm mb-4 block">Professional Journey</span>
-                    <h2 className="text-4xl font-bold">Experience</h2>
+                    <span className="overline-label">Professional Journey</span>
+                    <h2 className="text-5xl md:text-7xl font-bold uppercase italic tracking-tighter">Experience</h2>
                 </motion.div>
 
                 <div className="space-y-12">
@@ -44,8 +44,8 @@ export default function Experience() {
                             </div>
 
                             {/* Content */}
-                            <div className="bg-foreground/5 border border-foreground/5 rounded-2xl p-6 hover:bg-foreground/[0.07] transition-all group">
-                                <h3 className="text-xl font-bold text-foreground group-hover:text-purple-400 transition-colors">
+                            <div className="bg-foreground/5 border border-foreground/5 rounded-2xl p-8 hover:bg-foreground/[0.07] transition-all group">
+                                <h3 className="text-2xl font-bold text-foreground group-hover:text-purple-400 transition-colors uppercase italic tracking-tight">
                                     {item.role}
                                 </h3>
                                 <p className="text-purple-300/60 font-medium mb-4">{item.company}</p>

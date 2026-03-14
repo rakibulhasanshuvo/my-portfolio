@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
 import Link from 'next/link';
-import ThemeToggle from '@/components/ThemeToggle';
 
 const navLinks = [
     { name: 'Home', href: '/' },
@@ -99,7 +98,6 @@ export default function MobileNav() {
                                 </div>
                             ))}
                             <div className="mt-8 flex flex-col items-center gap-6">
-                                <ThemeToggle />
                                 <motion.div variants={linkVars}>
                                     <Link
                                         href="/resume.pdf"

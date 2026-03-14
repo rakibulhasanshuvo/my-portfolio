@@ -20,8 +20,8 @@ export default function FAQ() {
                     viewport={{ once: true }}
                     className="text-center mb-16"
                 >
-                    <span className="text-purple-400 font-medium tracking-wider uppercase text-sm mb-4 block">Got Questions?</span>
-                    <h2 className="text-4xl font-bold">Frequently Asked Questions</h2>
+                    <span className="overline-label">Got Questions?</span>
+                    <h2 className="text-5xl md:text-7xl font-bold uppercase italic tracking-tighter">Insights</h2>
                 </motion.div>
 
                 <div className="space-y-4">

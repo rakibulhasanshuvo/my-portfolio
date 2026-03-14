@@ -4,7 +4,6 @@ import Link from 'next/link';
 import MagneticButton from '@/components/ui/MagneticButton';
 import MobileNav from '@/components/MobileNav';
 import { motion } from 'framer-motion';
-import ThemeToggle from '@/components/ThemeToggle';
 
 const navLinks = [
     { name: 'Home', href: '/' },
@@ -40,7 +39,6 @@ export default function Navbar() {
                 <MobileNav />
 
                 <div className="flex items-center gap-4">
-                    <ThemeToggle />
                     <a
                         href="/resume.pdf"
                         target="_blank"

@@ -16,8 +16,8 @@ export default function Workflow() {
                     viewport={{ once: true }}
                     className="text-center mb-20"
                 >
-                    <span className="text-purple-400 font-medium tracking-wider uppercase text-sm mb-4 block italic">The Methodology</span>
-                    <h2 className="text-4xl md:text-5xl font-bold">How I Vibe</h2>
+                    <span className="overline-label">The Methodology</span>
+                    <h2 className="text-5xl md:text-7xl font-bold uppercase italic tracking-tighter">How I Craft</h2>
                 </motion.div>
 
                 <div className="relative">
@@ -38,7 +38,7 @@ export default function Workflow() {
                                 <div className={`flex-1 ${index % 2 === 0 ? 'md:text-right' : 'md:text-left'}`}>
                                     <div className="bg-foreground/5 border border-foreground/5 rounded-3xl p-8 backdrop-blur-md hover:border-purple-500/30 transition-colors group">
                                         <span className="text-5xl font-black text-foreground/5 mb-4 block group-hover:text-purple-500/20 transition-colors">0{index + 1}</span>
-                                        <h3 className="text-2xl font-bold mb-4 text-foreground group-hover:text-purple-400 transition-colors">{step.title}</h3>
+                                        <h3 className="text-3xl font-bold mb-4 text-foreground group-hover:text-purple-400 transition-colors uppercase italic tracking-tight">{step.title}</h3>
                                         <p className="text-foreground/60 leading-relaxed max-w-md mx-auto md:mx-0">
                                             {step.description}
                                         </p>

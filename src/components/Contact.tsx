@@ -75,9 +75,10 @@ export default function Contact() {
                 viewport={{ once: true }}
                 className="text-center mb-16"
             >
-                <h2 className="text-4xl font-bold mb-6 text-foreground">Let&apos;s Work Together</h2>
-                <p className="text-foreground/60 text-lg mb-4">
-                    Have a project in mind? Let&apos;s build something extraordinary.
+                <span className="overline-label">Contact</span>
+                <h2 className="text-5xl md:text-7xl font-bold mb-8 uppercase italic tracking-tighter">Let&apos;s Connect</h2>
+                <p className="text-foreground/60 text-xl mb-8 font-medium">
+                    Have a vision? Let&apos;s bring it to life with precision and style.
                 </p>
                 <a
                     href={`mailto:${YOUR_EMAIL}`}

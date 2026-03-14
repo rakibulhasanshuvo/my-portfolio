@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion';
 import { Download, MapPin } from 'lucide-react';
 import Image from 'next/image';
+import { profile } from '@/data/profile';
 
 export default function About() {
     return (
@@ -49,39 +50,24 @@ export default function About() {
                     transition={{ duration: 0.8 }}
                     viewport={{ once: true }}
                 >
-                    <span className="text-purple-400 font-medium tracking-wider uppercase text-sm mb-4 block">About Me</span>
-                    <h2 className="text-4xl md:text-5xl font-bold mb-6 leading-tight">
-                        Crafting Digital Experiences with Passion
+                    <span className="overline-label">The Story</span>
+                    <h2 className="text-5xl md:text-7xl font-bold mb-8 leading-[0.9] tracking-tighter uppercase italic">
+                        {profile.about.title}
                     </h2>
-                    <div className="space-y-4 text-foreground/60 leading-relaxed mb-8">
-                        <p>
-                            I&apos;m Rakibul Hasan Shuvo, a multidisciplinary creative developer based in Bangladesh.
-                            I specialize in building premium digital experiences that blend clean code with intuitive design.
-                        </p>
-                        <p>
-                            My journey started with a curiosity for how things work on the web. Today, I transform
-                            that curiosity into impactful products—from sleek portfolios to complex web applications.
-                        </p>
-                        <p>
-                            When I&apos;m not coding, you&apos;ll find me exploring cybersecurity, creating motion graphics,
-                            or vibing to new music. I believe the best work comes from passion and flow.
-                        </p>
+                    <div className="space-y-6 text-foreground/60 text-lg leading-relaxed mb-10">
+                        {profile.about.description.map((para, i) => (
+                            <p key={i}>{para}</p>
+                        ))}
                     </div>
 
                     {/* Stats */}
-                    <div className="grid grid-cols-3 gap-6 mb-8">
-                        <div>
-                            <span className="text-3xl font-bold text-foreground">3+</span>
-                            <p className="text-foreground/40 text-sm mt-1">Years Experience</p>
-                        </div>
-                        <div>
-                            <span className="text-3xl font-bold text-foreground">20+</span>
-                            <p className="text-foreground/40 text-sm mt-1">Projects Completed</p>
-                        </div>
-                        <div>
-                            <span className="text-3xl font-bold text-foreground">15+</span>
-                            <p className="text-foreground/40 text-sm mt-1">Happy Clients</p>
-                        </div>
+                    <div className="grid grid-cols-3 gap-8 mb-12">
+                        {profile.about.stats.map((stat, i) => (
+                            <div key={i}>
+                                <span className="text-4xl font-bold text-foreground">{stat.value}</span>
+                                <p className="overline-label !mb-0 !mt-2 !text-[10px]">{stat.label}</p>
+                            </div>
+                        ))}
                     </div>
 
                     {/* CTA */}

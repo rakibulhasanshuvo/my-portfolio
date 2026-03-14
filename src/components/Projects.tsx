@@ -62,8 +62,8 @@ function Card({ project }: { project: typeof projects[0] }) {
             />
 
             <div className="relative z-10 flex-grow px-8 py-6">
-                <span className="text-[10px] font-bold text-purple-400 mb-2 block tracking-widest uppercase">{project.category}</span>
-                <h3 className="text-xl font-bold mb-3 text-foreground">{project.title}</h3>
+                <span className="overline-label !text-[9px] !mb-2">{project.category}</span>
+                <h3 className="text-2xl font-bold mb-3 text-foreground uppercase italic tracking-tight">{project.title}</h3>
                 <p className="text-foreground/60 text-sm mb-6 leading-relaxed line-clamp-2">
                     {project.description}
                 </p>
@@ -120,12 +120,20 @@ export default function Projects() {
     return (
         <section id="work" className="py-20 mt-20 px-6 max-w-7xl mx-auto">
             <div className="flex flex-col items-center mb-16">
+                <motion.span
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    className="overline-label"
+                >
+                    Portfolio
+                </motion.span>
                 <motion.h2
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6 }}
+                    transition={{ duration: 0.6, delay: 0.1 }}
                     viewport={{ once: true }}
-                    className="text-4xl md:text-5xl font-bold mb-8 text-center"
+                    className="text-5xl md:text-7xl font-bold mb-10 text-center uppercase italic tracking-tighter"
                 >
                     Selected Works
                 </motion.h2>
