@@ -24,50 +24,44 @@ export default function DigitalNetwork() {
             vx: number;
             vy: number;
             size: number;
-            // Displacement for push effect
             dx: number = 0;
             dy: number = 0;
 
             constructor(w: number, h: number) {
                 this.x = Math.random() * w;
                 this.y = Math.random() * h;
-                this.vx = (Math.random() - 0.5) * 0.3;
-                this.vy = (Math.random() - 0.5) * 0.3;
-                this.size = Math.random() * 1.5 + 0.5;
+                this.vx = (Math.random() - 0.5) * 0.8;
+                this.vy = (Math.random() - 0.5) * 0.8;
+                this.size = Math.random() * 3 + 2;
             }
 
             update(w: number, h: number, scrollOffset: number) {
-                // Autonomous drift
                 this.x += this.vx;
                 this.y += this.vy;
 
-                // Wrap around edges
                 if (this.x < 0) this.x = w;
                 if (this.x > w) this.x = 0;
                 if (this.y < 0) this.y = h;
                 if (this.y > h) this.y = 0;
 
-                // Calculate visual position (parallax)
                 const visualY = (this.y - scrollOffset) % h;
                 const finalVisualY = visualY < 0 ? visualY + h : visualY;
 
-                // Push effect based on visual position
                 if (mouse.active) {
                     const diffX = this.x - mouse.x;
                     const diffY = finalVisualY - mouse.y;
                     const distance = Math.sqrt(diffX * diffX + diffY * diffY);
-                    const forceRadius = 150;
+                    const forceRadius = 300;
 
                     if (distance < forceRadius) {
                         const force = (forceRadius - distance) / forceRadius;
-                        this.dx += (diffX / distance) * force * 5;
-                        this.dy += (diffY / distance) * force * 5;
+                        this.dx += (diffX / distance) * force * 15;
+                        this.dy += (diffY / distance) * force * 15;
                     }
                 }
 
-                // Friction for push displacement
-                this.dx *= 0.9;
-                this.dy *= 0.9;
+                this.dx *= 0.85;
+                this.dy *= 0.85;
             }
 
             getVisualPos(w: number, h: number, scrollOffset: number) {
@@ -92,14 +86,14 @@ export default function DigitalNetwork() {
                 this.x = Math.random() * w;
                 this.y = Math.random() * h;
                 this.r = 0;
-                this.maxR = 200 + Math.random() * 300;
-                this.speed = 1 + Math.random() * 2;
-                this.opacity = 0.3;
+                this.maxR = 400 + Math.random() * 400;
+                this.speed = 4 + Math.random() * 4;
+                this.opacity = 1.0;
             }
 
             update() {
                 this.r += this.speed;
-                this.opacity = 0.3 * (1 - this.r / this.maxR);
+                this.opacity = 1.0 * (1 - this.r / this.maxR);
             }
 
             draw(w: number, h: number, scrollOffset: number) {
@@ -109,8 +103,8 @@ export default function DigitalNetwork() {
 
                 ctx.beginPath();
                 ctx.arc(this.x, finalVisualY, this.r, 0, Math.PI * 2);
-                ctx.strokeStyle = `rgba(147, 51, 234, ${this.opacity})`;
-                ctx.lineWidth = 1;
+                ctx.strokeStyle = `rgba(192, 132, 252, ${this.opacity})`;
+                ctx.lineWidth = 4;
                 ctx.stroke();
             }
 
@@ -127,7 +121,7 @@ export default function DigitalNetwork() {
 
         const initParticles = () => {
             particles = [];
-            const count = Math.min(Math.floor((canvas.width * canvas.height) / 12000), 80);
+            const count = Math.min(Math.floor((canvas.width * canvas.height) / 4000), 200);
             for (let i = 0; i < count; i++) {
                 particles.push(new Particle(canvas.width, canvas.height));
             }
@@ -136,12 +130,11 @@ export default function DigitalNetwork() {
         const animate = () => {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            const scrollOffset = window.scrollY * 0.15;
+            const scrollOffset = window.scrollY * 0.3;
             const w = canvas.width;
             const h = canvas.height;
 
-            // Pulses
-            if (Math.random() < 0.005 && pulses.length < 2) {
+            if (Math.random() < 0.015 && pulses.length < 6) {
                 pulses.push(new Pulse(w, h));
             }
             pulses = pulses.filter(p => {
@@ -150,17 +143,18 @@ export default function DigitalNetwork() {
                 return !p.isDead();
             });
 
-            // Particles update
             particles.forEach(p => p.update(w, h, scrollOffset));
 
-            // Particles draw & connect
             particles.forEach((p, i) => {
                 const pos1 = p.getVisualPos(w, h, scrollOffset);
 
                 ctx.beginPath();
                 ctx.arc(pos1.x, pos1.y, p.size, 0, Math.PI * 2);
-                ctx.fillStyle = 'rgba(147, 51, 234, 0.4)';
+                ctx.fillStyle = 'rgba(232, 121, 249, 1)'; // Neon pink/purple
                 ctx.fill();
+
+                ctx.shadowBlur = 25;
+                ctx.shadowColor = 'rgba(232, 121, 249, 0.8)';
 
                 for (let j = i + 1; j < particles.length; j++) {
                     const p2 = particles[j];
@@ -170,15 +164,16 @@ export default function DigitalNetwork() {
                     const dy = pos1.y - pos2.y;
                     const dist = Math.sqrt(dx * dx + dy * dy);
 
-                    if (dist < 150) {
+                    if (dist < 280) {
                         ctx.beginPath();
                         ctx.moveTo(pos1.x, pos1.y);
                         ctx.lineTo(pos2.x, pos2.y);
-                        ctx.strokeStyle = `rgba(147, 51, 234, ${0.15 * (1 - dist / 150)})`;
-                        ctx.lineWidth = 0.5;
+                        ctx.strokeStyle = `rgba(232, 121, 249, ${0.7 * (1 - dist / 280)})`;
+                        ctx.lineWidth = 2;
                         ctx.stroke();
                     }
                 }
+                ctx.shadowBlur = 0;
             });
 
             animationFrameId = requestAnimationFrame(animate);
@@ -186,8 +181,8 @@ export default function DigitalNetwork() {
 
         const handleMove = (e: MouseEvent | TouchEvent) => {
             mouse.active = true;
-            const clientX = 'clientX' in e ? e.clientX : e.touches[0].clientX;
-            const clientY = 'clientY' in e ? e.clientY : e.touches[0].clientY;
+            const clientX = 'clientX' in e ? (e as any).clientX : (e as TouchEvent).touches[0].clientX;
+            const clientY = 'clientY' in e ? (e as any).clientY : (e as TouchEvent).touches[0].clientY;
             mouse.x = clientX;
             mouse.y = clientY;
         };
@@ -218,30 +213,38 @@ export default function DigitalNetwork() {
     return (
         <div
             ref={containerRef}
-            className="absolute inset-0 pointer-events-none -z-[1] overflow-hidden isolate"
+            className="absolute inset-0 pointer-events-none -z-10 overflow-hidden"
         >
             <div className="sticky top-0 left-0 w-full h-screen overflow-hidden">
-                {/* Architectural Grid */}
+                {/* Aurora Gradients - Extreme visibility */}
+                <div className="absolute inset-0 overflow-hidden opacity-100">
+                    <div className="absolute -top-[20%] -left-[10%] w-[100%] h-[100%] bg-purple-600/50 blur-[120px] rounded-full animate-pulse" style={{ animationDuration: '8s' }} />
+                    <div className="absolute top-[10%] -right-[10%] w-[90%] h-[90%] bg-blue-600/50 blur-[120px] rounded-full animate-pulse" style={{ animationDuration: '12s', animationDelay: '2s' }} />
+                    <div className="absolute bottom-[0%] left-[10%] w-[80%] h-[80%] bg-indigo-600/40 blur-[120px] rounded-full animate-pulse" style={{ animationDuration: '10s', animationDelay: '5s' }} />
+                    <div className="absolute top-[30%] left-[20%] w-[90%] h-[90%] bg-fuchsia-600/40 blur-[150px] rounded-full animate-pulse" style={{ animationDuration: '15s', animationDelay: '8s' }} />
+                </div>
+
+                {/* Architectural Grid - High Contrast */}
                 <div
-                    className="absolute inset-0 opacity-[0.03] dark:opacity-[0.06]"
+                    className="absolute inset-0 opacity-[0.5] dark:opacity-[0.6]"
                     style={{
                         backgroundImage: `
-                            linear-gradient(to right, currentColor 1px, transparent 1px),
-                            linear-gradient(to bottom, currentColor 1px, transparent 1px)
+                            linear-gradient(to right, rgba(232, 121, 249, 0.6) 2.5px, transparent 2.5px),
+                            linear-gradient(to bottom, rgba(232, 121, 249, 0.6) 2.5px, transparent 2.5px)
                         `,
-                        backgroundSize: '60px 60px',
+                        backgroundSize: '150px 150px',
                     }}
                 />
 
                 {/* Canvas Layer */}
                 <canvas
                     ref={canvasRef}
-                    className="absolute inset-0 block w-full h-full opacity-60 dark:opacity-80"
+                    className="absolute inset-0 block w-full h-full opacity-100"
                 />
 
                 {/* Smooth entry/exit overlays */}
-                <div className="absolute top-0 left-0 w-full h-40 bg-gradient-to-b from-background to-transparent" />
-                <div className="absolute bottom-0 left-0 w-full h-40 bg-gradient-to-t from-background to-transparent" />
+                <div className="absolute top-0 left-0 w-full h-[600px] bg-gradient-to-b from-background via-background/20 to-transparent" />
+                <div className="absolute bottom-0 left-0 w-full h-[600px] bg-gradient-to-t from-background via-background/20 to-transparent" />
             </div>
         </div>
     );

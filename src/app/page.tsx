@@ -17,7 +17,7 @@ export default function Home() {
       <Hero />
 
       {/* Interactive Global Background for middle sections */}
-      <div className="relative">
+      <div className="relative isolate">
         <DigitalNetwork />
         <TechStack />
         <About />
