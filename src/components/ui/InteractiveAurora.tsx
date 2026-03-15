@@ -77,7 +77,7 @@ const Blob = ({ color, size, initialX, initialY, duration, delay = 0, mouseX, mo
     return (
         <motion.div
             ref={blobRef}
-            className={`absolute rounded-full blur-[150px] mix-blend-screen opacity-20 dark:opacity-40 ${color}`}
+            className={`absolute rounded-full blur-[120px] mix-blend-screen opacity-40 dark:opacity-70 ${color}`}
             style={{
                 width: size,
                 height: size,
@@ -116,7 +116,7 @@ export default function InteractiveAurora() {
             if ('clientX' in e) {
                 mouseX.set(e.clientX);
                 mouseY.set(e.clientY);
-            } else if (e.touches.length > 0) {
+            } else if (e.touches && e.touches.length > 0) {
                 mouseX.set(e.touches[0].clientX);
                 mouseY.set(e.touches[0].clientY);
             }
@@ -134,12 +134,12 @@ export default function InteractiveAurora() {
     }, [mouseX, mouseY]);
 
     return (
-        <div className="absolute inset-0 overflow-hidden pointer-events-none -z-10">
+        <div className="absolute inset-0 overflow-hidden pointer-events-none -z-10 h-full">
             {/* Content-wide distribution of aurora blobs */}
 
             {/* Top Area */}
             <Blob
-                color="bg-purple-600/30"
+                color="bg-purple-500"
                 size="60vw"
                 initialX="-10%"
                 initialY="5%"
@@ -148,7 +148,7 @@ export default function InteractiveAurora() {
                 mouseY={mouseY}
             />
             <Blob
-                color="bg-blue-600/20"
+                color="bg-blue-500"
                 size="50vw"
                 initialX="60%"
                 initialY="15%"
@@ -160,7 +160,7 @@ export default function InteractiveAurora() {
 
             {/* Middle Area */}
             <Blob
-                color="bg-indigo-600/20"
+                color="bg-indigo-500"
                 size="70vw"
                 initialX="20%"
                 initialY="40%"
@@ -170,7 +170,7 @@ export default function InteractiveAurora() {
                 mouseY={mouseY}
             />
             <Blob
-                color="bg-fuchsia-600/10"
+                color="bg-fuchsia-500"
                 size="55vw"
                 initialX="-20%"
                 initialY="55%"
@@ -182,7 +182,7 @@ export default function InteractiveAurora() {
 
             {/* Lower Area */}
             <Blob
-                color="bg-cyan-600/20"
+                color="bg-cyan-500"
                 size="65vw"
                 initialX="50%"
                 initialY="75%"
@@ -192,7 +192,7 @@ export default function InteractiveAurora() {
                 mouseY={mouseY}
             />
             <Blob
-                color="bg-violet-600/20"
+                color="bg-violet-500"
                 size="50vw"
                 initialX="0%"
                 initialY="85%"
