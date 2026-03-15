@@ -93,7 +93,7 @@ export default function Contact() {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.2 }}
                 viewport={{ once: true }}
-                className="bg-foreground/5 border border-foreground/5 rounded-3xl p-8 md:p-12 backdrop-blur-sm"
+                className="bg-background/20 border border-foreground/5 rounded-3xl p-8 md:p-12 backdrop-blur-sm"
             >
                 {formState === 'success' ? (
                     <div className="flex flex-col items-center justify-center h-[300px] text-center">

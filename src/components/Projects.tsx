@@ -26,12 +26,12 @@ function Card({ project }: { project: typeof projects[0] }) {
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.9 }}
             transition={{ duration: 0.3 }}
-            className="group relative border border-foreground/10 rounded-2xl bg-card overflow-hidden flex flex-col h-full"
+            className="group relative border border-foreground/10 rounded-2xl bg-card/60 backdrop-blur-sm overflow-hidden flex flex-col h-full"
             onMouseMove={handleMouseMove}
             whileHover={{ y: -5 }}
         >
             {/* Project Image/Video Preview */}
-            <div className="relative h-48 w-full overflow-hidden bg-foreground/5">
+            <div className="relative h-48 w-full overflow-hidden bg-foreground/10">
                 {project.image && (
                     <Image
                         src={project.image}
