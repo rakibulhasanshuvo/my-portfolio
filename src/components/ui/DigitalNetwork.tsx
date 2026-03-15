@@ -21,56 +21,62 @@ export default function DigitalNetwork() {
         class Particle {
             x: number;
             y: number;
-            baseX: number;
-            baseY: number;
             vx: number;
             vy: number;
             size: number;
+            // Displacement for push effect
+            dx: number = 0;
+            dy: number = 0;
 
             constructor(w: number, h: number) {
                 this.x = Math.random() * w;
                 this.y = Math.random() * h;
-                this.baseX = this.x;
-                this.baseY = this.y;
                 this.vx = (Math.random() - 0.5) * 0.3;
                 this.vy = (Math.random() - 0.5) * 0.3;
                 this.size = Math.random() * 1.5 + 0.5;
             }
 
-            update(w: number, h: number) {
-                // Drift
-                this.baseX += this.vx;
-                this.baseY += this.vy;
+            update(w: number, h: number, scrollOffset: number) {
+                // Autonomous drift
+                this.x += this.vx;
+                this.y += this.vy;
 
-                if (this.baseX < 0 || this.baseX > w) this.vx *= -1;
-                if (this.baseY < 0 || this.baseY > h) this.vy *= -1;
+                // Wrap around edges
+                if (this.x < 0) this.x = w;
+                if (this.x > w) this.x = 0;
+                if (this.y < 0) this.y = h;
+                if (this.y > h) this.y = 0;
 
-                this.x = this.baseX;
-                this.y = this.baseY;
+                // Calculate visual position (parallax)
+                const visualY = (this.y - scrollOffset) % h;
+                const finalVisualY = visualY < 0 ? visualY + h : visualY;
 
-                // Push effect
+                // Push effect based on visual position
                 if (mouse.active) {
-                    const dx = this.x - mouse.x;
-                    const dy = this.y - mouse.y;
-                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    const diffX = this.x - mouse.x;
+                    const diffY = finalVisualY - mouse.y;
+                    const distance = Math.sqrt(diffX * diffX + diffY * diffY);
                     const forceRadius = 150;
 
                     if (distance < forceRadius) {
                         const force = (forceRadius - distance) / forceRadius;
-                        const directionX = dx / distance;
-                        const directionY = dy / distance;
-                        this.x += directionX * force * 50;
-                        this.y += directionY * force * 50;
+                        this.dx += (diffX / distance) * force * 5;
+                        this.dy += (diffY / distance) * force * 5;
                     }
                 }
+
+                // Friction for push displacement
+                this.dx *= 0.9;
+                this.dy *= 0.9;
             }
 
-            draw() {
-                if (!ctx) return;
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fillStyle = 'rgba(147, 51, 234, 0.4)';
-                ctx.fill();
+            getVisualPos(w: number, h: number, scrollOffset: number) {
+                const visualY = (this.y - scrollOffset) % h;
+                const finalVisualY = visualY < 0 ? visualY + h : visualY;
+                return {
+                    x: this.x + this.dx,
+                    y: finalVisualY + this.dy
+                };
             }
         }
 
@@ -96,10 +102,13 @@ export default function DigitalNetwork() {
                 this.opacity = 0.3 * (1 - this.r / this.maxR);
             }
 
-            draw() {
+            draw(w: number, h: number, scrollOffset: number) {
                 if (!ctx) return;
+                const visualY = (this.y - scrollOffset) % h;
+                const finalVisualY = visualY < 0 ? visualY + h : visualY;
+
                 ctx.beginPath();
-                ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+                ctx.arc(this.x, finalVisualY, this.r, 0, Math.PI * 2);
                 ctx.strokeStyle = `rgba(147, 51, 234, ${this.opacity})`;
                 ctx.lineWidth = 1;
                 ctx.stroke();
@@ -111,7 +120,6 @@ export default function DigitalNetwork() {
         }
 
         const resize = () => {
-            // We use fixed sizing based on viewport to avoid massive canvas
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
             initParticles();
@@ -119,8 +127,7 @@ export default function DigitalNetwork() {
 
         const initParticles = () => {
             particles = [];
-            // Reasonable number of particles for performance
-            const count = Math.min(Math.floor((canvas.width * canvas.height) / 10000), 100);
+            const count = Math.min(Math.floor((canvas.width * canvas.height) / 12000), 80);
             for (let i = 0; i < count; i++) {
                 particles.push(new Particle(canvas.width, canvas.height));
             }
@@ -129,33 +136,44 @@ export default function DigitalNetwork() {
         const animate = () => {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            // Update and draw pulses
-            if (Math.random() < 0.01 && pulses.length < 3) {
-                pulses.push(new Pulse(canvas.width, canvas.height));
-            }
+            const scrollOffset = window.scrollY * 0.15;
+            const w = canvas.width;
+            const h = canvas.height;
 
+            // Pulses
+            if (Math.random() < 0.005 && pulses.length < 2) {
+                pulses.push(new Pulse(w, h));
+            }
             pulses = pulses.filter(p => {
                 p.update();
-                p.draw();
+                p.draw(w, h, scrollOffset);
                 return !p.isDead();
             });
 
-            // Update and draw particles
-            particles.forEach((p, i) => {
-                p.update(canvas.width, canvas.height);
-                p.draw();
+            // Particles update
+            particles.forEach(p => p.update(w, h, scrollOffset));
 
-                // Optimized connection logic (limited radius and connections)
+            // Particles draw & connect
+            particles.forEach((p, i) => {
+                const pos1 = p.getVisualPos(w, h, scrollOffset);
+
+                ctx.beginPath();
+                ctx.arc(pos1.x, pos1.y, p.size, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(147, 51, 234, 0.4)';
+                ctx.fill();
+
                 for (let j = i + 1; j < particles.length; j++) {
                     const p2 = particles[j];
-                    const dx = p.x - p2.x;
-                    const dy = p.y - p2.y;
+                    const pos2 = p2.getVisualPos(w, h, scrollOffset);
+
+                    const dx = pos1.x - pos2.x;
+                    const dy = pos1.y - pos2.y;
                     const dist = Math.sqrt(dx * dx + dy * dy);
 
                     if (dist < 150) {
                         ctx.beginPath();
-                        ctx.moveTo(p.x, p.y);
-                        ctx.lineTo(p2.x, p2.y);
+                        ctx.moveTo(pos1.x, pos1.y);
+                        ctx.lineTo(pos2.x, pos2.y);
                         ctx.strokeStyle = `rgba(147, 51, 234, ${0.15 * (1 - dist / 150)})`;
                         ctx.lineWidth = 0.5;
                         ctx.stroke();
@@ -202,28 +220,29 @@ export default function DigitalNetwork() {
             ref={containerRef}
             className="absolute inset-0 pointer-events-none -z-[1] overflow-hidden isolate"
         >
-            {/* Architectural Grid Background - Uses standard CSS pattern */}
-            <div
-                className="absolute inset-0 opacity-[0.03] dark:opacity-[0.06] -z-20"
-                style={{
-                    backgroundImage: `
-                        linear-gradient(to right, currentColor 1px, transparent 1px),
-                        linear-gradient(to bottom, currentColor 1px, transparent 1px)
-                    `,
-                    backgroundSize: '60px 60px',
-                    maskImage: 'radial-gradient(ellipse at center, black, transparent 80%)',
-                    WebkitMaskImage: 'radial-gradient(ellipse at center, black, transparent 80%)',
-                }}
-            />
+            <div className="sticky top-0 left-0 w-full h-screen overflow-hidden">
+                {/* Architectural Grid */}
+                <div
+                    className="absolute inset-0 opacity-[0.03] dark:opacity-[0.06]"
+                    style={{
+                        backgroundImage: `
+                            linear-gradient(to right, currentColor 1px, transparent 1px),
+                            linear-gradient(to bottom, currentColor 1px, transparent 1px)
+                        `,
+                        backgroundSize: '60px 60px',
+                    }}
+                />
 
-            {/* Canvas Particle Layer - Fixed position with lowest possible z-index */}
-            <canvas
-                ref={canvasRef}
-                className="fixed inset-0 block h-screen w-screen -z-30 opacity-60 dark:opacity-80"
-            />
+                {/* Canvas Layer */}
+                <canvas
+                    ref={canvasRef}
+                    className="absolute inset-0 block w-full h-full opacity-60 dark:opacity-80"
+                />
 
-            {/* Subtle Gradient Overlay for depth and smoothing edges */}
-            <div className="absolute inset-0 bg-gradient-to-b from-background via-transparent to-background -z-10" />
+                {/* Smooth entry/exit overlays */}
+                <div className="absolute top-0 left-0 w-full h-40 bg-gradient-to-b from-background to-transparent" />
+                <div className="absolute bottom-0 left-0 w-full h-40 bg-gradient-to-t from-background to-transparent" />
+            </div>
         </div>
     );
 }
