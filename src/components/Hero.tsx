@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { useCallback } from 'react';
+import type { Application } from '@splinetool/runtime';
 import AuroraBackground from './ui/AuroraBackground';
 import SplineScene from './ui/SplineScene';
 import { profile } from '@/data/profile';
@@ -9,9 +10,9 @@ import { profile } from '@/data/profile';
 const skills = profile.hero.skills;
 
 export default function Hero() {
-    const name = "Rakibul Hasan Shuvo".split("");
+    const words = "Rakibul Hasan Shuvo".split(" ");
 
-    const handleSplineLoad = useCallback((spline: any) => {
+    const handleSplineLoad = useCallback((spline: Application) => {
         // Find and hide all objects that appear to be text
         // Based on the scene URL, it has "Clarity. Focus. Impact." and subtext
         const objectsToHide = [
@@ -58,21 +59,33 @@ export default function Hero() {
             {/* Main Heading */}
             <h1 className="text-6xl md:text-[120px] font-extrabold text-center leading-[0.9] tracking-tighter mb-8 z-10 relative text-foreground uppercase italic">
                 <span className="absolute inset-0 blur-3xl bg-purple-500/20 rounded-full -z-10" />
-                {name.map((char, i) => (
-                    <motion.span
-                        key={i}
-                        initial={{ opacity: 0, y: 100, rotateX: -90 }}
-                        animate={{ opacity: 1, y: 0, rotateX: 0 }}
-                        transition={{
-                            duration: 1,
-                            delay: i * 0.03,
-                            ease: [0.16, 1, 0.3, 1]
-                        }}
-                        className="inline-block"
-                    >
-                        {char === " " ? "\u00A0" : char}
-                    </motion.span>
-                ))}
+                {words.map((word, wordIndex) => {
+                    // Calculate global character index for consistent staggered animation
+                    const prevWordsLength = words.slice(0, wordIndex).join("").length + wordIndex;
+
+                    return (
+                        <span key={wordIndex} className="inline-block whitespace-nowrap">
+                            {word.split("").map((char, charIndex) => (
+                                <motion.span
+                                    key={charIndex}
+                                    initial={{ opacity: 0, y: 100, rotateX: -90 }}
+                                    animate={{ opacity: 1, y: 0, rotateX: 0 }}
+                                    transition={{
+                                        duration: 1,
+                                        delay: (prevWordsLength + charIndex) * 0.03,
+                                        ease: [0.16, 1, 0.3, 1]
+                                    }}
+                                    className="inline-block"
+                                >
+                                    {char}
+                                </motion.span>
+                            ))}
+                            {wordIndex < words.length - 1 && (
+                                <span className="inline-block">&nbsp;</span>
+                            )}
+                        </span>
+                    );
+                })}
             </h1>
 
             {/* Subtext */}

@@ -2,6 +2,7 @@
 
 import React from 'react';
 import dynamic from 'next/dynamic';
+import type { Application } from '@splinetool/runtime';
 
 const Spline = dynamic(() => import('@splinetool/react-spline'), {
     ssr: false,
@@ -11,7 +12,7 @@ const Spline = dynamic(() => import('@splinetool/react-spline'), {
 interface SplineSceneProps {
     scene: string;
     className?: string;
-    onLoad?: (spline: any) => void;
+    onLoad?: (spline: Application) => void;
 }
 
 export default function SplineScene({ scene, className, onLoad }: SplineSceneProps) {

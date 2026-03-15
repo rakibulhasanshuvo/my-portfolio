@@ -1,40 +1,8 @@
 'use client';
 
-import { Github, Linkedin, Mail, Twitter } from 'lucide-react';
+import { Github, Linkedin, Mail, Instagram, Facebook } from 'lucide-react';
 import { profile } from '@/data/profile';
-
-const FiverrIcon = ({ size = 20 }: { size?: number }) => (
-    <svg
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        width={size}
-        height={size}
-    >
-        <path d="M15 3h-2a5 5 0 0 0-5 5v2H5v4h3v10h4V14h4l1-4h-5V8a1 1 0 0 1 1-1h2" />
-        <circle cx="19" cy="14" r="1" fill="currentColor" stroke="none" />
-    </svg>
-);
-
-const UpworkIcon = ({ size = 20 }: { size?: number }) => (
-    <svg
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        width={size}
-        height={size}
-    >
-        <path d="M6 3v7a3 3 0 0 0 6 0V3" />
-        <path d="M12 10c0 4 1 7.5 3 10" />
-        <circle cx="18" cy="11" r="4" />
-    </svg>
-);
+import { XIcon, FiverrIcon, UpworkIcon } from '@/components/ui/Icons';
 
 export default function Footer() {
     const social = profile.social;
@@ -74,6 +42,24 @@ export default function Footer() {
                         <Github size={20} />
                     </a>
                     <a
+                        href={social.facebook}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-white/40 hover:text-white transition-colors"
+                        aria-label="Facebook"
+                    >
+                        <Facebook size={20} />
+                    </a>
+                    <a
+                        href={social.instagram}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-white/40 hover:text-white transition-colors"
+                        aria-label="Instagram"
+                    >
+                        <Instagram size={20} />
+                    </a>
+                    <a
                         href={social.upwork}
                         target="_blank"
                         rel="noopener noreferrer"
@@ -96,9 +82,9 @@ export default function Footer() {
                         target="_blank"
                         rel="noopener noreferrer"
                         className="text-white/40 hover:text-white transition-colors"
-                        aria-label="Twitter"
+                        aria-label="X (Twitter)"
                     >
-                        <Twitter size={20} />
+                        <XIcon size={18} />
                     </a>
                     <a
                         href={`mailto:${profile.email}`}

@@ -13,7 +13,14 @@ export function ShareButtons({ title }: ShareButtonsProps) {
     const [url, setUrl] = useState('');
 
     useEffect(() => {
-        setUrl(window.location.href);
+        if (typeof window !== 'undefined') {
+            const currentUrl = window.location.href;
+            // Use requestAnimationFrame or setTimeout to move setState out of the synchronous effect body
+            // to satisfy the strict lint rule while still capturing the client-side URL
+            requestAnimationFrame(() => {
+                setUrl(currentUrl);
+            });
+        }
     }, []);
 
     const shareData = {
@@ -22,8 +29,9 @@ export function ShareButtons({ title }: ShareButtonsProps) {
     };
 
     const copyToClipboard = async () => {
+        const currentUrl = url || (typeof window !== 'undefined' ? window.location.href : '');
         try {
-            await navigator.clipboard.writeText(url);
+            await navigator.clipboard.writeText(currentUrl);
             setCopied(true);
             setTimeout(() => setCopied(false), 2000);
         } catch (err) {

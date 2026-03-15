@@ -24,10 +24,11 @@ export const profile = {
     social: {
         linkedin: "https://www.linkedin.com/in/muhammad-rakibul-hasan-shuvo-5783363a0",
         github: "https://github.com/rakibulhasanshuvo",
-        twitter: "https://twitter.com/",
+        twitter: "https://x.com/Rakibulhasan_45",
         fiverr: "https://www.fiverr.com/hasan_shuvo_45",
         upwork: "https://www.upwork.com/freelancers/~01be148467895f438a",
-        instagram: "#"
+        instagram: "https://www.instagram.com/m.rakibul.h45/",
+        facebook: "#"
     },
 
     // Hero Section
