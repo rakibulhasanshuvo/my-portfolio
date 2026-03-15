@@ -9,7 +9,7 @@ import FAQ from '@/components/FAQ';
 import Testimonials from '@/components/Testimonials';
 import Contact from '@/components/Contact';
 import Footer from '@/components/Footer';
-import InteractiveAurora from '@/components/ui/InteractiveAurora';
+import DigitalNetwork from '@/components/ui/DigitalNetwork';
 
 export default function Home() {
   return (
@@ -18,7 +18,7 @@ export default function Home() {
 
       {/* Interactive Global Background for middle sections */}
       <div className="relative">
-        <InteractiveAurora />
+        <DigitalNetwork />
         <TechStack />
         <About />
         <Services />
