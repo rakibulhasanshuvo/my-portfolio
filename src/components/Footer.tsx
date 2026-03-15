@@ -1,15 +1,44 @@
 'use client';
 
 import { Github, Linkedin, Mail, Twitter } from 'lucide-react';
+import { profile } from '@/data/profile';
 
-const SOCIAL_LINKS = {
-    linkedin: 'https://www.linkedin.com/in/muhammad-rakibul-hasan-shuvo-5783363a0',
-    github: 'https://github.com/',
-    twitter: 'https://twitter.com/',
-    email: 'm.rakibul.h45@gmail.com'
-};
+const FiverrIcon = ({ size = 20 }: { size?: number }) => (
+    <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        width={size}
+        height={size}
+    >
+        <path d="M15 3h-2a5 5 0 0 0-5 5v2H5v4h3v10h4V14h4l1-4h-5V8a1 1 0 0 1 1-1h2" />
+        <circle cx="19" cy="14" r="1" fill="currentColor" stroke="none" />
+    </svg>
+);
+
+const UpworkIcon = ({ size = 20 }: { size?: number }) => (
+    <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        width={size}
+        height={size}
+    >
+        <path d="M6 3v7a3 3 0 0 0 6 0V3" />
+        <path d="M12 10c0 4 1 7.5 3 10" />
+        <circle cx="18" cy="11" r="4" />
+    </svg>
+);
 
 export default function Footer() {
+    const social = profile.social;
+
     return (
         <footer className="py-12 px-6 border-t border-white/5 bg-black/50 backdrop-blur-sm mt-20">
             <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
@@ -21,13 +50,13 @@ export default function Footer() {
 
                 {/* Copyright */}
                 <div className="text-sm text-white/40">
-                    © {new Date().getFullYear()} Rakibul Hasan Shuvo. All rights reserved.
+                    © {new Date().getFullYear()} {profile.name}. All rights reserved.
                 </div>
 
                 {/* Social Links */}
                 <div className="flex items-center gap-6">
                     <a
-                        href={SOCIAL_LINKS.linkedin}
+                        href={social.linkedin}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="text-white/40 hover:text-white transition-colors"
@@ -36,7 +65,7 @@ export default function Footer() {
                         <Linkedin size={20} />
                     </a>
                     <a
-                        href={SOCIAL_LINKS.github}
+                        href={social.github}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="text-white/40 hover:text-white transition-colors"
@@ -45,7 +74,25 @@ export default function Footer() {
                         <Github size={20} />
                     </a>
                     <a
-                        href={SOCIAL_LINKS.twitter}
+                        href={social.upwork}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-white/40 hover:text-white transition-colors"
+                        aria-label="Upwork"
+                    >
+                        <UpworkIcon size={20} />
+                    </a>
+                    <a
+                        href={social.fiverr}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-white/40 hover:text-white transition-colors"
+                        aria-label="Fiverr"
+                    >
+                        <FiverrIcon size={20} />
+                    </a>
+                    <a
+                        href={social.twitter}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="text-white/40 hover:text-white transition-colors"
@@ -54,7 +101,7 @@ export default function Footer() {
                         <Twitter size={20} />
                     </a>
                     <a
-                        href={`mailto:${SOCIAL_LINKS.email}`}
+                        href={`mailto:${profile.email}`}
                         className="text-white/40 hover:text-white transition-colors"
                         aria-label="Email"
                     >

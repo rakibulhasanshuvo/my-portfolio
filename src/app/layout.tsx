@@ -83,6 +83,7 @@ export default function RootLayout({
           <LoadingScreen />
           <CustomCursor />
           <Navbar />
+          <div className="noise-bg" />
           {children}
         </ThemeProvider>
       </body>

@@ -25,6 +25,8 @@ export const profile = {
         linkedin: "https://www.linkedin.com/in/muhammad-rakibul-hasan-shuvo-5783363a0",
         github: "https://github.com/rakibulhasanshuvo",
         twitter: "https://twitter.com/",
+        fiverr: "https://www.fiverr.com/hasan_shuvo_45",
+        upwork: "https://www.upwork.com/freelancers/~01be148467895f438a",
         instagram: "#"
     },
 
