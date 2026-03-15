@@ -200,11 +200,11 @@ export default function DigitalNetwork() {
     return (
         <div
             ref={containerRef}
-            className="absolute inset-0 pointer-events-none -z-10 overflow-hidden"
+            className="absolute inset-0 pointer-events-none -z-[1] overflow-hidden isolate"
         >
             {/* Architectural Grid Background - Uses standard CSS pattern */}
             <div
-                className="absolute inset-0 opacity-[0.05] dark:opacity-[0.1]"
+                className="absolute inset-0 opacity-[0.03] dark:opacity-[0.06] -z-20"
                 style={{
                     backgroundImage: `
                         linear-gradient(to right, currentColor 1px, transparent 1px),
@@ -216,14 +216,14 @@ export default function DigitalNetwork() {
                 }}
             />
 
-            {/* Canvas Particle Layer - Fixed position to avoid massive canvas size */}
+            {/* Canvas Particle Layer - Fixed position with lowest possible z-index */}
             <canvas
                 ref={canvasRef}
-                className="fixed inset-0 block h-screen w-screen"
+                className="fixed inset-0 block h-screen w-screen -z-30 opacity-60 dark:opacity-80"
             />
 
             {/* Subtle Gradient Overlay for depth and smoothing edges */}
-            <div className="absolute inset-0 bg-gradient-to-b from-background via-transparent to-background" />
+            <div className="absolute inset-0 bg-gradient-to-b from-background via-transparent to-background -z-10" />
         </div>
     );
 }
