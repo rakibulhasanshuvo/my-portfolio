@@ -5,11 +5,10 @@ import { useState, FormEvent, useRef } from 'react';
 import { Send, CheckCircle, Loader2, AlertCircle } from 'lucide-react';
 import emailjs from '@emailjs/browser';
 
-// ⚠️ IMPORTANT: Replace these with your actual EmailJS credentials
-// Get them from: https://www.emailjs.com/
-const EMAILJS_SERVICE_ID = 'YOUR_SERVICE_ID';  // e.g., 'service_abc123'
-const EMAILJS_TEMPLATE_ID = 'YOUR_TEMPLATE_ID'; // e.g., 'template_xyz789'
-const EMAILJS_PUBLIC_KEY = 'YOUR_PUBLIC_KEY';   // e.g., 'AbCdEfGhIjKlMnOp'
+// EmailJS Configuration using environment variables
+const EMAILJS_SERVICE_ID = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID || '';
+const EMAILJS_TEMPLATE_ID = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID || '';
+const EMAILJS_PUBLIC_KEY = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY || '';
 
 import { profile } from '@/data/profile';
 
@@ -29,7 +28,9 @@ export default function Contact() {
         setErrorMessage('');
 
         // Check if EmailJS is configured
-        if (EMAILJS_SERVICE_ID === 'YOUR_SERVICE_ID') {
+        const isEmailJSConfigured = EMAILJS_SERVICE_ID && EMAILJS_TEMPLATE_ID && EMAILJS_PUBLIC_KEY;
+
+        if (!isEmailJSConfigured) {
             // Fallback to mailto if EmailJS not configured
             const formData = new FormData(formRef.current);
             const name = formData.get('user_name') as string;
@@ -50,7 +51,9 @@ export default function Contact() {
                 EMAILJS_SERVICE_ID,
                 EMAILJS_TEMPLATE_ID,
                 formRef.current,
-                EMAILJS_PUBLIC_KEY
+                {
+                    publicKey: EMAILJS_PUBLIC_KEY,
+                }
             );
             setFormState('success');
         } catch (error) {
