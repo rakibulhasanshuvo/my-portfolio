@@ -25,13 +25,13 @@ Go to [https://www.emailjs.com/](https://www.emailjs.com/) and sign up (free tie
 1. Go to **Account** → **General**
 2. Copy your **Public Key**
 
-### 5. Update Your Code
-Open `src/components/Contact.tsx` and replace:
+### 5. Update Your Credentials
+Create a `.env.local` file in the root directory (or update your environment variables in deployment) and add the following:
 
-```typescript
-const EMAILJS_SERVICE_ID = 'YOUR_SERVICE_ID';   // Replace with your Service ID
-const EMAILJS_TEMPLATE_ID = 'YOUR_TEMPLATE_ID'; // Replace with your Template ID
-const EMAILJS_PUBLIC_KEY = 'YOUR_PUBLIC_KEY';   // Replace with your Public Key
+```env
+NEXT_PUBLIC_EMAILJS_SERVICE_ID=your_service_id
+NEXT_PUBLIC_EMAILJS_TEMPLATE_ID=your_template_id
+NEXT_PUBLIC_EMAILJS_PUBLIC_KEY=your_public_key
 ```
 
 ## ✅ Done!
