@@ -5,6 +5,8 @@ import { motion } from 'framer-motion';
 import { profile } from '@/data/profile';
 
 const technologies = profile.techStack;
+const firstRowTechnologies = [...technologies, ...technologies, ...technologies];
+const secondRowTechnologies = [...technologies.slice().reverse(), ...technologies, ...technologies];
 
 const firstRowTechnologies = [...technologies, ...technologies, ...technologies];
 const secondRowTechnologies = [...technologies.slice().reverse(), ...technologies, ...technologies];
