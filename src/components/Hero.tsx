@@ -31,7 +31,10 @@ export default function Hero() {
         });
 
         // Debug: log all object names to console if we still see text
-        console.log(spline.getAllObjects().map((o: any) => o.name));
+        if (process.env.NODE_ENV === 'development') {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            console.log(spline.getAllObjects().map((o: any) => o.name));
+        }
     }, []);
 
     return (
