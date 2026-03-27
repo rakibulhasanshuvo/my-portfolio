@@ -1,69 +1,64 @@
-import { describe, it, expect } from 'vitest';
+import { expect, test, describe } from 'vitest';
 import sitemap from './sitemap';
 import { profile } from '@/data/profile';
 import { blogPosts } from '@/data/blog';
 
 describe('sitemap', () => {
-    it('generates the correct sitemap URLs and metadata', () => {
-        const generatedSitemap = sitemap();
-        const baseUrl = 'https://rakibul.dev';
+    test('should generate the correct number of URLs', () => {
+        const result = sitemap();
+        const expectedLength = 2 + profile.projects.length + blogPosts.length;
+        expect(result).toHaveLength(expectedLength);
+    });
 
-        // Check base structure
-        expect(Array.isArray(generatedSitemap)).toBe(true);
+    test('should include standard static routes', () => {
+        const result = sitemap();
 
-        // Define expected URLs
-        const expectedBaseRoutes = [
-            { url: baseUrl, changeFrequency: 'yearly', priority: 1 },
-            { url: `${baseUrl}/blog`, changeFrequency: 'weekly', priority: 0.8 },
-        ];
+        const homeRoute = result.find(route => route.url === 'https://rakibul.dev');
+        expect(homeRoute).toBeDefined();
+        expect(homeRoute).toEqual({
+            url: 'https://rakibul.dev',
+            lastModified: expect.any(Date),
+            changeFrequency: 'yearly',
+            priority: 1,
+        });
 
-        const expectedProjectRoutes = profile.projects.map((project) => ({
-            url: `${baseUrl}/work/${project.id}`,
-            changeFrequency: 'monthly',
-            priority: 0.8,
-        }));
-
-        const expectedBlogRoutes = blogPosts.map((post) => ({
-            url: `${baseUrl}/blog/${post.slug}`,
+        const blogRoute = result.find(route => route.url === 'https://rakibul.dev/blog');
+        expect(blogRoute).toBeDefined();
+        expect(blogRoute).toEqual({
+            url: 'https://rakibul.dev/blog',
+            lastModified: expect.any(Date),
             changeFrequency: 'weekly',
-            priority: 0.7,
-        }));
-
-        const totalExpectedCount = expectedBaseRoutes.length + expectedProjectRoutes.length + expectedBlogRoutes.length;
-
-        // Verify length dynamically matches data
-        expect(generatedSitemap).toHaveLength(totalExpectedCount);
-
-        // Helper to check standard properties of a sitemap entry
-        const verifyEntry = (
-            entry: any,
-            expectedUrl: string,
-            expectedChangeFreq: string,
-            expectedPriority: number
-        ) => {
-            expect(entry).toBeDefined();
-            expect(entry.url).toBe(expectedUrl);
-            expect(entry.changeFrequency).toBe(expectedChangeFreq);
-            expect(entry.priority).toBe(expectedPriority);
-            expect(entry.lastModified).toBeInstanceOf(Date);
-        };
-
-        // Check base routes
-        verifyEntry(generatedSitemap[0], expectedBaseRoutes[0].url, expectedBaseRoutes[0].changeFrequency, expectedBaseRoutes[0].priority);
-        verifyEntry(generatedSitemap[1], expectedBaseRoutes[1].url, expectedBaseRoutes[1].changeFrequency, expectedBaseRoutes[1].priority);
-
-        // Check project routes (offset by 2 base routes)
-        profile.projects.forEach((project, index) => {
-            const entryIndex = index + 2;
-            const entry = generatedSitemap[entryIndex];
-            verifyEntry(entry, expectedProjectRoutes[index].url, expectedProjectRoutes[index].changeFrequency, expectedProjectRoutes[index].priority);
+            priority: 0.8,
         });
+    });
 
-        // Check blog routes (offset by 2 base routes + projects.length)
-        blogPosts.forEach((post, index) => {
-            const entryIndex = index + 2 + profile.projects.length;
-            const entry = generatedSitemap[entryIndex];
-            verifyEntry(entry, expectedBlogRoutes[index].url, expectedBlogRoutes[index].changeFrequency, expectedBlogRoutes[index].priority);
-        });
+    test('should include dynamic project routes', () => {
+        const result = sitemap();
+
+        for (const project of profile.projects) {
+            const projectRoute = result.find(route => route.url === `https://rakibul.dev/work/${project.id}`);
+            expect(projectRoute).toBeDefined();
+            expect(projectRoute).toEqual({
+                url: `https://rakibul.dev/work/${project.id}`,
+                lastModified: expect.any(Date),
+                changeFrequency: 'monthly',
+                priority: 0.8,
+            });
+        }
+    });
+
+    test('should include dynamic blog routes', () => {
+        const result = sitemap();
+
+        for (const post of blogPosts) {
+            const blogRoute = result.find(route => route.url === `https://rakibul.dev/blog/${post.slug}`);
+            expect(blogRoute).toBeDefined();
+            expect(blogRoute).toEqual({
+                url: `https://rakibul.dev/blog/${post.slug}`,
+                lastModified: expect.any(Date),
+                changeFrequency: 'weekly',
+                priority: 0.7,
+            });
+        }
     });
 });
