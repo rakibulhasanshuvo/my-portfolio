@@ -1,21 +1,9 @@
 'use client';
 
 import Script from 'next/script';
-import { usePathname } from 'next/navigation';
-import { useEffect } from 'react';
 
 // Placeholder for Google Analytics or other scripts
 export default function Analytics() {
-    const pathname = usePathname();
-    // const searchParams = useSearchParams();
-
-    useEffect(() => {
-        // if (pathname) {
-        //     console.log(`Page view: ${pathname}`);
-        //     // Trigger analytics event here
-        // }
-    }, [pathname]);
-
     // Don't render scripts if ID is missing or invalid
     const GA_ID = 'G-XXXXXXXXXX'; // Replace with real ID
     if (GA_ID === 'G-XXXXXXXXXX') {
