@@ -102,6 +102,7 @@ export default function MobileNav() {
                                     <Link
                                         href="/resume.pdf"
                                         target="_blank"
+                                        rel="noopener noreferrer"
                                         className="text-lg font-medium text-foreground/50 hover:text-foreground transition-colors"
                                     >
                                         View Resume
