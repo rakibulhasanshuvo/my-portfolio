@@ -8,6 +8,7 @@ import SplineScene from './ui/SplineScene';
 import { profile } from '@/data/profile';
 
 const skills = profile.hero.skills;
+const duplicatedSkills = [...skills, ...skills, ...skills];
 
 export default function Hero() {
     const words = "Rakibul Hasan Shuvo".split(" ");
@@ -112,7 +113,7 @@ export default function Hero() {
                         duration: 35
                     }}
                 >
-                    {[...skills, ...skills, ...skills].map((skill, index) => (
+                    {duplicatedSkills.map((skill, index) => (
                         <motion.div
                             key={index}
                             animate={{
