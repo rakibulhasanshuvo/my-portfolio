@@ -6,6 +6,8 @@ import { ExternalLink, Github, Play } from 'lucide-react';
 
 import { profile } from '@/data/profile';
 const projects = profile.projects;
+const categories = ['All', ...Array.from(new Set(projects.map(p => p.category)))];
+
 import Link from 'next/link';
 import Image from 'next/image';
 
@@ -111,7 +113,6 @@ function Card({ project }: { project: typeof projects[0] }) {
 
 export default function Projects() {
     const [filter, setFilter] = useState('All');
-    const categories = ['All', ...Array.from(new Set(projects.map(p => p.category)))];
 
     const filteredProjects = filter === 'All'
         ? projects
