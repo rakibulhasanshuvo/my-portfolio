@@ -74,6 +74,7 @@ export default function About() {
                     <a
                         href="/resume.pdf"
                         target="_blank"
+                        rel="noopener noreferrer"
                         className="inline-flex items-center gap-2 px-6 py-3 bg-foreground text-background font-bold rounded-full hover:opacity-90 transition-opacity"
                     >
                         <Download size={18} />
