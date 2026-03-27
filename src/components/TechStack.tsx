@@ -5,6 +5,8 @@ import { motion } from 'framer-motion';
 import { profile } from '@/data/profile';
 
 const technologies = profile.techStack;
+const firstRowTechnologies = [...technologies, ...technologies, ...technologies];
+const secondRowTechnologies = [...technologies.slice().reverse(), ...technologies, ...technologies];
 
 export default function TechStack() {
     return (
@@ -24,7 +26,7 @@ export default function TechStack() {
                             },
                         }}
                     >
-                        {[...technologies, ...technologies, ...technologies].map((tech, i) => (
+                        {firstRowTechnologies.map((tech, i) => (
                             <div
                                 key={i}
                                 className="flex items-center gap-3 px-6 py-3 bg-foreground/5 border border-foreground/5 rounded-full hover:bg-foreground/10 transition-colors cursor-default"
@@ -50,7 +52,7 @@ export default function TechStack() {
                             },
                         }}
                     >
-                        {[...technologies.slice().reverse(), ...technologies, ...technologies].map((tech, i) => (
+                        {secondRowTechnologies.map((tech, i) => (
                             <div
                                 key={i}
                                 className="flex items-center gap-3 px-6 py-3 bg-foreground/5 border border-foreground/5 rounded-full hover:bg-foreground/10 transition-colors cursor-default"
