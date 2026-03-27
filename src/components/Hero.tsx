@@ -31,7 +31,7 @@ export default function Hero() {
         });
 
         // Debug: log all object names to console if we still see text
-        // console.log(spline.getAllObjects().map((o: any) => o.name));
+        console.log(spline.getAllObjects().map((o: any) => o.name));
     }, []);
 
     return (
