@@ -6,6 +6,9 @@ import { profile } from '@/data/profile';
 
 const technologies = profile.techStack;
 
+const firstRowTechnologies = [...technologies, ...technologies, ...technologies];
+const secondRowTechnologies = [...technologies.slice().reverse(), ...technologies, ...technologies];
+
 export default function TechStack() {
     return (
         <section className="py-20 overflow-hidden border-y border-foreground/5">
@@ -24,9 +27,9 @@ export default function TechStack() {
                             },
                         }}
                     >
-                        {[...technologies, ...technologies, ...technologies].map((tech, i) => (
+                        {firstRowTechnologies.map((tech, i) => (
                             <div
-                                key={i}
+                                key={`${tech.name}-${i}`}
                                 className="flex items-center gap-3 px-6 py-3 bg-foreground/5 border border-foreground/5 rounded-full hover:bg-foreground/10 transition-colors cursor-default"
                             >
                                 <span className="text-xl">{tech.icon}</span>
@@ -50,9 +53,9 @@ export default function TechStack() {
                             },
                         }}
                     >
-                        {[...technologies.slice().reverse(), ...technologies, ...technologies].map((tech, i) => (
+                        {secondRowTechnologies.map((tech, i) => (
                             <div
-                                key={i}
+                                key={`${tech.name}-${i}`}
                                 className="flex items-center gap-3 px-6 py-3 bg-foreground/5 border border-foreground/5 rounded-full hover:bg-foreground/10 transition-colors cursor-default"
                             >
                                 <span className="text-xl">{tech.icon}</span>
