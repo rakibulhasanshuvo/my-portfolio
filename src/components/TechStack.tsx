@@ -8,9 +8,6 @@ const technologies = profile.techStack;
 const firstRowTechnologies = [...technologies, ...technologies, ...technologies];
 const secondRowTechnologies = [...technologies.slice().reverse(), ...technologies, ...technologies];
 
-const firstRowTechnologies = [...technologies, ...technologies, ...technologies];
-const secondRowTechnologies = [...technologies.slice().reverse(), ...technologies, ...technologies];
-
 export default function TechStack() {
     return (
         <section className="py-20 overflow-hidden border-y border-foreground/5">

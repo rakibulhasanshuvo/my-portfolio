@@ -5,8 +5,8 @@ import Script from 'next/script';
 // Placeholder for Google Analytics or other scripts
 export default function Analytics() {
     // Don't render scripts if ID is missing or invalid
-    const GA_ID = 'G-XXXXXXXXXX'; // Replace with real ID
-    if (GA_ID === 'G-XXXXXXXXXX') {
+    const GA_ID = process.env.NEXT_PUBLIC_GA_ID;
+    if (!GA_ID) {
         return null;
     }
 
