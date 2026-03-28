@@ -1,0 +1,56 @@
+
+> vibe-portfolio@0.1.0 dev
+> next dev
+
+▲ Next.js 16.1.6 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://192.168.0.2:3000
+
+✓ Starting...
+Attention: Next.js now collects completely anonymous telemetry regarding usage.
+This information is used to shape Next.js' roadmap and prioritize features.
+You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
+https://nextjs.org/telemetry
+
+✓ Ready in 1128ms
+○ Compiling / ...
+⨯ ./src/components/TechStack.tsx:11:7
+Ecmascript file had an error
+[0m [90m  9 |[39m [36mconst[39m secondRowTechnologies [33m=[39m [[33m...[39mtechnologies[33m.[39mslice()[33m.[39mreverse()[33m,[39m [33m...[39mtechnologies[33m,[39m [33m...[39mtechnologies][33m;[39m
+ [90m 10 |[39m
+[31m[1m>[22m[39m[90m 11 |[39m [36mconst[39m firstRowTechnologies [33m=[39m [[33m...[39mtechnologies[33m,[39m [33m...[39mtechnologies[33m,[39m [33m...[39mtechnologies][33m;[39m
+ [90m    |[39m       [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 12 |[39m [36mconst[39m secondRowTechnologies [33m=[39m [[33m...[39mtechnologies[33m.[39mslice()[33m.[39mreverse()[33m,[39m [33m...[39mtechnologies[33m,[39m [33m...[39mtechnologies][33m;[39m
+ [90m 13 |[39m
+ [90m 14 |[39m [36mexport[39m [36mdefault[39m [36mfunction[39m [33mTechStack[39m() {[0m
+
+the name `firstRowTechnologies` is defined multiple times
+
+Import trace:
+  Server Component:
+    ./src/components/TechStack.tsx
+    ./src/app/page.tsx
+
+
+
+./src/components/TechStack.tsx:12:7
+Ecmascript file had an error
+[0m [90m 10 |[39m
+ [90m 11 |[39m [36mconst[39m firstRowTechnologies [33m=[39m [[33m...[39mtechnologies[33m,[39m [33m...[39mtechnologies[33m,[39m [33m...[39mtechnologies][33m;[39m
+[31m[1m>[22m[39m[90m 12 |[39m [36mconst[39m secondRowTechnologies [33m=[39m [[33m...[39mtechnologies[33m.[39mslice()[33m.[39mreverse()[33m,[39m [33m...[39mtechnologies[33m,[39m [33m...[39mtechnologies][33m;[39m
+ [90m    |[39m       [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 13 |[39m
+ [90m 14 |[39m [36mexport[39m [36mdefault[39m [36mfunction[39m [33mTechStack[39m() {
+ [90m 15 |[39m     [36mreturn[39m ([0m
+
+the name `secondRowTechnologies` is defined multiple times
+
+Import trace:
+  Server Component:
+    ./src/components/TechStack.tsx
+    ./src/app/page.tsx
+
+
+ GET / 500 in 13.5s (compile: 13.2s, render: 271ms)
+✓ Compiled in 72ms
+Killed
