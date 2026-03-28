@@ -14,6 +14,30 @@ import { profile } from '@/data/profile';
 
 const YOUR_EMAIL = profile.email;
 
+async function handleMailtoFallback(form: HTMLFormElement): Promise<void> {
+    const formData = new FormData(form);
+    const name = formData.get('user_name') as string;
+    const email = formData.get('user_email') as string;
+    const message = formData.get('message') as string;
+
+    const subject = encodeURIComponent(`Portfolio Inquiry from ${name}`);
+    const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`);
+
+    await new Promise(resolve => setTimeout(resolve, 500));
+    window.location.href = `mailto:${YOUR_EMAIL}?subject=${subject}&body=${body}`;
+}
+
+async function handleEmailJSSubmit(form: HTMLFormElement): Promise<void> {
+    await emailjs.sendForm(
+        EMAILJS_SERVICE_ID,
+        EMAILJS_TEMPLATE_ID,
+        form,
+        {
+            publicKey: EMAILJS_PUBLIC_KEY,
+        }
+    );
+}
+
 export default function Contact() {
     const formRef = useRef<HTMLFormElement>(null);
     const [formState, setFormState] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
@@ -30,31 +54,13 @@ export default function Contact() {
         // Check if EmailJS is configured
         const isEmailJSConfigured = EMAILJS_SERVICE_ID && EMAILJS_TEMPLATE_ID && EMAILJS_PUBLIC_KEY;
 
-        if (!isEmailJSConfigured) {
-            // Fallback to mailto if EmailJS not configured
-            const formData = new FormData(formRef.current);
-            const name = formData.get('user_name') as string;
-            const email = formData.get('user_email') as string;
-            const message = formData.get('message') as string;
-
-            const subject = encodeURIComponent(`Portfolio Inquiry from ${name}`);
-            const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`);
-
-            await new Promise(resolve => setTimeout(resolve, 500));
-            window.location.href = `mailto:${YOUR_EMAIL}?subject=${subject}&body=${body}`;
-            setFormState('success');
-            return;
-        }
-
         try {
-            await emailjs.sendForm(
-                EMAILJS_SERVICE_ID,
-                EMAILJS_TEMPLATE_ID,
-                formRef.current,
-                {
-                    publicKey: EMAILJS_PUBLIC_KEY,
-                }
-            );
+            if (!isEmailJSConfigured) {
+                // Fallback to mailto if EmailJS not configured
+                await handleMailtoFallback(formRef.current);
+            } else {
+                await handleEmailJSSubmit(formRef.current);
+            }
             setFormState('success');
         } catch (error) {
             console.error('EmailJS Error:', error);

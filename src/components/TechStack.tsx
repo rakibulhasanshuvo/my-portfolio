@@ -8,8 +8,6 @@ const technologies = profile.techStack;
 const firstRowTechnologies = [...technologies, ...technologies, ...technologies];
 const secondRowTechnologies = [...technologies.slice().reverse(), ...technologies, ...technologies];
 
-const firstRowTechnologies = [...technologies, ...technologies, ...technologies];
-const secondRowTechnologies = [...technologies.slice().reverse(), ...technologies, ...technologies];
 
 export default function TechStack() {
     return (
