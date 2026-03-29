@@ -1,19 +1,19 @@
-import { expect, test, mock, spyOn, afterEach } from "bun:test";
-import React from "react";
+import { describe, it, expect, vi, afterEach } from 'vitest';
 
 // Track the effect passed to useEffect
 let effectCallback: (() => void | (() => void)) | undefined;
 
 // Mock Global functions
 const originalRAF = global.requestAnimationFrame;
-global.requestAnimationFrame = (callback: FrameRequestCallback) => {
+global.requestAnimationFrame = vi.fn(() => {
   return 1; // dummy handle
-};
+});
 
 // Mock React before anything else
-mock.module("react", () => {
+vi.mock('react', async () => {
+  const actualReact = await vi.importActual('react');
   return {
-    ...React,
+    ...actualReact,
     useEffect: (effect: () => void | (() => void)) => {
       effectCallback = effect;
     },
@@ -21,63 +21,64 @@ mock.module("react", () => {
 });
 
 // Mock Lenis
-const destroySpy = spyOn({ destroy: () => {} }, "destroy");
-const rafSpy = spyOn({ raf: () => {} }, "raf");
+const destroySpy = vi.fn();
+const rafSpy = vi.fn();
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 let capturedOptions: any = null;
 
-class MockLenis {
-  constructor(options: any) {
-    capturedOptions = options;
+vi.mock('lenis', () => {
+  class MockLenis {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    constructor(options: any) {
+      capturedOptions = options;
+    }
+    raf = rafSpy;
+    destroy = destroySpy;
   }
-  raf = rafSpy;
-  destroy = destroySpy;
-}
-
-mock.module("lenis", () => {
   return {
     default: MockLenis,
   };
 });
 
 // Import the component AFTER mocking
-import SmoothScroll from "./SmoothScroll";
+import SmoothScroll from './SmoothScroll';
 
-afterEach(() => {
-  effectCallback = undefined;
-  capturedOptions = null;
-  destroySpy.mockClear();
-  rafSpy.mockClear();
-});
+describe('SmoothScroll', () => {
+  afterEach(() => {
+    effectCallback = undefined;
+    capturedOptions = null;
+    destroySpy.mockClear();
+    rafSpy.mockClear();
+    global.requestAnimationFrame = originalRAF;
+  });
 
-test("SmoothScroll initializes Lenis with correct options and destroys it on unmount", () => {
-  // Render the component (this triggers useEffect mock)
-  SmoothScroll();
+  it('initializes Lenis with correct options and destroys it on unmount', () => {
+    // Render the component (this triggers useEffect mock)
+    SmoothScroll();
 
-  expect(effectCallback).toBeDefined();
+    expect(effectCallback).toBeDefined();
 
-  if (effectCallback) {
-    // Execute the effect
-    const cleanup = effectCallback();
+    if (effectCallback) {
+      // Execute the effect
+      const cleanup = effectCallback();
 
-    // Verify Lenis was initialized with correct options
-    expect(capturedOptions).toBeDefined();
-    expect(capturedOptions.duration).toBe(1.2);
-    expect(capturedOptions.orientation).toBe('vertical');
-    expect(capturedOptions.gestureOrientation).toBe('vertical');
-    expect(capturedOptions.smoothWheel).toBe(true);
+      // Verify Lenis was initialized with correct options
+      expect(capturedOptions).toBeDefined();
+      expect(capturedOptions.duration).toBe(1.2);
+      expect(capturedOptions.orientation).toBe('vertical');
+      expect(capturedOptions.gestureOrientation).toBe('vertical');
+      expect(capturedOptions.smoothWheel).toBe(true);
 
-    // Verify cleanup is a function
-    expect(typeof cleanup).toBe("function");
+      // Verify cleanup is a function
+      expect(typeof cleanup).toBe('function');
 
-    // Execute cleanup
-    if (typeof cleanup === "function") {
-      cleanup();
-      // Verify lenis.destroy() was called
-      expect(destroySpy).toHaveBeenCalled();
+      // Execute cleanup
+      if (typeof cleanup === 'function') {
+        cleanup();
+        // Verify lenis.destroy() was called
+        expect(destroySpy).toHaveBeenCalled();
+      }
     }
-  }
-
-  // Revert global change for this test
-  global.requestAnimationFrame = originalRAF;
+  });
 });
