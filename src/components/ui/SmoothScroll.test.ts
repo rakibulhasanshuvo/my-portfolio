@@ -1,4 +1,4 @@
-import { expect, test, mock, spyOn, afterEach } from "bun:test";
+import { expect, test, vi, afterEach } from "vitest";
 import React from "react";
 
 // Track the effect passed to useEffect
@@ -6,14 +6,15 @@ let effectCallback: (() => void | (() => void)) | undefined;
 
 // Mock Global functions
 const originalRAF = global.requestAnimationFrame;
-global.requestAnimationFrame = (callback: FrameRequestCallback) => {
+global.requestAnimationFrame = () => {
   return 1; // dummy handle
 };
 
 // Mock React before anything else
-mock.module("react", () => {
+vi.mock("react", async () => {
+  const actual = await vi.importActual("react");
   return {
-    ...React,
+    ...actual as any,
     useEffect: (effect: () => void | (() => void)) => {
       effectCallback = effect;
     },
@@ -21,22 +22,19 @@ mock.module("react", () => {
 });
 
 // Mock Lenis
-const destroySpy = spyOn({ destroy: () => {} }, "destroy");
-const rafSpy = spyOn({ raf: () => {} }, "raf");
+const destroySpy = vi.fn();
+const rafSpy = vi.fn();
+let capturedOptions: unknown = null;
 
-let capturedOptions: any = null;
-
-class MockLenis {
-  constructor(options: any) {
-    capturedOptions = options;
-  }
-  raf = rafSpy;
-  destroy = destroySpy;
-}
-
-mock.module("lenis", () => {
+vi.mock("lenis", () => {
   return {
-    default: MockLenis,
+    default: class MockLenis {
+      constructor(options: unknown) {
+        capturedOptions = options;
+      }
+      raf = rafSpy;
+      destroy = destroySpy;
+    },
   };
 });
 
@@ -62,10 +60,12 @@ test("SmoothScroll initializes Lenis with correct options and destroys it on unm
 
     // Verify Lenis was initialized with correct options
     expect(capturedOptions).toBeDefined();
-    expect(capturedOptions.duration).toBe(1.2);
-    expect(capturedOptions.orientation).toBe('vertical');
-    expect(capturedOptions.gestureOrientation).toBe('vertical');
-    expect(capturedOptions.smoothWheel).toBe(true);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const opts = capturedOptions as any;
+    expect(opts.duration).toBe(1.2);
+    expect(opts.orientation).toBe('vertical');
+    expect(opts.gestureOrientation).toBe('vertical');
+    expect(opts.smoothWheel).toBe(true);
 
     // Verify cleanup is a function
     expect(typeof cleanup).toBe("function");

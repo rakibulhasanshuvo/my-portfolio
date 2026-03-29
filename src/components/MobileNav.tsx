@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import { useBodyScrollLock } from '@/hooks/useBodyScrollLock';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
 import Link from 'next/link';
@@ -34,6 +35,59 @@ const linkVars = {
     open: { y: 0, transition: { duration: 0.7, ease: [0, 0.55, 0.45, 1] as [number, number, number, number] } }
 };
 
+interface MobileNavLinkProps {
+    href: string;
+    name: string;
+    closeMenu: () => void;
+}
+
+function MobileNavLink({ href, name, closeMenu }: MobileNavLinkProps) {
+    return (
+        <div className="overflow-hidden">
+            <motion.div variants={linkVars}>
+                <Link
+                    href={href}
+                    onClick={closeMenu}
+                    className="text-foreground hover:text-purple-400 transition-colors"
+                >
+                    {name}
+                </Link>
+            </motion.div>
+        </div>
+    );
+}
+
+function ResumeLink() {
+    return (
+        <div className="mt-8 flex flex-col items-center gap-6">
+            <motion.div variants={linkVars}>
+                <Link
+                    href="/resume.pdf"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-lg font-medium text-foreground/50 hover:text-foreground transition-colors"
+                >
+                    View Resume
+                </Link>
+            </motion.div>
+        </div>
+    );
+}
+
+function CloseButton({ closeMenu }: { closeMenu: () => void }) {
+    return (
+        <div className="absolute top-6 right-6 z-[10000]">
+            <button
+                onClick={closeMenu}
+                className="p-2 text-foreground/70 hover:text-foreground transition-colors"
+                aria-label="Close menu"
+            >
+                <X size={32} />
+            </button>
+        </div>
+    );
+}
+
 interface MobileMenuProps {
     closeMenu: () => void;
 }
@@ -47,15 +101,7 @@ function MobileMenu({ closeMenu }: MobileMenuProps) {
             exit="exit"
             className="fixed inset-0 bg-background origin-top z-[9999] flex flex-col justify-center items-center p-10"
         >
-            <div className="absolute top-6 right-6">
-                <button
-                    onClick={closeMenu}
-                    className="p-2 text-foreground/70 hover:text-foreground transition-colors"
-                    aria-label="Close menu"
-                >
-                    <X size={32} />
-                </button>
-            </div>
+            <CloseButton closeMenu={closeMenu} />
 
             <motion.div
                 variants={containerVars}
@@ -64,31 +110,15 @@ function MobileMenu({ closeMenu }: MobileMenuProps) {
                 exit="initial"
                 className="flex flex-col gap-6 text-center font-bold text-4xl"
             >
-                {navLinks.map((link) => (
-                    <div key={link.name} className="overflow-hidden">
-                        <motion.div variants={linkVars}>
-                            <Link
-                                href={link.href}
-                                onClick={closeMenu}
-                                className="text-foreground hover:text-purple-400 transition-colors"
-                            >
-                                {link.name}
-                            </Link>
-                        </motion.div>
-                    </div>
+                {navLinks.map((link, index) => (
+                    <MobileNavLink
+                        key={`${link.name}-${index}`}
+                        href={link.href}
+                        name={link.name}
+                        closeMenu={closeMenu}
+                    />
                 ))}
-                <div className="mt-8 flex flex-col items-center gap-6">
-                    <motion.div variants={linkVars}>
-                        <Link
-                            href="/resume.pdf"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-lg font-medium text-foreground/50 hover:text-foreground transition-colors"
-                        >
-                            View Resume
-                        </Link>
-                    </motion.div>
-                </div>
+                <ResumeLink />
             </motion.div>
         </motion.div>
     );
@@ -97,16 +127,7 @@ function MobileMenu({ closeMenu }: MobileMenuProps) {
 export default function MobileNav() {
     const [isOpen, setIsOpen] = useState(false);
 
-    useEffect(() => {
-        if (isOpen) {
-            document.body.style.overflow = 'hidden';
-        } else {
-            document.body.style.overflow = 'unset';
-        }
-        return () => {
-            document.body.style.overflow = 'unset';
-        };
-    }, [isOpen]);
+    useBodyScrollLock(isOpen);
 
     return (
         <div className="md:hidden">

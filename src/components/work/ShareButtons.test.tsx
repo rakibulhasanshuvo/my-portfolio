@@ -7,7 +7,7 @@ describe('ShareButtons', () => {
 
     beforeEach(() => {
         // Mock window.location.href to a known value
-        delete (window as any).location;
+        delete (window as unknown).location;
         window.location = { ...originalLocation, href: 'https://test.com/project-x' };
 
         // Mock navigator.clipboard
