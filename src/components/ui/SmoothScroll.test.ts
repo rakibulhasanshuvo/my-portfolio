@@ -1,4 +1,4 @@
-import { expect, test, mock, spyOn, afterEach } from "bun:test";
+import { expect, test, vi, afterEach } from "vitest";
 import React from "react";
 
 // Track the effect passed to useEffect
@@ -11,9 +11,10 @@ global.requestAnimationFrame = (callback: FrameRequestCallback) => {
 };
 
 // Mock React before anything else
-mock.module("react", () => {
+vi.mock("react", async () => {
+  const actual = await vi.importActual("react");
   return {
-    ...React,
+    ...actual,
     useEffect: (effect: () => void | (() => void)) => {
       effectCallback = effect;
     },
@@ -21,22 +22,19 @@ mock.module("react", () => {
 });
 
 // Mock Lenis
-const destroySpy = spyOn({ destroy: () => {} }, "destroy");
-const rafSpy = spyOn({ raf: () => {} }, "raf");
+export const destroySpy = vi.fn();
+export const rafSpy = vi.fn();
+export let capturedOptions: any = null;
 
-let capturedOptions: any = null;
-
-class MockLenis {
-  constructor(options: any) {
-    capturedOptions = options;
-  }
-  raf = rafSpy;
-  destroy = destroySpy;
-}
-
-mock.module("lenis", () => {
+vi.mock("lenis", () => {
   return {
-    default: MockLenis,
+    default: class MockLenis {
+      constructor(options: any) {
+        capturedOptions = options;
+      }
+      raf = rafSpy;
+      destroy = destroySpy;
+    }
   };
 });
 
