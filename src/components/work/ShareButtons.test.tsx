@@ -7,6 +7,7 @@ describe('ShareButtons', () => {
 
     beforeEach(() => {
         // Mock window.location.href to a known value
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         delete (window as any).location;
         window.location = { ...originalLocation, href: 'https://test.com/project-x' };
 
