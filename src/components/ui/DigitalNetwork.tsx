@@ -15,7 +15,7 @@ interface Particle {
 }
 
 export default function DigitalNetwork() {
-    const isMobile = useMobile(768);
+    const isMobile = useMobile(768, true);
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const containerRef = useRef<HTMLDivElement>(null);
     const { scrollYProgress } = useScroll();
@@ -29,9 +29,13 @@ export default function DigitalNetwork() {
     const animationFrameId = useRef<number | null>(null);
 
     const initParticles = useCallback((width: number, height: number) => {
-        // Scale particle density for mobile devices
-        const isMobile = width < 768;
-        const baseDensity = isMobile ? 30000 : 15000;
+        // Completely skip rendering particles on mobile to save GPU/CPU cycles
+        if (width < 768) {
+            particles.current = [];
+            return;
+        }
+
+        const baseDensity = 15000;
         const particleCount = Math.min(Math.floor((width * height) / baseDensity), 100);
 
         particles.current = [];
@@ -144,8 +148,24 @@ export default function DigitalNetwork() {
         };
     }, [initParticles]);
 
+    // Return early with static grid on mobile
+    if (isMobile) {
+        return (
+            <div className="fixed inset-0 pointer-events-none -z-10 overflow-hidden">
+                 <div
+                    className="absolute inset-0 opacity-[0.02] dark:opacity-[0.03]"
+                    style={{
+                        backgroundImage: `linear-gradient(to right, currentColor 1px, transparent 1px), linear-gradient(to bottom, currentColor 1px, transparent 1px)`,
+                        backgroundSize: '40px 40px',
+                        color: 'var(--foreground)'
+                    }}
+                />
+            </div>
+        )
+    }
+
     return (
-        <div ref={containerRef} className="fixed inset-0 pointer-events-none -z-10 overflow-hidden">
+        <div ref={containerRef} className="fixed inset-0 pointer-events-none -z-10 overflow-hidden hidden md:block">
             {/* Architectural Grid */}
             <div
                 className="absolute inset-0 opacity-[0.03] dark:opacity-[0.05]"
@@ -156,21 +176,17 @@ export default function DigitalNetwork() {
                 }}
             />
 
-            {/* Aurora Gradients - Reduced on mobile */}
+            {/* Aurora Gradients */}
             <motion.div
                 style={{ y: y1 }}
-                className="absolute top-[-20%] left-[-10%] w-[70vw] h-[70vw] bg-purple-600/10 rounded-full blur-[80px] md:blur-[120px] animate-pulse"
+                className="absolute top-[-20%] left-[-10%] w-[70vw] h-[70vw] bg-purple-600/10 rounded-full md:blur-[120px] animate-pulse"
             />
             <motion.div
                 style={{ y: y2 }}
-                className="absolute bottom-[-10%] right-[-10%] w-[60vw] h-[60vw] bg-blue-600/10 rounded-full blur-[80px] md:blur-[120px] animate-pulse"
+                className="absolute bottom-[-10%] right-[-10%] w-[60vw] h-[60vw] bg-blue-600/10 rounded-full md:blur-[120px] animate-pulse"
             />
-            {!isMobile && (
-                <>
-                    <div className="absolute top-[20%] right-[10%] w-[40vw] h-[40vw] bg-indigo-600/5 rounded-full blur-[100px] animate-pulse" style={{ animationDelay: '2s' }} />
-                    <div className="absolute bottom-[10%] left-[10%] w-[50vw] h-[50vw] bg-fuchsia-600/5 rounded-full blur-[100px] animate-pulse" style={{ animationDelay: '4s' }} />
-                </>
-            )}
+            <div className="absolute top-[20%] right-[10%] w-[40vw] h-[40vw] bg-indigo-600/5 rounded-full blur-[100px] animate-pulse" style={{ animationDelay: '2s' }} />
+            <div className="absolute bottom-[10%] left-[10%] w-[50vw] h-[50vw] bg-fuchsia-600/5 rounded-full blur-[100px] animate-pulse" style={{ animationDelay: '4s' }} />
 
             {/* Particle Canvas */}
             <canvas

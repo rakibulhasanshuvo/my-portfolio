@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 
-export function useMobile(breakpoint = 768) {
-  const [isMobile, setIsMobile] = useState<boolean>(false);
+export function useMobile(breakpoint = 768, defaultState = false) {
+  const [isMobile, setIsMobile] = useState<boolean>(defaultState);
   const [hasHydrated, setHasHydrated] = useState(false);
 
   useEffect(() => {
@@ -19,8 +19,8 @@ export function useMobile(breakpoint = 768) {
     return () => window.removeEventListener('resize', checkIsMobile);
   }, [breakpoint]);
 
-  // Return false on server to avoid hydration mismatch
-  if (!hasHydrated) return false;
+  // Return defaultState on server to avoid hydration mismatch while still providing better defaults
+  if (!hasHydrated) return defaultState;
 
   return isMobile;
 }
