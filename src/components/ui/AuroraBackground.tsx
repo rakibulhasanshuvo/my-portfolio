@@ -1,8 +1,10 @@
 'use client';
 
 import { motion, useScroll, useTransform } from 'framer-motion';
+import { useMobile } from '@/hooks/useMobile';
 
 export default function AuroraBackground() {
+    const isMobile = useMobile(768);
     const { scrollYProgress } = useScroll();
 
     // Create parallax effect - different speeds for different layers
@@ -27,25 +29,27 @@ export default function AuroraBackground() {
                 }}
             />
 
-            {/* Layer 2 - Medium */}
-            <motion.div
-                className="absolute top-[20%] right-[-10%] w-[40vw] h-[40vw] bg-blue-600/20 rounded-full blur-[100px] dark:mix-blend-screen mix-blend-multiply opacity-50 dark:opacity-100"
-                style={{ y: y2, willChange: 'transform' }}
-                animate={{
-                    x: [0, -50, 0],
-                    scale: [1, 1.1, 1],
-                }}
-                transition={{
-                    duration: 25,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                    delay: 2
-                }}
-            />
+            {/* Layer 2 - Medium - Hidden on mobile for perf */}
+            {!isMobile && (
+                <motion.div
+                    className="absolute top-[20%] right-[-10%] w-[40vw] h-[40vw] bg-blue-600/20 rounded-full blur-[100px] dark:mix-blend-screen mix-blend-multiply opacity-50 dark:opacity-100"
+                    style={{ y: y2, willChange: 'transform' }}
+                    animate={{
+                        x: [0, -50, 0],
+                        scale: [1, 1.1, 1],
+                    }}
+                    transition={{
+                        duration: 25,
+                        repeat: Infinity,
+                        ease: "easeInOut",
+                        delay: 2
+                    }}
+                />
+            )}
 
             {/* Layer 3 - Fastest parallax */}
             <motion.div
-                className="absolute bottom-[-10%] left-[20%] w-[60vw] h-[60vw] bg-indigo-600/20 rounded-full blur-[140px] dark:mix-blend-screen mix-blend-multiply opacity-50 dark:opacity-100"
+                className="absolute bottom-[-10%] left-[20%] w-[60vw] h-[60vw] bg-indigo-600/20 rounded-full blur-[100px] md:blur-[140px] dark:mix-blend-screen mix-blend-multiply opacity-50 dark:opacity-100"
                 style={{ y: y3, willChange: 'transform' }}
                 animate={{
                     x: [0, 50, 0],
