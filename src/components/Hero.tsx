@@ -6,11 +6,13 @@ import type { Application } from '@splinetool/runtime';
 import AuroraBackground from './ui/AuroraBackground';
 import SplineScene from './ui/SplineScene';
 import { profile } from '@/data/profile';
+import { useMobile } from '@/hooks/useMobile';
 
 const skills = profile.hero.skills;
 const duplicatedSkills = [...skills, ...skills, ...skills];
 
 export default function Hero() {
+    const isMobile = useMobile(1024); // Tablets and below shouldn't load Spline
     const words = "Rakibul Hasan Shuvo".split(" ");
 
     const handleSplineLoad = useCallback((spline: Application) => {
@@ -44,11 +46,13 @@ export default function Hero() {
             <AuroraBackground />
 
             {/* 3D Spline Design - Hidden on mobile for performance */}
-            <SplineScene
-                scene="https://prod.spline.design/qF9apOu8tJv1sgOk/scene.splinecode"
-                onLoad={handleSplineLoad}
-                className="absolute inset-0 z-0 pointer-events-none hidden lg:block"
-            />
+            {!isMobile && (
+                <SplineScene
+                    scene="https://prod.spline.design/qF9apOu8tJv1sgOk/scene.splinecode"
+                    onLoad={handleSplineLoad}
+                    className="absolute inset-0 z-0 pointer-events-none hidden lg:block"
+                />
+            )}
 
             {/* Overline label */}
             <motion.span

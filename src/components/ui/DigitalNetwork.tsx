@@ -2,6 +2,7 @@
 
 import React, { useEffect, useRef, useCallback } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
+import { useMobile } from '@/hooks/useMobile';
 
 interface Particle {
     x: number;
@@ -14,6 +15,7 @@ interface Particle {
 }
 
 export default function DigitalNetwork() {
+    const isMobile = useMobile(768);
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const containerRef = useRef<HTMLDivElement>(null);
     const { scrollYProgress } = useScroll();
@@ -154,17 +156,21 @@ export default function DigitalNetwork() {
                 }}
             />
 
-            {/* Aurora Gradients */}
+            {/* Aurora Gradients - Reduced on mobile */}
             <motion.div
                 style={{ y: y1 }}
-                className="absolute top-[-20%] left-[-10%] w-[70vw] h-[70vw] bg-purple-600/10 rounded-full blur-[120px] animate-pulse"
+                className="absolute top-[-20%] left-[-10%] w-[70vw] h-[70vw] bg-purple-600/10 rounded-full blur-[80px] md:blur-[120px] animate-pulse"
             />
             <motion.div
                 style={{ y: y2 }}
-                className="absolute bottom-[-10%] right-[-10%] w-[60vw] h-[60vw] bg-blue-600/10 rounded-full blur-[120px] animate-pulse"
+                className="absolute bottom-[-10%] right-[-10%] w-[60vw] h-[60vw] bg-blue-600/10 rounded-full blur-[80px] md:blur-[120px] animate-pulse"
             />
-            <div className="absolute top-[20%] right-[10%] w-[40vw] h-[40vw] bg-indigo-600/5 rounded-full blur-[100px] animate-pulse" style={{ animationDelay: '2s' }} />
-            <div className="absolute bottom-[10%] left-[10%] w-[50vw] h-[50vw] bg-fuchsia-600/5 rounded-full blur-[100px] animate-pulse" style={{ animationDelay: '4s' }} />
+            {!isMobile && (
+                <>
+                    <div className="absolute top-[20%] right-[10%] w-[40vw] h-[40vw] bg-indigo-600/5 rounded-full blur-[100px] animate-pulse" style={{ animationDelay: '2s' }} />
+                    <div className="absolute bottom-[10%] left-[10%] w-[50vw] h-[50vw] bg-fuchsia-600/5 rounded-full blur-[100px] animate-pulse" style={{ animationDelay: '4s' }} />
+                </>
+            )}
 
             {/* Particle Canvas */}
             <canvas
