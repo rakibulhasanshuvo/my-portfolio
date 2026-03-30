@@ -5,11 +5,10 @@ export function useMobile(breakpoint = 768, defaultState = false) {
   const [hasHydrated, setHasHydrated] = useState(false);
 
   useEffect(() => {
-    setHasHydrated(true);
-
     // Check initial
     const checkIsMobile = () => {
       setIsMobile(window.innerWidth < breakpoint);
+      setHasHydrated(true);
     };
 
     checkIsMobile();

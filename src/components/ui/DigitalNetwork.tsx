@@ -2,7 +2,6 @@
 
 import React, { useEffect, useRef, useCallback } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { useMobile } from '@/hooks/useMobile';
 
 interface Particle {
     x: number;
@@ -15,7 +14,6 @@ interface Particle {
 }
 
 export default function DigitalNetwork() {
-    const isMobile = useMobile(768, true);
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const containerRef = useRef<HTMLDivElement>(null);
     const { scrollYProgress } = useScroll();
@@ -29,14 +27,11 @@ export default function DigitalNetwork() {
     const animationFrameId = useRef<number | null>(null);
 
     const initParticles = useCallback((width: number, height: number) => {
-        // Completely skip rendering particles on mobile to save GPU/CPU cycles
-        if (width < 768) {
-            particles.current = [];
-            return;
-        }
-
-        const baseDensity = 15000;
-        const particleCount = Math.min(Math.floor((width * height) / baseDensity), 100);
+        const isMobile = width < 768;
+        // On mobile, severely limit particle count to preserve the Matrix aesthetic without CPU strain
+        const baseDensity = isMobile ? 40000 : 15000;
+        const maxParticles = isMobile ? 15 : 100;
+        const particleCount = Math.min(Math.floor((width * height) / baseDensity), maxParticles);
 
         particles.current = [];
         for (let i = 0; i < particleCount; i++) {
@@ -47,8 +42,8 @@ export default function DigitalNetwork() {
                 y,
                 baseX: x,
                 baseY: y,
-                vx: (Math.random() - 0.5) * 0.5,
-                vy: (Math.random() - 0.5) * 0.5,
+                vx: (Math.random() - 0.5) * (isMobile ? 0.2 : 0.5), // Slower on mobile
+                vy: (Math.random() - 0.5) * (isMobile ? 0.2 : 0.5),
                 size: Math.random() * 2 + 1,
             });
         }
@@ -102,21 +97,24 @@ export default function DigitalNetwork() {
                 ctx.fill();
 
                 // Connections (Limited proximity calculations for performance)
-                for (let j = i + 1; j < particles.current.length; j++) {
-                    const p2 = particles.current[j];
-                    const dx = p.x - p2.x;
-                    const dy = p.y - p2.y;
+                // Disable connection lines entirely on mobile to save O(n^2) loop calculations
+                if (canvas.width >= 768) {
+                    for (let j = i + 1; j < particles.current.length; j++) {
+                        const p2 = particles.current[j];
+                        const dx = p.x - p2.x;
+                        const dy = p.y - p2.y;
 
-                    // Quick distance check before sqrt
-                    if (Math.abs(dx) < 150 && Math.abs(dy) < 150) {
-                        const dist = Math.sqrt(dx * dx + dy * dy);
-                        if (dist < 150) {
-                            ctx.beginPath();
-                            ctx.moveTo(p.x, p.y);
-                            ctx.lineTo(p2.x, p2.y);
-                            ctx.strokeStyle = `rgba(255, 255, 255, ${0.1 * (1 - dist / 150)})`;
-                            ctx.lineWidth = 0.5;
-                            ctx.stroke();
+                        // Quick distance check before sqrt
+                        if (Math.abs(dx) < 150 && Math.abs(dy) < 150) {
+                            const dist = Math.sqrt(dx * dx + dy * dy);
+                            if (dist < 150) {
+                                ctx.beginPath();
+                                ctx.moveTo(p.x, p.y);
+                                ctx.lineTo(p2.x, p2.y);
+                                ctx.strokeStyle = `rgba(255, 255, 255, ${0.1 * (1 - dist / 150)})`;
+                                ctx.lineWidth = 0.5;
+                                ctx.stroke();
+                            }
                         }
                     }
                 }
@@ -148,24 +146,8 @@ export default function DigitalNetwork() {
         };
     }, [initParticles]);
 
-    // Return early with static grid on mobile
-    if (isMobile) {
-        return (
-            <div className="fixed inset-0 pointer-events-none -z-10 overflow-hidden">
-                 <div
-                    className="absolute inset-0 opacity-[0.02] dark:opacity-[0.03]"
-                    style={{
-                        backgroundImage: `linear-gradient(to right, currentColor 1px, transparent 1px), linear-gradient(to bottom, currentColor 1px, transparent 1px)`,
-                        backgroundSize: '40px 40px',
-                        color: 'var(--foreground)'
-                    }}
-                />
-            </div>
-        )
-    }
-
     return (
-        <div ref={containerRef} className="fixed inset-0 pointer-events-none -z-10 overflow-hidden hidden md:block">
+        <div ref={containerRef} className="fixed inset-0 pointer-events-none z-[-10] overflow-hidden">
             {/* Architectural Grid */}
             <div
                 className="absolute inset-0 opacity-[0.03] dark:opacity-[0.05]"
@@ -176,17 +158,19 @@ export default function DigitalNetwork() {
                 }}
             />
 
-            {/* Aurora Gradients */}
-            <motion.div
-                style={{ y: y1 }}
-                className="absolute top-[-20%] left-[-10%] w-[70vw] h-[70vw] bg-purple-600/10 rounded-full md:blur-[120px] animate-pulse"
-            />
-            <motion.div
-                style={{ y: y2 }}
-                className="absolute bottom-[-10%] right-[-10%] w-[60vw] h-[60vw] bg-blue-600/10 rounded-full md:blur-[120px] animate-pulse"
-            />
-            <div className="absolute top-[20%] right-[10%] w-[40vw] h-[40vw] bg-indigo-600/5 rounded-full blur-[100px] animate-pulse" style={{ animationDelay: '2s' }} />
-            <div className="absolute bottom-[10%] left-[10%] w-[50vw] h-[50vw] bg-fuchsia-600/5 rounded-full blur-[100px] animate-pulse" style={{ animationDelay: '4s' }} />
+            {/* Aurora Gradients - Hidden on mobile, they use static radial gradients in AuroraBackground.tsx */}
+            <div className="hidden md:block">
+                <motion.div
+                    style={{ y: y1 }}
+                    className="absolute top-[-20%] left-[-10%] w-[70vw] h-[70vw] bg-purple-600/10 rounded-full blur-[120px] animate-pulse"
+                />
+                <motion.div
+                    style={{ y: y2 }}
+                    className="absolute bottom-[-10%] right-[-10%] w-[60vw] h-[60vw] bg-blue-600/10 rounded-full blur-[120px] animate-pulse"
+                />
+                <div className="absolute top-[20%] right-[10%] w-[40vw] h-[40vw] bg-indigo-600/5 rounded-full blur-[100px] animate-pulse" style={{ animationDelay: '2s' }} />
+                <div className="absolute bottom-[10%] left-[10%] w-[50vw] h-[50vw] bg-fuchsia-600/5 rounded-full blur-[100px] animate-pulse" style={{ animationDelay: '4s' }} />
+            </div>
 
             {/* Particle Canvas */}
             <canvas
