@@ -5,7 +5,6 @@ import "./globals.css";
 
 import CustomCursor from "@/components/ui/CustomCursor";
 import SmoothScroll from "@/components/ui/SmoothScroll";
-import LoadingScreen from "@/components/ui/LoadingScreen";
 import Analytics from "@/components/Analytics";
 import ThemeProvider from "@/components/ThemeProvider";
 
@@ -80,7 +79,6 @@ export default function RootLayout({
         >
           <SmoothScroll />
           <Analytics />
-          <LoadingScreen />
           <CustomCursor />
           <Navbar />
           <div className="noise-bg" />

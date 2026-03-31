@@ -21,11 +21,11 @@ export default function Hero() {
     const [mountSpline, setMountSpline] = useState(false);
     const words = "Rakibul Hasan Shuvo".split(" ");
 
-    // Defer mounting the Spline component slightly to allow initial UI and LoadingScreen to render smoothly
+    // Defer mounting the Spline component slightly to allow initial UI to render smoothly
     useEffect(() => {
         const timer = setTimeout(() => {
             setMountSpline(true);
-        }, 3500); // 3.5s delay ensures LoadingScreen (which takes ~3s) finishes first
+        }, 1000); // 1s delay ensures initial paint finishes first
 
         return () => clearTimeout(timer);
     }, []);
@@ -56,7 +56,7 @@ export default function Hero() {
     }, []);
 
     return (
-        <section className="min-h-screen flex flex-col justify-center items-center px-4 relative overflow-hidden pt-32">
+        <section className="min-h-screen flex flex-col justify-center items-center px-4 relative overflow-hidden pt-32 animate-entry">
 
             <AuroraBackground />
 
