@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useEffect, useRef, useCallback } from 'react';
-import { motion, useScroll, useTransform } from 'framer-motion';
 
 interface Particle {
     x: number;
@@ -19,11 +18,6 @@ export default function DigitalNetwork() {
     const isMobile = useMobile(768, true);
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const containerRef = useRef<HTMLDivElement>(null);
-    const { scrollYProgress } = useScroll();
-
-    // Parallax effects
-    const y1 = useTransform(scrollYProgress, [0, 1], [0, -100]);
-    const y2 = useTransform(scrollYProgress, [0, 1], [0, -200]);
 
     const mouse = useRef({ x: 0, y: 0 });
     const particles = useRef<Particle[]>([]);
@@ -33,7 +27,7 @@ export default function DigitalNetwork() {
         const isMobile = width < 768;
         // On mobile, severely limit particle count to preserve the Matrix aesthetic without CPU strain
         const baseDensity = isMobile ? 40000 : 15000;
-        const maxParticles = isMobile ? 15 : 100;
+        const maxParticles = isMobile ? 15 : 75; // Reduced from 100 to save CPU
         const particleCount = Math.min(Math.floor((width * height) / baseDensity), maxParticles);
 
         particles.current = [];
@@ -101,18 +95,23 @@ export default function DigitalNetwork() {
                 ctx.fillStyle = 'rgba(255, 255, 255, 0.2)';
                 ctx.fill();
 
-                // Connections (Limited proximity calculations for performance)
-                // Disable connection lines entirely on mobile to save O(n^2) loop calculations
+                // Connections (Distance Threshold implementation to drastically reduce calculations)
+                // Disable connection lines entirely on mobile to save CPU
                 if (canvas.width >= 768) {
+                    let connections = 0;
                     for (let j = i + 1; j < particles.current.length; j++) {
+                        // Max 5 connections per particle to avoid dense web rendering overhead
+                        if (connections >= 5) break;
+
                         const p2 = particles.current[j];
                         const dx = p.x - p2.x;
                         const dy = p.y - p2.y;
 
-                        // Quick distance check before sqrt
+                        // Strict distance threshold (150px) check before expensive math
                         if (Math.abs(dx) < 150 && Math.abs(dy) < 150) {
                             const dist = Math.sqrt(dx * dx + dy * dy);
                             if (dist < 150) {
+                                connections++;
                                 ctx.beginPath();
                                 ctx.moveTo(p.x, p.y);
                                 ctx.lineTo(p2.x, p2.y);
@@ -178,18 +177,20 @@ export default function DigitalNetwork() {
                 }}
             />
 
-            {/* Aurora Gradients - Hidden on mobile, they use static radial gradients in AuroraBackground.tsx */}
+            {/* Aurora Gradients - Hidden on mobile. Replaced Framer Motion with CSS parallax wrappers */}
             <div className="hidden md:block">
-                <motion.div
-                    style={{ y: y1 }}
-                    className="absolute top-[-20%] left-[-10%] w-[70vw] h-[70vw] bg-purple-600/10 rounded-full blur-[120px] animate-pulse"
-                />
-                <motion.div
-                    style={{ y: y2 }}
-                    className="absolute bottom-[-10%] right-[-10%] w-[60vw] h-[60vw] bg-blue-600/10 rounded-full blur-[120px] animate-pulse"
-                />
-                <div className="absolute top-[20%] right-[10%] w-[40vw] h-[40vw] bg-indigo-600/5 rounded-full blur-[100px] animate-pulse" style={{ animationDelay: '2s' }} />
-                <div className="absolute bottom-[10%] left-[10%] w-[50vw] h-[50vw] bg-fuchsia-600/5 rounded-full blur-[100px] animate-pulse" style={{ animationDelay: '4s' }} />
+                <div className="absolute inset-0 pointer-events-none -z-10" style={{ perspective: '1000px' }}>
+                    <div
+                        className="absolute top-[-20%] left-[-10%] w-[70vw] h-[70vw] bg-purple-600/10 rounded-full blur-[120px] animate-pulse"
+                        style={{ transform: 'translateZ(-100px) scale(1.1)', willChange: 'transform' }}
+                    />
+                    <div
+                        className="absolute bottom-[-10%] right-[-10%] w-[60vw] h-[60vw] bg-blue-600/10 rounded-full blur-[120px] animate-pulse"
+                        style={{ transform: 'translateZ(-200px) scale(1.2)', willChange: 'transform' }}
+                    />
+                    <div className="absolute top-[20%] right-[10%] w-[40vw] h-[40vw] bg-indigo-600/5 rounded-full blur-[100px] animate-pulse" style={{ animationDelay: '2s' }} />
+                    <div className="absolute bottom-[10%] left-[10%] w-[50vw] h-[50vw] bg-fuchsia-600/5 rounded-full blur-[100px] animate-pulse" style={{ animationDelay: '4s' }} />
+                </div>
             </div>
 
             {/* Particle Canvas */}
