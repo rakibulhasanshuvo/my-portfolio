@@ -20,14 +20,16 @@ export default function Hero() {
     const isMobile = useMobile(1024, true);
     const words = "Rakibul Hasan Shuvo".split(" ");
 
-    // State to delay Spline loading until LoadingScreen is nearly finished (3s mark)
+    // State to delay Spline loading until LoadingScreen is completely finished (4.5s mark)
+    // Ensures absolutely zero main-thread contention during the initial load sequence
     const [startSpline, setStartSpline] = useState(false);
 
     useEffect(() => {
-        // Wait 3 seconds before mounting Spline to avoid fighting with the 4s loading animation
+        // Wait 4.5 seconds before mounting Spline to strictly guarantee the 4s
+        // loading animation has fully unmounted and stopped painting.
         const timer = setTimeout(() => {
             setStartSpline(true);
-        }, 3000);
+        }, 4500);
         return () => clearTimeout(timer);
     }, []);
 

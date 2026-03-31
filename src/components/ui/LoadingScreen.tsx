@@ -8,11 +8,17 @@ export default function LoadingScreen() {
     const [progress, setProgress] = useState(0);
 
     useEffect(() => {
+        // Force overflow hidden on body while loading to prevent scrolling
+        document.body.style.overflow = 'hidden';
+
         // Animate progress smoothly from 0 to 100 over 3.5 seconds
         let startTimestamp: number | null = null;
         const duration = 3500; // 3.5 seconds
+        let isCancelled = false;
+        let timeoutId: NodeJS.Timeout;
 
         const step = (timestamp: number) => {
+            if (isCancelled) return;
             if (!startTimestamp) startTimestamp = timestamp;
             const progressRatio = Math.min((timestamp - startTimestamp) / duration, 1);
             setProgress(Math.floor(progressRatio * 100));
@@ -21,13 +27,24 @@ export default function LoadingScreen() {
                 window.requestAnimationFrame(step);
             } else {
                 // Wait 0.5s at 100% before unmounting (Total exactly 4s)
-                setTimeout(() => setIsLoading(false), 500);
+                timeoutId = setTimeout(() => {
+                    if (!isCancelled) {
+                        setIsLoading(false);
+                        // Restore scrolling
+                        document.body.style.overflow = '';
+                    }
+                }, 500);
             }
         };
 
         const animationId = window.requestAnimationFrame(step);
 
-        return () => window.cancelAnimationFrame(animationId);
+        return () => {
+            isCancelled = true;
+            window.cancelAnimationFrame(animationId);
+            clearTimeout(timeoutId);
+            document.body.style.overflow = '';
+        };
     }, []);
 
     return (
