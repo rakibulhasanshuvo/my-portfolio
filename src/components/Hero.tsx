@@ -164,7 +164,7 @@ export default function Hero() {
                 >
                     {duplicatedSkills.map((skill, index) => (
                         <motion.div
-                            key={index}
+                            key={`${skill}-${index}`}
                             animate={shouldReduceMotion || isMobile ? false : {
                                 y: [0, -10, 0]
                             }}
