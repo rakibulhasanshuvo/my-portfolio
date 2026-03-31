@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { useCallback } from 'react';
+import { useCallback, useState, useEffect } from 'react';
 import type { Application } from '@splinetool/runtime';
 import dynamic from 'next/dynamic';
 import AuroraBackground from './ui/AuroraBackground';
@@ -18,7 +18,17 @@ export default function Hero() {
     // This might cause a hydration mismatch if loaded on desktop, but the visual pop-in
     // is better than a 20s lockup on mobile.
     const isMobile = useMobile(1024, true);
+    const [mountSpline, setMountSpline] = useState(false);
     const words = "Rakibul Hasan Shuvo".split(" ");
+
+    // Defer mounting the Spline component slightly to allow initial UI to render smoothly
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setMountSpline(true);
+        }, 1000); // 1s delay ensures initial paint finishes first
+
+        return () => clearTimeout(timer);
+    }, []);
 
     const handleSplineLoad = useCallback((spline: Application) => {
         // Find and hide all objects that appear to be text
@@ -46,13 +56,13 @@ export default function Hero() {
     }, []);
 
     return (
-        <section className="min-h-screen flex flex-col justify-center items-center px-4 relative overflow-hidden pt-32">
+        <section className="min-h-screen flex flex-col justify-center items-center px-4 relative overflow-hidden pt-32 animate-entry">
 
             <AuroraBackground />
 
             {/* 3D Spline Design - Hidden on mobile for performance */}
             <div className="absolute inset-0 z-0 pointer-events-none hidden lg:block">
-                {!isMobile && (
+                {!isMobile && mountSpline && (
                     <SplineScene
                         scene="https://prod.spline.design/qF9apOu8tJv1sgOk/scene.splinecode"
                         onLoad={handleSplineLoad}

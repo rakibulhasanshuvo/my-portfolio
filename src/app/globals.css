@@ -61,6 +61,22 @@ h1, h2, h3, h4, h5, h6 {
   background: #555;
 }
 
+/* Animations */
+@keyframes slideDownFade {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-entry {
+  animation: slideDownFade 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
 /* Utilities */
 .glass {
   background: color-mix(in srgb, var(--background) 60%, transparent);
