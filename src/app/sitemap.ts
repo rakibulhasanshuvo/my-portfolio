@@ -1,6 +1,5 @@
 import { MetadataRoute } from 'next';
-import { profile } from '@/data/profile';
-const projects = profile.projects;
+import { projects } from '@/lib/constants';
 import { blogPosts } from '@/data/blog';
 
 export default function sitemap(): MetadataRoute.Sitemap {
