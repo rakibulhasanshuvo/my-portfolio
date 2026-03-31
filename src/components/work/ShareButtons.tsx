@@ -3,12 +3,14 @@
 import { motion } from 'framer-motion';
 import { Twitter, Linkedin, Link2, Check } from 'lucide-react';
 import { useState, useEffect } from 'react';
+import { useOptimizedMotion } from '@/lib/motion';
 
 interface ShareButtonsProps {
     title: string;
 }
 
 export function ShareButtons({ title }: ShareButtonsProps) {
+    const { isMobile, shouldReduceMotion } = useOptimizedMotion();
     const [copied, setCopied] = useState(false);
     const [url, setUrl] = useState('');
 
@@ -47,7 +49,7 @@ export function ShareButtons({ title }: ShareButtonsProps) {
                     href={shareData.twitter}
                     target="_blank"
                     rel="noopener noreferrer"
-                    whileHover={{ y: -2 }}
+                    whileHover={shouldReduceMotion || isMobile ? undefined : { y: -2 }}
                     className="p-3 rounded-full bg-foreground/5 border border-foreground/10 hover:border-purple-500/50 hover:bg-purple-500/10 transition-colors group"
                     title="Share on Twitter"
                 >
@@ -57,7 +59,7 @@ export function ShareButtons({ title }: ShareButtonsProps) {
                     href={shareData.linkedin}
                     target="_blank"
                     rel="noopener noreferrer"
-                    whileHover={{ y: -2 }}
+                    whileHover={shouldReduceMotion || isMobile ? undefined : { y: -2 }}
                     className="p-3 rounded-full bg-foreground/5 border border-foreground/10 hover:border-purple-500/50 hover:bg-purple-500/10 transition-colors group"
                     title="Share on LinkedIn"
                 >
@@ -65,7 +67,7 @@ export function ShareButtons({ title }: ShareButtonsProps) {
                 </motion.a>
                 <motion.button
                     onClick={copyToClipboard}
-                    whileHover={{ y: -2 }}
+                    whileHover={shouldReduceMotion || isMobile ? undefined : { y: -2 }}
                     className="p-3 rounded-full bg-foreground/5 border border-foreground/10 hover:border-purple-500/50 hover:bg-purple-500/10 transition-colors group relative"
                     title="Copy Link"
                 >

@@ -4,19 +4,26 @@ import { motion } from 'framer-motion';
 import { Download, MapPin } from 'lucide-react';
 import Image from 'next/image';
 import { profile } from '@/data/profile';
+import { useOptimizedMotion } from '@/lib/motion';
 
 export default function About() {
+    const { isMobile, shouldReduceMotion, transition } = useOptimizedMotion();
+
     return (
         <section id="about" className="py-32 px-6 max-w-7xl mx-auto">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
 
                 {/* Photo Side */}
                 <motion.div
-                    initial={{ opacity: 0, x: -50 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.8 }}
+                    initial={shouldReduceMotion ? false : (isMobile ? { opacity: 0 } : { opacity: 0, x: -50 })}
+                    whileInView={shouldReduceMotion ? undefined : { opacity: 1, x: 0 }}
+
+                    layout={!isMobile}
+                    transition={{ ...transition, duration: isMobile ? transition.duration : 0.8 }}
+
                     viewport={{ once: true }}
                     className="relative"
+                    style={shouldReduceMotion ? { opacity: 1, x: 0 } : undefined}
                 >
                     <div className="aspect-square rounded-3xl bg-gradient-to-br from-purple-500/20 to-blue-500/20 overflow-hidden border border-foreground/10 relative group">
                         <div className="absolute inset-0 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center bg-background/60">
@@ -34,11 +41,15 @@ export default function About() {
 
                     {/* Location Badge */}
                     <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.3, duration: 0.5 }}
+                        initial={shouldReduceMotion ? false : (isMobile ? { opacity: 0 } : { opacity: 0, y: 20 })}
+                        whileInView={shouldReduceMotion ? undefined : { opacity: 1, y: 0 }}
+
+                        layout={!isMobile}
+                        transition={{ ...transition, delay: 0.3, duration: 0.5 }}
+
                         viewport={{ once: true }}
                         className="absolute -bottom-6 left-8 px-4 py-2 bg-foreground/5 backdrop-blur-md border border-foreground/10 rounded-full flex items-center gap-2"
+                        style={shouldReduceMotion ? { opacity: 1, y: 0 } : undefined}
                     >
                         <MapPin size={16} className="text-purple-400" />
                         <span className="text-sm text-foreground/70">Bangladesh</span>
@@ -47,10 +58,14 @@ export default function About() {
 
                 {/* Content Side */}
                 <motion.div
-                    initial={{ opacity: 0, x: 50 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.8 }}
+                    initial={shouldReduceMotion ? false : (isMobile ? { opacity: 0 } : { opacity: 0, x: 50 })}
+                    whileInView={shouldReduceMotion ? undefined : { opacity: 1, x: 0 }}
+
+                    layout={!isMobile}
+                    transition={{ ...transition, duration: isMobile ? transition.duration : 0.8 }}
+
                     viewport={{ once: true }}
+                    style={shouldReduceMotion ? { opacity: 1, x: 0 } : undefined}
                 >
                     <span className="overline-label">The Story</span>
                     <h2 className="text-5xl md:text-7xl font-bold mb-8 leading-[0.9] tracking-tighter uppercase italic">
