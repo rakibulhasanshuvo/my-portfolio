@@ -21,14 +21,35 @@ export default function Hero() {
     const [mountSpline, setMountSpline] = useState(false);
     const words = "Rakibul Hasan Shuvo".split(" ");
 
-    // Defer mounting the Spline component slightly to allow initial UI to render smoothly
+    // Drastically defer mounting the Spline component to ensure the main thread
+    // is completely free for LCP/FCP and initial user interaction. This prevents
+    // the massive 15s Total Blocking Time (TBT) seen on PageSpeed Insights.
     useEffect(() => {
+        // If the user hasn't scrolled or interacted within 3.5s, load it anyway.
+        // We use 3.5s to comfortably clear the initial page load execution window.
         const timer = setTimeout(() => {
-            setMountSpline(true);
-        }, 1000); // 1s delay ensures initial paint finishes first
+            if (!isMobile) setMountSpline(true);
+        }, 3500);
 
-        return () => clearTimeout(timer);
-    }, []);
+        // Or load immediately on first interaction (scroll, mousemove, touch)
+        const handleInteraction = () => {
+            if (!isMobile) setMountSpline(true);
+            window.removeEventListener('scroll', handleInteraction);
+            window.removeEventListener('mousemove', handleInteraction);
+            window.removeEventListener('touchstart', handleInteraction);
+        };
+
+        window.addEventListener('scroll', handleInteraction, { once: true, passive: true });
+        window.addEventListener('mousemove', handleInteraction, { once: true, passive: true });
+        window.addEventListener('touchstart', handleInteraction, { once: true, passive: true });
+
+        return () => {
+            clearTimeout(timer);
+            window.removeEventListener('scroll', handleInteraction);
+            window.removeEventListener('mousemove', handleInteraction);
+            window.removeEventListener('touchstart', handleInteraction);
+        };
+    }, [isMobile]);
 
     const handleSplineLoad = useCallback((spline: Application) => {
         // Find and hide all objects that appear to be text
