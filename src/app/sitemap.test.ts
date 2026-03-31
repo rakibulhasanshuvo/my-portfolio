@@ -1,12 +1,12 @@
 import { expect, test, describe } from 'vitest';
 import sitemap from './sitemap';
-import { profile } from '@/data/profile';
+import { projects } from '@/lib/constants';
 import { blogPosts } from '@/data/blog';
 
 describe('sitemap', () => {
     test('should generate the correct number of URLs', () => {
         const result = sitemap();
-        const expectedLength = 2 + profile.projects.length + blogPosts.length;
+        const expectedLength = 2 + projects.length + blogPosts.length;
         expect(result).toHaveLength(expectedLength);
     });
 
@@ -35,7 +35,7 @@ describe('sitemap', () => {
     test('should include dynamic project routes', () => {
         const result = sitemap();
 
-        for (const project of profile.projects) {
+        for (const project of projects) {
             const projectRoute = result.find(route => route.url === `https://rakibul.dev/work/${project.id}`);
             expect(projectRoute).toBeDefined();
             expect(projectRoute).toEqual({

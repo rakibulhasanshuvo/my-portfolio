@@ -12,6 +12,10 @@ export const secondRowTechnologies = [...reversedTech, ...reversedTech, ...rever
 
 import { blogPosts } from '@/data/blog';
 
+// Projects Constants
+export const projects = profile.projects;
+export const categories = ['All', ...Array.from(new Set(projects.map(p => p.category)))];
+
 // Lookups Maps for O(1) Access
-export const projectMap = Object.fromEntries(profile.projects.map(p => [p.id, p]));
+export const projectMap = Object.fromEntries(projects.map(p => [p.id, p]));
 export const blogPostMap = Object.fromEntries(blogPosts.map(p => [p.slug, p]));

@@ -1,6 +1,4 @@
-import { profile } from '@/data/profile';
-const projects = profile.projects;
-import { projectMap } from '@/lib/constants';
+import { projects, projectMap } from '@/lib/constants';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';

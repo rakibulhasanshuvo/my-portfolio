@@ -4,10 +4,8 @@ import { motion, useMotionTemplate, useMotionValue, AnimatePresence } from 'fram
 import { MouseEvent, useState } from 'react';
 import { ExternalLink, Github, Play } from 'lucide-react';
 
-import { profile } from '@/data/profile';
 import { useOptimizedMotion } from '@/lib/motion';
-const projects = profile.projects;
-const categories = ['All', ...Array.from(new Set(projects.map(p => p.category)))];
+import { projects, categories } from '@/lib/constants';
 
 import Link from 'next/link';
 import Image from 'next/image';
