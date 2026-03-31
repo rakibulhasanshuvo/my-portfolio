@@ -3,21 +3,16 @@
 import { motion } from 'framer-motion';
 import { useCallback } from 'react';
 import type { Application } from '@splinetool/runtime';
-import dynamic from 'next/dynamic';
 import AuroraBackground from './ui/AuroraBackground';
+import SplineScene from './ui/SplineScene';
 import { profile } from '@/data/profile';
 import { useMobile } from '@/hooks/useMobile';
-import { skills, duplicatedSkills } from '@/lib/constants';
 
-const SplineScene = dynamic(() => import('./ui/SplineScene'), {
-    ssr: false,
-});
+const skills = profile.hero.skills;
+const duplicatedSkills = [...skills, ...skills, ...skills];
 
 export default function Hero() {
-    // Default to true during SSR to prevent heavy 3D loading before hydration on mobile.
-    // This might cause a hydration mismatch if loaded on desktop, but the visual pop-in
-    // is better than a 20s lockup on mobile.
-    const isMobile = useMobile(1024, true);
+    const isMobile = useMobile(1024); // Tablets and below shouldn't load Spline
     const words = "Rakibul Hasan Shuvo".split(" ");
 
     const handleSplineLoad = useCallback((spline: Application) => {
@@ -51,18 +46,13 @@ export default function Hero() {
             <AuroraBackground />
 
             {/* 3D Spline Design - Hidden on mobile for performance */}
-            <div className="absolute inset-0 z-0 pointer-events-none hidden lg:block">
-                {!isMobile && (
-                    <SplineScene
-                        scene="https://prod.spline.design/qF9apOu8tJv1sgOk/scene.splinecode"
-                        onLoad={handleSplineLoad}
-                        className="w-full h-full"
-                    />
-                )}
-            </div>
-
-            {/* Mobile Static Fallback */}
-            <div className="absolute inset-0 z-0 pointer-events-none block lg:hidden bg-gradient-to-b from-purple-900/20 via-background to-background" />
+            {!isMobile && (
+                <SplineScene
+                    scene="https://prod.spline.design/qF9apOu8tJv1sgOk/scene.splinecode"
+                    onLoad={handleSplineLoad}
+                    className="absolute inset-0 z-0 pointer-events-none hidden lg:block"
+                />
+            )}
 
             {/* Overline label */}
             <motion.span

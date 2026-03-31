@@ -1,6 +1,5 @@
 import { profile } from '@/data/profile';
 const projects = profile.projects;
-import { projectMap } from '@/lib/constants';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -14,7 +13,7 @@ interface Props {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const { slug } = await params;
-    const project = projectMap[slug];
+    const project = projects.find((p) => p.id === slug);
     if (!project) return {};
 
     return {
@@ -36,7 +35,7 @@ export async function generateStaticParams() {
 
 export default async function ProjectPage({ params }: Props) {
     const { slug } = await params;
-    const project = projectMap[slug];
+    const project = projects.find((p) => p.id === slug);
 
     if (!project) {
         notFound();

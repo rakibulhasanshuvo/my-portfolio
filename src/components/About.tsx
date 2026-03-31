@@ -26,8 +26,6 @@ export default function About() {
                             src="/rakibul.jpeg"
                             alt="Rakibul Hasan Shuvo"
                             fill
-                            sizes="(max-width: 768px) 100vw, 50vw"
-                            priority={true}
                             className="object-cover"
                         />
                     </div>

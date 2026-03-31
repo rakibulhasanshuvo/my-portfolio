@@ -1,5 +1,4 @@
 import { blogPosts } from '@/data/blog';
-import { blogPostMap } from '@/lib/constants';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 
@@ -10,7 +9,7 @@ export async function generateStaticParams() {
 }
 
 export default function BlogPostPage({ params }: { params: { slug: string } }) {
-    const post = blogPostMap[params.slug];
+    const post = blogPosts.find((p) => p.slug === params.slug);
 
     if (!post) {
         notFound();
