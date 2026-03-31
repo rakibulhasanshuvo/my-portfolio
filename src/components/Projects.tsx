@@ -5,6 +5,7 @@ import { MouseEvent, useState } from 'react';
 import { ExternalLink, Github, Play } from 'lucide-react';
 
 import { profile } from '@/data/profile';
+import { useOptimizedMotion } from '@/lib/motion';
 const projects = profile.projects;
 const categories = ['All', ...Array.from(new Set(projects.map(p => p.category)))];
 
@@ -12,6 +13,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 
 function Card({ project }: { project: typeof projects[0] }) {
+    const { isMobile, shouldReduceMotion } = useOptimizedMotion();
     const mouseX = useMotionValue(0);
     const mouseY = useMotionValue(0);
 
@@ -23,14 +25,15 @@ function Card({ project }: { project: typeof projects[0] }) {
 
     return (
         <motion.div
-            layout
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.9 }}
+            layout={!isMobile}
+            initial={shouldReduceMotion ? false : (isMobile ? { opacity: 0 } : { opacity: 0, scale: 0.9 })}
+            animate={shouldReduceMotion ? undefined : { opacity: 1, scale: 1 }}
+            exit={isMobile ? { opacity: 0, transitionEnd: { display: "none" } } : { opacity: 0, scale: 0.9, transitionEnd: { display: "none" } }}
             transition={{ duration: 0.3 }}
             className="group relative border border-foreground/10 rounded-2xl bg-card overflow-hidden flex flex-col h-full"
-            onMouseMove={handleMouseMove}
-            whileHover={{ y: -5 }}
+            onMouseMove={isMobile ? undefined : handleMouseMove}
+            whileHover={isMobile ? undefined : { y: -5 }}
+            style={shouldReduceMotion ? { opacity: 1, scale: 1 } : undefined}
         >
             {/* Project Image/Video Preview */}
             <div className="relative h-48 w-full overflow-hidden bg-foreground/5">
@@ -113,6 +116,7 @@ function Card({ project }: { project: typeof projects[0] }) {
 
 export default function Projects() {
     const [filter, setFilter] = useState('All');
+    const { isMobile, shouldReduceMotion, transition } = useOptimizedMotion();
 
     const filteredProjects = filter === 'All'
         ? projects
@@ -122,19 +126,28 @@ export default function Projects() {
         <section id="work" className="py-20 mt-20 px-6 max-w-7xl mx-auto">
             <div className="flex flex-col items-center mb-16">
                 <motion.span
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
+                    initial={shouldReduceMotion ? false : (isMobile ? { opacity: 0 } : { opacity: 0, y: 20 })}
+                    whileInView={shouldReduceMotion ? undefined : { opacity: 1, y: 0 }}
+
+                    layout={!isMobile}
+                    transition={{ ...transition }}
+
                     viewport={{ once: true }}
                     className="overline-label"
+                    style={shouldReduceMotion ? { opacity: 1, y: 0 } : undefined}
                 >
                     Portfolio
                 </motion.span>
                 <motion.h2
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: 0.1 }}
+                    initial={shouldReduceMotion ? false : (isMobile ? { opacity: 0 } : { opacity: 0, y: 20 })}
+                    whileInView={shouldReduceMotion ? undefined : { opacity: 1, y: 0 }}
+
+                    layout={!isMobile}
+                    transition={{ ...transition, duration: isMobile ? transition.duration : 0.6, delay: 0.1 }}
+
                     viewport={{ once: true }}
                     className="text-5xl md:text-7xl font-bold mb-10 text-center uppercase italic tracking-tighter"
+                    style={shouldReduceMotion ? { opacity: 1, y: 0 } : undefined}
                 >
                     Selected Works
                 </motion.h2>
@@ -151,8 +164,9 @@ export default function Projects() {
                             {filter === cat && (
                                 <motion.div
                                     layoutId="activeTab"
+                                    layout={!isMobile}
                                     className="absolute inset-0 bg-purple-600 rounded-full -z-10"
-                                    transition={{ type: 'spring', duration: 0.5 }}
+                                    transition={isMobile ? { type: 'tween', duration: 0.3 } : { type: 'spring', duration: 0.5 }}
                                 />
                             )}
                             {cat}
@@ -162,7 +176,7 @@ export default function Projects() {
             </div>
 
             <motion.div
-                layout
+                layout={!isMobile}
                 className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
             >
                 <AnimatePresence mode='popLayout'>

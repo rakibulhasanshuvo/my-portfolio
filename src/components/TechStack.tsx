@@ -3,8 +3,11 @@
 import { motion } from 'framer-motion';
 
 import { firstRowTechnologies, secondRowTechnologies } from '@/lib/constants';
+import { useOptimizedMotion } from '@/lib/motion';
 
 export default function TechStack() {
+    const { shouldReduceMotion } = useOptimizedMotion();
+
     return (
         <section className="py-20 overflow-hidden border-y border-foreground/5">
             <div className="relative">
@@ -12,7 +15,7 @@ export default function TechStack() {
                 <div className="flex mb-6 overflow-hidden">
                     <motion.div
                         className="flex gap-6 whitespace-nowrap"
-                        animate={{ x: [0, -1000] }}
+                        animate={shouldReduceMotion ? undefined : { x: [0, -1000] }}
                         transition={{
                             x: {
                                 repeat: Infinity,
@@ -21,6 +24,7 @@ export default function TechStack() {
                                 ease: "linear",
                             },
                         }}
+                        style={shouldReduceMotion ? { x: 0 } : undefined}
                     >
                         {firstRowTechnologies.map((tech, i) => (
                             <div
@@ -38,7 +42,7 @@ export default function TechStack() {
                 <div className="flex overflow-hidden">
                     <motion.div
                         className="flex gap-6 whitespace-nowrap"
-                        animate={{ x: [-1000, 0] }}
+                        animate={shouldReduceMotion ? undefined : { x: [-1000, 0] }}
                         transition={{
                             x: {
                                 repeat: Infinity,
@@ -47,6 +51,7 @@ export default function TechStack() {
                                 ease: "linear",
                             },
                         }}
+                        style={shouldReduceMotion ? { x: -1000 } : undefined}
                     >
                         {secondRowTechnologies.map((tech, i) => (
                             <div

@@ -7,13 +7,15 @@ import dynamic from 'next/dynamic';
 import AuroraBackground from './ui/AuroraBackground';
 import { profile } from '@/data/profile';
 import { useMobile } from '@/hooks/useMobile';
-import { skills, duplicatedSkills } from '@/lib/constants';
+import { duplicatedSkills } from '@/lib/constants';
+import { useOptimizedMotion } from '@/lib/motion';
 
 const SplineScene = dynamic(() => import('./ui/SplineScene'), {
     ssr: false,
 });
 
 export default function Hero() {
+    const { shouldReduceMotion } = useOptimizedMotion();
     // Default to true during SSR to prevent heavy 3D loading before hydration on mobile.
     // This might cause a hydration mismatch if loaded on desktop, but the visual pop-in
     // is better than a 20s lockup on mobile.
@@ -76,10 +78,11 @@ export default function Hero() {
 
             {/* Overline label */}
             <motion.span
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
+                initial={shouldReduceMotion ? false : (isMobile ? { opacity: 0 } : { opacity: 0, y: 20 })}
+                animate={shouldReduceMotion ? undefined : { opacity: 1, y: 0 }}
                 transition={{ delay: 0.5, duration: 0.8 }}
                 className="overline-label z-10"
+                style={shouldReduceMotion ? { opacity: 1, y: 0 } : undefined}
             >
                 Digital Architect & Developer
             </motion.span>
@@ -96,14 +99,15 @@ export default function Hero() {
                             {word.split("").map((char, charIndex) => (
                                 <motion.span
                                     key={charIndex}
-                                    initial={{ opacity: 0, y: 100, rotateX: -90 }}
-                                    animate={{ opacity: 1, y: 0, rotateX: 0 }}
+                                    initial={shouldReduceMotion ? false : (isMobile ? { opacity: 0 } : { opacity: 0, y: 100, rotateX: -90 })}
+                                    animate={shouldReduceMotion ? undefined : { opacity: 1, y: 0, rotateX: 0 }}
                                     transition={{
                                         duration: 1,
                                         delay: (prevWordsLength + charIndex) * 0.03,
                                         ease: [0.16, 1, 0.3, 1]
                                     }}
                                     className="inline-block"
+                                    style={shouldReduceMotion ? { opacity: 1, y: 0, rotateX: 0 } : undefined}
                                 >
                                     {char}
                                 </motion.span>
@@ -118,10 +122,11 @@ export default function Hero() {
 
             {/* Subtext */}
             <motion.p
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
+                initial={shouldReduceMotion ? false : (isMobile ? { opacity: 0 } : { opacity: 0, y: 20 })}
+                animate={shouldReduceMotion ? undefined : { opacity: 1, y: 0 }}
                 transition={{ delay: 1.2, duration: 0.8 }}
                 className="text-lg md:text-2xl text-foreground/60 mb-16 text-center max-w-3xl px-6 z-10 font-medium leading-relaxed"
+                style={shouldReduceMotion ? { opacity: 1, y: 0 } : undefined}
             >
                 {profile.hero.tagline}
             </motion.p>
@@ -130,17 +135,18 @@ export default function Hero() {
             <div className="w-full max-w-4xl overflow-hidden relative z-10 mask-gradient py-10">
                 <motion.div
                     className="flex gap-8 whitespace-nowrap"
-                    animate={{ x: [0, -1000] }}
+                    animate={shouldReduceMotion ? undefined : { x: [0, -1000] }}
                     transition={{
                         repeat: Infinity,
                         ease: "linear",
                         duration: 35
                     }}
+                    style={shouldReduceMotion ? { x: 0 } : undefined}
                 >
                     {duplicatedSkills.map((skill, index) => (
                         <motion.div
                             key={index}
-                            animate={{
+                            animate={shouldReduceMotion || isMobile ? false : {
                                 y: [0, -10, 0]
                             }}
                             transition={{
@@ -150,6 +156,7 @@ export default function Hero() {
                                 delay: index * 0.2 // Deterministic delay
                             }}
                             className="px-6 py-3 rounded-full border border-foreground/10 bg-foreground/5 backdrop-blur-md text-sm font-medium text-foreground/80 hover:bg-foreground/10 transition-colors cursor-default hover:border-foreground/20"
+                            style={shouldReduceMotion || isMobile ? { y: 0 } : undefined}
                         >
                             {skill}
                         </motion.div>

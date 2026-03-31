@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { Code2, Palette, TrendingUp } from 'lucide-react';
 
 import { profile } from '@/data/profile';
+import { useOptimizedMotion } from '@/lib/motion';
 
 const iconMap = {
     Code2,
@@ -14,23 +15,34 @@ const iconMap = {
 const services = profile.services;
 
 export default function Services() {
+    const { isMobile, shouldReduceMotion, transition } = useOptimizedMotion();
+
     return (
         <section className="py-32 px-6 max-w-7xl mx-auto">
             <div className="text-center mb-20">
                 <motion.span
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
+                    initial={shouldReduceMotion ? false : (isMobile ? { opacity: 0 } : { opacity: 0, y: 20 })}
+                    whileInView={shouldReduceMotion ? undefined : { opacity: 1, y: 0 }}
+
+                    layout={!isMobile}
+                    transition={{ ...transition }}
+
                     viewport={{ once: true }}
                     className="overline-label"
+                    style={shouldReduceMotion ? { opacity: 1, y: 0 } : undefined}
                 >
                     Expertise
                 </motion.span>
                 <motion.h2
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: 0.1 }}
+                    initial={shouldReduceMotion ? false : (isMobile ? { opacity: 0 } : { opacity: 0, y: 20 })}
+                    whileInView={shouldReduceMotion ? undefined : { opacity: 1, y: 0 }}
+
+                    layout={!isMobile}
+                    transition={{ ...transition, duration: isMobile ? transition.duration : 0.6, delay: 0.1 }}
+
                     viewport={{ once: true }}
                     className="text-5xl md:text-7xl font-bold uppercase italic tracking-tighter"
+                    style={shouldReduceMotion ? { opacity: 1, y: 0 } : undefined}
                 >
                     Solutions & Services
                 </motion.h2>
@@ -40,12 +52,16 @@ export default function Services() {
                 {services.map((service, index) => (
                     <motion.div
                         key={index}
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.5, delay: index * 0.1 }}
+                        initial={shouldReduceMotion ? false : (isMobile ? { opacity: 0 } : { opacity: 0, y: 20 })}
+                        whileInView={shouldReduceMotion ? undefined : { opacity: 1, y: 0 }}
+
+                        layout={!isMobile}
+                        transition={{ ...transition, duration: isMobile ? transition.duration : 0.5, delay: index * 0.1 }}
+
                         viewport={{ once: true }}
-                        whileHover={{ y: -5 }}
+                        whileHover={isMobile ? undefined : { y: -5 }}
                         className="p-8 rounded-2xl bg-foreground/5 border border-foreground/5 backdrop-blur-sm hover:bg-foreground/10 transition-colors"
+                        style={shouldReduceMotion ? { opacity: 1, y: 0 } : undefined}
                     >
                         <div className="mb-6 p-4 rounded-full bg-foreground/5 w-fit">
                             {(() => {

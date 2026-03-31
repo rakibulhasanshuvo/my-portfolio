@@ -2,19 +2,26 @@
 
 import { motion } from 'framer-motion';
 import { profile } from '@/data/profile';
+import { useOptimizedMotion } from '@/lib/motion';
 
 const workflow = profile.workflow;
 
 export default function Workflow() {
+    const { isMobile, shouldReduceMotion, transition } = useOptimizedMotion();
+
     return (
         <section className="py-32 px-6 relative overflow-hidden">
             <div className="max-w-7xl mx-auto">
                 <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6 }}
+                    initial={shouldReduceMotion ? false : (isMobile ? { opacity: 0 } : { opacity: 0, y: 20 })}
+                    whileInView={shouldReduceMotion ? undefined : { opacity: 1, y: 0 }}
+
+                    layout={!isMobile}
+                    transition={{ ...transition, duration: isMobile ? transition.duration : 0.6 }}
+
                     viewport={{ once: true }}
                     className="text-center mb-20"
+                    style={shouldReduceMotion ? { opacity: 1, y: 0 } : undefined}
                 >
                     <span className="overline-label">The Methodology</span>
                     <h2 className="text-5xl md:text-7xl font-bold uppercase italic tracking-tighter">How I Craft</h2>
@@ -28,11 +35,15 @@ export default function Workflow() {
                         {workflow.map((step, index) => (
                             <motion.div
                                 key={index}
-                                initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
-                                whileInView={{ opacity: 1, x: 0 }}
-                                transition={{ duration: 0.8, delay: index * 0.1 }}
+                                initial={shouldReduceMotion ? false : (isMobile ? { opacity: 0 } : { opacity: 0, x: index % 2 === 0 ? -50 : 50 })}
+                                whileInView={shouldReduceMotion ? undefined : { opacity: 1, x: 0 }}
+
+                                layout={!isMobile}
+                                transition={{ ...transition, duration: isMobile ? transition.duration : 0.8, delay: index * 0.1 }}
+
                                 viewport={{ once: true, margin: "-100px" }}
                                 className={`flex flex-col md:flex-row items-center gap-8 ${index % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'}`}
+                                style={shouldReduceMotion ? { opacity: 1, x: 0 } : undefined}
                             >
                                 {/* Content */}
                                 <div className={`flex-1 ${index % 2 === 0 ? 'md:text-right' : 'md:text-left'}`}>

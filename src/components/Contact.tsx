@@ -11,10 +11,12 @@ const EMAILJS_TEMPLATE_ID = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID || '';
 const EMAILJS_PUBLIC_KEY = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY || '';
 
 import { profile } from '@/data/profile';
+import { useOptimizedMotion } from '@/lib/motion';
 
 const YOUR_EMAIL = profile.email;
 
 export default function Contact() {
+    const { isMobile, shouldReduceMotion, transition } = useOptimizedMotion();
     const formRef = useRef<HTMLFormElement>(null);
     const [formState, setFormState] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
     const [errorMessage, setErrorMessage] = useState('');
@@ -72,11 +74,15 @@ export default function Contact() {
     return (
         <section id="contact" className="py-32 px-6 max-w-4xl mx-auto">
             <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6 }}
+                initial={shouldReduceMotion ? false : (isMobile ? { opacity: 0 } : { opacity: 0, y: 20 })}
+                whileInView={shouldReduceMotion ? undefined : { opacity: 1, y: 0 }}
+
+                layout={!isMobile}
+                transition={{ ...transition, duration: 0.6 }}
+
                 viewport={{ once: true }}
                 className="text-center mb-16"
+                style={shouldReduceMotion ? { opacity: 1, y: 0 } : undefined}
             >
                 <span className="overline-label">Contact</span>
                 <h2 className="text-5xl md:text-7xl font-bold mb-8 uppercase italic tracking-tighter">Let&apos;s Connect</h2>
@@ -92,18 +98,25 @@ export default function Contact() {
             </motion.div>
 
             <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.2 }}
+                initial={shouldReduceMotion ? false : (isMobile ? { opacity: 0 } : { opacity: 0, y: 20 })}
+                whileInView={shouldReduceMotion ? undefined : { opacity: 1, y: 0 }}
+
+                layout={!isMobile}
+                transition={{ ...transition, duration: 0.6, delay: 0.2 }}
+
                 viewport={{ once: true }}
                 className="bg-foreground/5 border border-foreground/5 rounded-3xl p-8 md:p-12 backdrop-blur-sm"
+                style={shouldReduceMotion ? { opacity: 1, y: 0 } : undefined}
             >
                 {formState === 'success' ? (
                     <div className="flex flex-col items-center justify-center h-[300px] text-center">
                         <motion.div
-                            initial={{ scale: 0 }}
-                            animate={{ scale: 1 }}
+                            initial={shouldReduceMotion ? false : (isMobile ? { opacity: 0 } : { scale: 0 })}
+                            animate={shouldReduceMotion ? undefined : { opacity: 1, scale: 1 }}
+                            layout={!isMobile}
+                            transition={{ ...transition }}
                             className="bg-green-500/20 p-4 rounded-full text-green-400 mb-6"
+                            style={shouldReduceMotion ? { opacity: 1, scale: 1 } : undefined}
                         >
                             <CheckCircle size={48} />
                         </motion.div>
@@ -119,9 +132,12 @@ export default function Contact() {
                 ) : formState === 'error' ? (
                     <div className="flex flex-col items-center justify-center h-[300px] text-center">
                         <motion.div
-                            initial={{ scale: 0 }}
-                            animate={{ scale: 1 }}
+                            initial={shouldReduceMotion ? false : (isMobile ? { opacity: 0 } : { scale: 0 })}
+                            animate={shouldReduceMotion ? undefined : { opacity: 1, scale: 1 }}
+                            layout={!isMobile}
+                            transition={{ ...transition }}
                             className="bg-red-500/20 p-4 rounded-full text-red-400 mb-6"
+                            style={shouldReduceMotion ? { opacity: 1, scale: 1 } : undefined}
                         >
                             <AlertCircle size={48} />
                         </motion.div>
