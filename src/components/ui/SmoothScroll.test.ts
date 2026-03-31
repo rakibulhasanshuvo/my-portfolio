@@ -17,6 +17,7 @@ vi.mock('react', async () => {
     useEffect: (effect: () => void | (() => void)) => {
       effectCallback = effect;
     },
+    useState: (initialState: any) => [initialState, vi.fn()],
   };
 });
 

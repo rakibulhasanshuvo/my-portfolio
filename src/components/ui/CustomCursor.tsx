@@ -5,7 +5,15 @@ import { motion, useMotionValue, useSpring } from 'framer-motion';
 import { useMobile } from '@/hooks/useMobile';
 
 export default function CustomCursor() {
-    const isMobile = useMobile(1024);
+    // 1024px to cover tablets too as they are touch devices mostly
+    const isMobile = useMobile(1024, true);
+
+    if (isMobile) return null;
+
+    return <DesktopCustomCursor />;
+}
+
+function DesktopCustomCursor() {
     const [isHovered, setIsHovered] = useState(false);
     const cursorX = useMotionValue(-100);
     const cursorY = useMotionValue(-100);
@@ -16,8 +24,6 @@ export default function CustomCursor() {
     const cursorYSpring = useSpring(cursorY, springConfig);
 
     useEffect(() => {
-        if (isMobile) return;
-
         const moveCursor = (e: MouseEvent) => {
             cursorX.set(e.clientX - 16);
             cursorY.set(e.clientY - 16);
@@ -36,9 +42,7 @@ export default function CustomCursor() {
             window.removeEventListener('mousemove', moveCursor);
             window.removeEventListener('mouseover', handleOver);
         };
-    }, [cursorX, cursorY, isMobile]);
-
-    if (isMobile) return null;
+    }, [cursorX, cursorY]);
 
     return (
         <motion.div

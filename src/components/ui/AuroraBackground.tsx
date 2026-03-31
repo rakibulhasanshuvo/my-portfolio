@@ -5,16 +5,10 @@ import { useMobile } from '@/hooks/useMobile';
 
 export default function AuroraBackground() {
     const isMobile = useMobile(768, true);
-    const { scrollYProgress } = useScroll();
 
-    // Create parallax effect - different speeds for different layers
-    const y1 = useTransform(scrollYProgress, [0, 1], [0, -200], { clamp: false });
-    const y2 = useTransform(scrollYProgress, [0, 1], [0, -100], { clamp: false });
-    const y3 = useTransform(scrollYProgress, [0, 1], [0, -300], { clamp: false });
+    // Extract heavy Framer Motion scroll listeners to a child component
+    // so they are never even registered/initialized on mobile devices.
 
-    // Lightweight static radial gradients for mobile.
-    // Provides the "Cyber-Luxury" vibe with large color blobs without
-    // the severe GPU penalty of animated mix-blend-mode and huge blur radiuses.
     if (isMobile) {
         return (
             <div className="absolute inset-0 overflow-hidden pointer-events-none -z-10">
@@ -24,6 +18,18 @@ export default function AuroraBackground() {
             </div>
         );
     }
+
+    return <DesktopAuroraBackground />;
+}
+
+function DesktopAuroraBackground() {
+    const { scrollYProgress } = useScroll();
+
+    // Create parallax effect - different speeds for different layers
+    const y1 = useTransform(scrollYProgress, [0, 1], [0, -200], { clamp: false });
+    const y2 = useTransform(scrollYProgress, [0, 1], [0, -100], { clamp: false });
+    const y3 = useTransform(scrollYProgress, [0, 1], [0, -300], { clamp: false });
+
 
     return (
         <div className="absolute inset-0 overflow-hidden pointer-events-none -z-10">
