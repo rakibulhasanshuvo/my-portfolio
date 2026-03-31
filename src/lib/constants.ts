@@ -7,7 +7,8 @@ export const duplicatedSkills = [...skills, ...skills, ...skills];
 // TechStack Section Constants
 export const technologies = profile.techStack;
 export const firstRowTechnologies = [...technologies, ...technologies, ...technologies];
-export const secondRowTechnologies = [...technologies.slice().reverse(), ...technologies, ...technologies];
+const reversedTech = [...technologies].reverse();
+export const secondRowTechnologies = [...reversedTech, ...reversedTech, ...reversedTech];
 
 import { blogPosts } from '@/data/blog';
 
