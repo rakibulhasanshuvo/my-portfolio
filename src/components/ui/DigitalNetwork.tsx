@@ -13,7 +13,10 @@ interface Particle {
     baseY: number;
 }
 
+import { useMobile } from '@/hooks/useMobile';
+
 export default function DigitalNetwork() {
+    const isMobile = useMobile(768, true);
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const containerRef = useRef<HTMLDivElement>(null);
     const { scrollYProgress } = useScroll();
@@ -50,6 +53,8 @@ export default function DigitalNetwork() {
     }, []);
 
     useEffect(() => {
+        if (isMobile) return;
+
         const canvas = canvasRef.current;
         if (!canvas) return;
 
@@ -144,7 +149,22 @@ export default function DigitalNetwork() {
             window.removeEventListener('touchmove', handleTouchMove);
             if (animationFrameId.current) cancelAnimationFrame(animationFrameId.current);
         };
-    }, [initParticles]);
+    }, [initParticles, isMobile]);
+
+    if (isMobile) {
+        return (
+            <div ref={containerRef} className="fixed inset-0 pointer-events-none z-[-10] overflow-hidden">
+                <div
+                    className="absolute inset-0 opacity-[0.03] dark:opacity-[0.05]"
+                    style={{
+                        backgroundImage: `linear-gradient(to right, currentColor 1px, transparent 1px), linear-gradient(to bottom, currentColor 1px, transparent 1px)`,
+                        backgroundSize: '40px 40px',
+                        color: 'var(--foreground)'
+                    }}
+                />
+            </div>
+        );
+    }
 
     return (
         <div ref={containerRef} className="fixed inset-0 pointer-events-none z-[-10] overflow-hidden">
