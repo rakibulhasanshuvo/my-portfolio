@@ -30,7 +30,7 @@ export default function AuroraBackground() {
             {/* Layer 1 - Slowest */}
             <motion.div
                 className="absolute top-[-10%] left-[-10%] w-[50vw] h-[50vw] bg-purple-600/30 rounded-full blur-[120px] dark:mix-blend-screen mix-blend-multiply opacity-50 dark:opacity-100"
-                style={{ y: y1, willChange: 'transform' }}
+                style={{ y: y1, willChange: 'transform, filter' }}
                 animate={{
                     x: [0, 100, 0],
                     scale: [1, 1.2, 1],
@@ -45,7 +45,7 @@ export default function AuroraBackground() {
             {/* Layer 2 - Medium */}
             <motion.div
                 className="absolute top-[20%] right-[-10%] w-[40vw] h-[40vw] bg-blue-600/20 rounded-full blur-[100px] dark:mix-blend-screen mix-blend-multiply opacity-50 dark:opacity-100"
-                style={{ y: y2, willChange: 'transform' }}
+                style={{ y: y2, willChange: 'transform, filter' }}
                 animate={{
                     x: [0, -50, 0],
                     scale: [1, 1.1, 1],
@@ -61,7 +61,7 @@ export default function AuroraBackground() {
             {/* Layer 3 - Fastest parallax */}
             <motion.div
                 className="absolute bottom-[-10%] left-[20%] w-[60vw] h-[60vw] bg-indigo-600/20 rounded-full blur-[140px] dark:mix-blend-screen mix-blend-multiply opacity-50 dark:opacity-100"
-                style={{ y: y3, willChange: 'transform' }}
+                style={{ y: y3, willChange: 'transform, filter' }}
                 animate={{
                     x: [0, 50, 0],
                     scale: [1, 1.3, 1],

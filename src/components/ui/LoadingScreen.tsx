@@ -8,18 +8,42 @@ export default function LoadingScreen() {
     const [progress, setProgress] = useState(0);
 
     useEffect(() => {
-        const interval = setInterval(() => {
-            setProgress((prev) => {
-                if (prev >= 100) {
-                    clearInterval(interval);
-                    setTimeout(() => setIsLoading(false), 500);
-                    return 100;
-                }
-                return prev + Math.floor(Math.random() * 10) + 1;
-            });
-        }, 100);
+        let startTime: number | null = null;
+        let animationFrameId: number;
+        let isCancelled = false;
 
-        return () => clearInterval(interval);
+        // Target duration: 2.5 seconds for loading text to hit 100%
+        const duration = 2500;
+
+        const animate = (timestamp: number) => {
+            if (isCancelled) return;
+            if (!startTime) startTime = timestamp;
+            const elapsed = timestamp - startTime;
+
+            const nextProgress = Math.min(Math.floor((elapsed / duration) * 100), 100);
+
+            setProgress((prev) => {
+                // Only update React state if the value actually changed to avoid thrashing
+                if (prev !== nextProgress) return nextProgress;
+                return prev;
+            });
+
+            if (elapsed < duration) {
+                animationFrameId = requestAnimationFrame(animate);
+            } else {
+                // Done loading
+                setTimeout(() => {
+                    if (!isCancelled) setIsLoading(false);
+                }, 500);
+            }
+        };
+
+        animationFrameId = requestAnimationFrame(animate);
+
+        return () => {
+            isCancelled = true;
+            cancelAnimationFrame(animationFrameId);
+        };
     }, []);
 
     return (
