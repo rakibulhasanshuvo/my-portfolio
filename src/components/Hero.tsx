@@ -23,13 +23,32 @@ export default function Hero() {
     const [mountSpline, setMountSpline] = useState(false);
     const words = "Rakibul Hasan Shuvo".split(" ");
 
-    // Defer mounting the Spline component slightly to allow initial UI to render smoothly
+    // Defer mounting the heavy Spline component until the main thread is idle
+    // This allows the initial UI and critical rendering path to complete instantly.
     useEffect(() => {
-        const timer = setTimeout(() => {
-            setMountSpline(true);
-        }, 1000); // 1s delay ensures initial paint finishes first
+        let mounted = true;
 
-        return () => clearTimeout(timer);
+        // Use requestIdleCallback if available to only mount when CPU is not busy
+        if ('requestIdleCallback' in window) {
+            const idleId = window.requestIdleCallback(() => {
+                if (mounted) setMountSpline(true);
+            }, { timeout: 3000 }); // Force mount after 3s if never idle
+
+            return () => {
+                mounted = false;
+                window.cancelIdleCallback(idleId);
+            };
+        } else {
+            // Fallback for Safari
+            const timer = setTimeout(() => {
+                if (mounted) setMountSpline(true);
+            }, 1000);
+
+            return () => {
+                mounted = false;
+                clearTimeout(timer);
+            };
+        }
     }, []);
 
     const handleSplineLoad = useCallback((spline: Application) => {
