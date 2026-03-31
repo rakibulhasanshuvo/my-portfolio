@@ -8,18 +8,26 @@ export default function LoadingScreen() {
     const [progress, setProgress] = useState(0);
 
     useEffect(() => {
-        const interval = setInterval(() => {
-            setProgress((prev) => {
-                if (prev >= 100) {
-                    clearInterval(interval);
-                    setTimeout(() => setIsLoading(false), 500);
-                    return 100;
-                }
-                return prev + Math.floor(Math.random() * 10) + 1;
-            });
-        }, 100);
+        // Animate progress smoothly from 0 to 100 over 3.5 seconds
+        let startTimestamp: number | null = null;
+        const duration = 3500; // 3.5 seconds
 
-        return () => clearInterval(interval);
+        const step = (timestamp: number) => {
+            if (!startTimestamp) startTimestamp = timestamp;
+            const progressRatio = Math.min((timestamp - startTimestamp) / duration, 1);
+            setProgress(Math.floor(progressRatio * 100));
+
+            if (progressRatio < 1) {
+                window.requestAnimationFrame(step);
+            } else {
+                // Wait 0.5s at 100% before unmounting (Total exactly 4s)
+                setTimeout(() => setIsLoading(false), 500);
+            }
+        };
+
+        const animationId = window.requestAnimationFrame(step);
+
+        return () => window.cancelAnimationFrame(animationId);
     }, []);
 
     return (

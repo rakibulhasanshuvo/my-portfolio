@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { useCallback } from 'react';
+import { useCallback, useState, useEffect } from 'react';
 import type { Application } from '@splinetool/runtime';
 import dynamic from 'next/dynamic';
 import AuroraBackground from './ui/AuroraBackground';
@@ -19,6 +19,17 @@ export default function Hero() {
     // is better than a 20s lockup on mobile.
     const isMobile = useMobile(1024, true);
     const words = "Rakibul Hasan Shuvo".split(" ");
+
+    // State to delay Spline loading until LoadingScreen is nearly finished (3s mark)
+    const [startSpline, setStartSpline] = useState(false);
+
+    useEffect(() => {
+        // Wait 3 seconds before mounting Spline to avoid fighting with the 4s loading animation
+        const timer = setTimeout(() => {
+            setStartSpline(true);
+        }, 3000);
+        return () => clearTimeout(timer);
+    }, []);
 
     const handleSplineLoad = useCallback((spline: Application) => {
         // Find and hide all objects that appear to be text
@@ -52,7 +63,7 @@ export default function Hero() {
 
             {/* 3D Spline Design - Hidden on mobile for performance */}
             <div className="absolute inset-0 z-0 pointer-events-none hidden lg:block">
-                {!isMobile && (
+                {!isMobile && startSpline && (
                     <SplineScene
                         scene="https://prod.spline.design/qF9apOu8tJv1sgOk/scene.splinecode"
                         onLoad={handleSplineLoad}
