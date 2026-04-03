@@ -13,38 +13,106 @@ const navLinks = [
     { name: 'Contact', href: '#contact' }
 ];
 
-// Dynamically configure variants inside component based on optimized motion hook
+// Factory functions for Framer Motion variants
+const getMenuVars = (isMobile: boolean) => ({
+    initial: { opacity: 0, scaleY: isMobile ? 1 : 0 },
+    animate: {
+        opacity: 1,
+        scaleY: 1,
+        transition: { duration: 0.5, ease: [0.12, 0, 0.39, 0] as [number, number, number, number] }
+    },
+    exit: {
+        opacity: 0,
+        scaleY: isMobile ? 1 : 0,
+        transition: { delay: isMobile ? 0 : 0.5, duration: 0.5, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] },
+        transitionEnd: { display: "none" }
+    }
+});
+
+const getContainerVars = () => ({
+    initial: { transition: { staggerChildren: 0.09, staggerDirection: -1 } },
+    open: { transition: { delayChildren: 0.3, staggerChildren: 0.09, staggerDirection: 1 } }
+});
+
+const getLinkVars = (isMobile: boolean) => ({
+    initial: { opacity: 0, y: isMobile ? 0 : "30vh", transition: { duration: 0.5, ease: [0.37, 0, 0.63, 1] as [number, number, number, number] } },
+    open: { opacity: 1, y: 0, transition: { duration: 0.7, ease: [0, 0.55, 0.45, 1] as [number, number, number, number] }, transitionEnd: { display: "block" } }
+});
+
+interface CloseButtonProps {
+    onClick: () => void;
+}
+
+function CloseButton({ onClick }: CloseButtonProps) {
+    return (
+        <div className="absolute top-6 right-6">
+            <button
+                onClick={onClick}
+                className="p-2 text-foreground/70 hover:text-foreground transition-colors"
+                aria-label="Close menu"
+            >
+                <X size={32} />
+            </button>
+        </div>
+    );
+}
+
+interface MenuLinksProps {
+    closeMenu: () => void;
+    isMobile: boolean;
+    shouldReduceMotion: boolean;
+}
+
+function MenuLinks({ closeMenu, isMobile, shouldReduceMotion }: MenuLinksProps) {
+    const containerVars = getContainerVars();
+    const linkVars = getLinkVars(isMobile);
+
+    return (
+        <motion.div
+            variants={containerVars}
+            initial="initial"
+            animate={shouldReduceMotion ? undefined : "open"}
+            exit="initial"
+            layout={!isMobile}
+            className="flex flex-col gap-6 text-center font-bold text-4xl"
+            style={shouldReduceMotion ? { opacity: 1, y: 0 } : undefined}
+        >
+            {navLinks.map((link) => (
+                <div key={link.name} className="overflow-hidden">
+                    <motion.div variants={linkVars} layout={!isMobile} style={shouldReduceMotion ? { opacity: 1, y: 0 } : undefined}>
+                        <Link
+                            href={link.href}
+                            onClick={closeMenu}
+                            className="text-foreground hover:text-purple-400 transition-colors"
+                        >
+                            {link.name}
+                        </Link>
+                    </motion.div>
+                </div>
+            ))}
+            <div className="mt-8 flex flex-col items-center gap-6">
+                <motion.div variants={linkVars} layout={!isMobile} style={shouldReduceMotion ? { opacity: 1, y: 0 } : undefined}>
+                    <Link
+                        href="/resume.pdf"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-lg font-medium text-foreground/50 hover:text-foreground transition-colors"
+                    >
+                        View Resume
+                    </Link>
+                </motion.div>
+            </div>
+        </motion.div>
+    );
+}
+
 interface MobileMenuProps {
     closeMenu: () => void;
 }
 
 function MobileMenu({ closeMenu }: MobileMenuProps) {
     const { isMobile, shouldReduceMotion } = useOptimizedMotion();
-
-    const menuVars = {
-        initial: { opacity: 0, scaleY: isMobile ? 1 : 0 },
-        animate: {
-            opacity: 1,
-            scaleY: 1,
-            transition: { duration: 0.5, ease: [0.12, 0, 0.39, 0] as [number, number, number, number] }
-        },
-        exit: {
-            opacity: 0,
-            scaleY: isMobile ? 1 : 0,
-            transition: { delay: isMobile ? 0 : 0.5, duration: 0.5, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] },
-            transitionEnd: { display: "none" }
-        }
-    };
-
-    const containerVars = {
-        initial: { transition: { staggerChildren: 0.09, staggerDirection: -1 } },
-        open: { transition: { delayChildren: 0.3, staggerChildren: 0.09, staggerDirection: 1 } }
-    };
-
-    const linkVars = {
-        initial: { opacity: 0, y: isMobile ? 0 : "30vh", transition: { duration: 0.5, ease: [0.37, 0, 0.63, 1] as [number, number, number, number] } },
-        open: { opacity: 1, y: 0, transition: { duration: 0.7, ease: [0, 0.55, 0.45, 1] as [number, number, number, number] }, transitionEnd: { display: "block" } }
-    };
+    const menuVars = getMenuVars(isMobile);
 
     return (
         <motion.div
@@ -56,51 +124,12 @@ function MobileMenu({ closeMenu }: MobileMenuProps) {
             style={shouldReduceMotion ? { opacity: 1, scaleY: 1 } : undefined}
             className="fixed inset-0 bg-background origin-top z-[9999] flex flex-col justify-center items-center p-10"
         >
-            <div className="absolute top-6 right-6">
-                <button
-                    onClick={closeMenu}
-                    className="p-2 text-foreground/70 hover:text-foreground transition-colors"
-                    aria-label="Close menu"
-                >
-                    <X size={32} />
-                </button>
-            </div>
-
-            <motion.div
-                variants={containerVars}
-                initial="initial"
-                animate={shouldReduceMotion ? undefined : "open"}
-                exit="initial"
-                layout={!isMobile}
-                className="flex flex-col gap-6 text-center font-bold text-4xl"
-                style={shouldReduceMotion ? { opacity: 1, y: 0 } : undefined}
-            >
-                {navLinks.map((link) => (
-                    <div key={link.name} className="overflow-hidden">
-                        <motion.div variants={linkVars} layout={!isMobile} style={shouldReduceMotion ? { opacity: 1, y: 0 } : undefined}>
-                            <Link
-                                href={link.href}
-                                onClick={closeMenu}
-                                className="text-foreground hover:text-purple-400 transition-colors"
-                            >
-                                {link.name}
-                            </Link>
-                        </motion.div>
-                    </div>
-                ))}
-                <div className="mt-8 flex flex-col items-center gap-6">
-                    <motion.div variants={linkVars} layout={!isMobile} style={shouldReduceMotion ? { opacity: 1, y: 0 } : undefined}>
-                        <Link
-                            href="/resume.pdf"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-lg font-medium text-foreground/50 hover:text-foreground transition-colors"
-                        >
-                            View Resume
-                        </Link>
-                    </motion.div>
-                </div>
-            </motion.div>
+            <CloseButton onClick={closeMenu} />
+            <MenuLinks
+                closeMenu={closeMenu}
+                isMobile={isMobile}
+                shouldReduceMotion={shouldReduceMotion}
+            />
         </motion.div>
     );
 }
