@@ -195,7 +195,53 @@ describe('Contact', () => {
         expect((screen.getByLabelText('Message') as HTMLTextAreaElement).value).toBe('');
     });
 
+    it('returns early if formRef.current is null', async () => {
+        vi.resetModules();
+        vi.stubEnv('NEXT_PUBLIC_EMAILJS_SERVICE_ID', 'test_service');
+        vi.stubEnv('NEXT_PUBLIC_EMAILJS_TEMPLATE_ID', 'test_template');
+        vi.stubEnv('NEXT_PUBLIC_EMAILJS_PUBLIC_KEY', 'test_public_key');
+
+        const React = await vi.importActual('react') as any;
+
+        let shouldMock = true;
+        vi.doMock('react', () => {
+            return {
+                ...React,
+                useRef: (initValue: any) => {
+                    if (shouldMock && initValue === null) {
+                        return {
+                            get current() { return null; },
+                            set current(val) { /* do nothing */ }
+                        };
+                    }
+                    return React.useRef(initValue);
+                }
+            };
+        });
+
+        const { default: Contact } = await import('./Contact');
+
+        document.body.innerHTML = '';
+        const { unmount } = render(<Contact />);
+
+        const form = screen.getByRole('button', { name: /send message/i }).closest('form');
+        if (form) {
+             fireEvent.submit(form);
+        }
+
+        expect(screen.queryByText('Sending...')).not.toBeInTheDocument();
+        expect(emailjs.sendForm).not.toHaveBeenCalled();
+
+        shouldMock = false;
+        vi.doUnmock('react');
+        vi.resetModules();
+
+        unmount();
+        document.body.innerHTML = '';
+    });
+
     it('resets form from error state', async () => {
+        document.body.innerHTML = '';
         // Setup for error state
         vi.stubEnv('NEXT_PUBLIC_EMAILJS_SERVICE_ID', 'test_service');
         vi.stubEnv('NEXT_PUBLIC_EMAILJS_TEMPLATE_ID', 'test_template');
