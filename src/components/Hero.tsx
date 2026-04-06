@@ -107,14 +107,14 @@ export default function Hero() {
             </motion.span>
 
             {/* Main Heading */}
-            <h1 className="text-6xl md:text-[120px] font-extrabold text-center leading-[0.9] tracking-tighter mb-8 z-10 relative text-foreground uppercase italic">
+            <h1 className="text-[12vw] sm:text-[10vw] md:text-[120px] font-extrabold text-center leading-[0.9] tracking-tighter mb-8 z-10 relative text-foreground uppercase italic w-full break-words">
                 <span className="absolute inset-0 blur-3xl bg-purple-500/20 rounded-full -z-10" />
                 {words.map((word, wordIndex) => {
                     // Calculate global character index for consistent staggered animation
                     const prevWordsLength = words.slice(0, wordIndex).join("").length + wordIndex;
 
                     return (
-                        <span key={wordIndex} className="inline-block whitespace-nowrap">
+                        <span key={wordIndex} className="inline-block">
                             {word.split("").map((char, charIndex) => (
                                 <motion.span
                                     key={charIndex}
