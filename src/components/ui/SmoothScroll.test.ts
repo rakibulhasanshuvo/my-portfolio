@@ -42,6 +42,12 @@ vi.mock('lenis', () => {
   };
 });
 
+// Mock useMobile
+const useMobileSpy = vi.fn();
+vi.mock('@/hooks/useMobile', () => ({
+  useMobile: () => useMobileSpy(),
+}));
+
 // Import the component AFTER mocking
 import SmoothScroll from './SmoothScroll';
 
@@ -51,10 +57,13 @@ describe('SmoothScroll', () => {
     capturedOptions = null;
     destroySpy.mockClear();
     rafSpy.mockClear();
+    useMobileSpy.mockClear();
     global.requestAnimationFrame = originalRAF;
   });
 
   it('initializes Lenis with correct options and destroys it on unmount', () => {
+    useMobileSpy.mockReturnValue(false);
+
     // Render the component (this triggers useEffect mock)
     SmoothScroll();
 
@@ -80,6 +89,33 @@ describe('SmoothScroll', () => {
         // Verify lenis.destroy() was called
         expect(destroySpy).toHaveBeenCalled();
       }
+    }
+  });
+
+  it('does not initialize Lenis when isMobile is true', () => {
+    useMobileSpy.mockReturnValue(true);
+
+    // Mock requestAnimationFrame locally to count calls
+    const mockRAF = vi.fn();
+    global.requestAnimationFrame = mockRAF;
+
+    // Render the component
+    SmoothScroll();
+
+    expect(effectCallback).toBeDefined();
+
+    if (effectCallback) {
+      // Execute the effect
+      const cleanup = effectCallback();
+
+      // Verify Lenis was NOT initialized
+      expect(capturedOptions).toBeNull();
+
+      // Verify requestAnimationFrame was NOT called
+      expect(mockRAF).not.toHaveBeenCalled();
+
+      // Verify cleanup is undefined (since it returns early)
+      expect(cleanup).toBeUndefined();
     }
   });
 });
