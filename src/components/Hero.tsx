@@ -14,6 +14,8 @@ const SplineScene = dynamic(() => import('./ui/SplineScene'), {
     ssr: false,
 });
 
+const WORDS = "Rakibul Hasan Shuvo".split(" ");
+
 export default function Hero() {
     const { shouldReduceMotion } = useOptimizedMotion();
     // Default to true during SSR to prevent heavy 3D loading before hydration on mobile.
@@ -21,7 +23,6 @@ export default function Hero() {
     // is better than a 20s lockup on mobile.
     const isMobile = useMobile(1024, true);
     const [mountSpline, setMountSpline] = useState(false);
-    const words = "Rakibul Hasan Shuvo".split(" ");
 
     // Defer mounting the heavy Spline component until the main thread is idle
     // This allows the initial UI and critical rendering path to complete instantly.
@@ -108,9 +109,9 @@ export default function Hero() {
             {/* Main Heading */}
             <h1 className="text-6xl md:text-[120px] font-extrabold text-center leading-[0.9] tracking-tighter mb-8 z-10 relative text-foreground uppercase italic">
                 <span className="absolute inset-0 blur-3xl bg-purple-500/20 rounded-full -z-10" />
-                {words.map((word, wordIndex) => {
+                {WORDS.map((word, wordIndex) => {
                     // Calculate global character index for consistent staggered animation
-                    const prevWordsLength = words.slice(0, wordIndex).join("").length + wordIndex;
+                    const prevWordsLength = WORDS.slice(0, wordIndex).join("").length + wordIndex;
 
                     return (
                         <span key={wordIndex} className="inline-block whitespace-nowrap">
@@ -130,7 +131,7 @@ export default function Hero() {
                                     {char}
                                 </motion.span>
                             ))}
-                            {wordIndex < words.length - 1 && (
+                            {wordIndex < WORDS.length - 1 && (
                                 <span className="inline-block">&nbsp;</span>
                             )}
                         </span>
