@@ -1,7 +1,7 @@
 'use client';
 
 import { motion, useMotionTemplate, useMotionValue, AnimatePresence } from 'framer-motion';
-import { MouseEvent, useState } from 'react';
+import { MouseEvent, useState, useMemo } from 'react';
 import { ExternalLink, Github, Play } from 'lucide-react';
 
 import { useOptimizedMotion } from '@/lib/motion';
@@ -116,9 +116,11 @@ export default function Projects() {
     const [filter, setFilter] = useState('All');
     const { isMobile, shouldReduceMotion, transition } = useOptimizedMotion();
 
-    const filteredProjects = filter === 'All'
-        ? projects
-        : projects.filter(p => p.category === filter);
+    const filteredProjects = useMemo(() => {
+        return filter === 'All'
+            ? projects
+            : projects.filter(p => p.category === filter);
+    }, [filter]);
 
     return (
         <section id="work" className="py-20 mt-20 px-6 max-w-7xl mx-auto">
