@@ -5,6 +5,28 @@ import { motion } from 'framer-motion';
 import { firstRowTechnologies, secondRowTechnologies } from '@/lib/constants';
 import { useOptimizedMotion } from '@/lib/motion';
 
+const FIRST_ROW_ANIMATE = { x: [0, -1000] };
+const FIRST_ROW_TRANSITION = {
+    x: {
+        repeat: Infinity,
+        repeatType: "loop" as const,
+        duration: 30,
+        ease: "linear" as const,
+    },
+};
+const FIRST_ROW_STYLE = { x: 0 };
+
+const SECOND_ROW_ANIMATE = { x: [-1000, 0] };
+const SECOND_ROW_TRANSITION = {
+    x: {
+        repeat: Infinity,
+        repeatType: "loop" as const,
+        duration: 35,
+        ease: "linear" as const,
+    },
+};
+const SECOND_ROW_STYLE = { x: -1000 };
+
 export default function TechStack() {
     const { shouldReduceMotion } = useOptimizedMotion();
 
@@ -15,16 +37,9 @@ export default function TechStack() {
                 <div className="flex mb-6 overflow-hidden">
                     <motion.div
                         className="flex gap-6 whitespace-nowrap"
-                        animate={shouldReduceMotion ? undefined : { x: [0, -1000] }}
-                        transition={{
-                            x: {
-                                repeat: Infinity,
-                                repeatType: "loop",
-                                duration: 30,
-                                ease: "linear",
-                            },
-                        }}
-                        style={shouldReduceMotion ? { x: 0 } : undefined}
+                        animate={shouldReduceMotion ? undefined : FIRST_ROW_ANIMATE}
+                        transition={FIRST_ROW_TRANSITION}
+                        style={shouldReduceMotion ? FIRST_ROW_STYLE : undefined}
                     >
                         {firstRowTechnologies.map((tech, i) => (
                             <div
@@ -42,16 +57,9 @@ export default function TechStack() {
                 <div className="flex overflow-hidden">
                     <motion.div
                         className="flex gap-6 whitespace-nowrap"
-                        animate={shouldReduceMotion ? undefined : { x: [-1000, 0] }}
-                        transition={{
-                            x: {
-                                repeat: Infinity,
-                                repeatType: "loop",
-                                duration: 35,
-                                ease: "linear",
-                            },
-                        }}
-                        style={shouldReduceMotion ? { x: -1000 } : undefined}
+                        animate={shouldReduceMotion ? undefined : SECOND_ROW_ANIMATE}
+                        transition={SECOND_ROW_TRANSITION}
+                        style={shouldReduceMotion ? SECOND_ROW_STYLE : undefined}
                     >
                         {secondRowTechnologies.map((tech, i) => (
                             <div
