@@ -1,10 +1,11 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
 import Link from 'next/link';
 import { useOptimizedMotion } from '@/lib/motion';
+import { useScrollLock } from '@/hooks/useScrollLock';
 
 const navLinks = [
     { name: 'Home', href: '/' },
@@ -12,6 +13,55 @@ const navLinks = [
     { name: 'About', href: '#about' },
     { name: 'Contact', href: '#contact' }
 ];
+
+const getMenuVars = (isMobile: boolean) => ({
+    initial: { opacity: 0, scaleY: isMobile ? 1 : 0 },
+    animate: {
+        opacity: 1,
+        scaleY: 1,
+        transition: { duration: 0.5, ease: [0.12, 0, 0.39, 0] as const }
+    },
+    exit: {
+        opacity: 0,
+        scaleY: isMobile ? 1 : 0,
+        transition: { delay: isMobile ? 0 : 0.5, duration: 0.5, ease: [0.22, 1, 0.36, 1] as const },
+        transitionEnd: { display: "none" }
+    }
+});
+
+const containerVars = {
+    initial: { transition: { staggerChildren: 0.09, staggerDirection: -1 } },
+    open: { transition: { delayChildren: 0.3, staggerChildren: 0.09, staggerDirection: 1 } }
+};
+
+const getLinkVars = (isMobile: boolean) => ({
+    initial: { opacity: 0, y: isMobile ? 0 : "30vh", transition: { duration: 0.5, ease: [0.37, 0, 0.63, 1] as const } },
+    open: { opacity: 1, y: 0, transition: { duration: 0.7, ease: [0, 0.55, 0.45, 1] as const }, transitionEnd: { display: "block" } }
+});
+
+interface MobileMenuLinkProps {
+    href: string;
+    name: string;
+    isMobile: boolean;
+    shouldReduceMotion: boolean;
+    closeMenu: () => void;
+}
+
+function MobileMenuLink({ href, name, isMobile, shouldReduceMotion, closeMenu }: MobileMenuLinkProps) {
+    return (
+        <div className="overflow-hidden">
+            <motion.div variants={getLinkVars(isMobile)} layout={!isMobile} style={shouldReduceMotion ? { opacity: 1, y: 0 } : undefined}>
+                <Link
+                    href={href}
+                    onClick={closeMenu}
+                    className="text-foreground hover:text-purple-400 transition-colors"
+                >
+                    {name}
+                </Link>
+            </motion.div>
+        </div>
+    );
+}
 
 // Dynamically configure variants inside component based on optimized motion hook
 interface MobileMenuProps {
@@ -21,34 +71,9 @@ interface MobileMenuProps {
 function MobileMenu({ closeMenu }: MobileMenuProps) {
     const { isMobile, shouldReduceMotion } = useOptimizedMotion();
 
-    const menuVars = {
-        initial: { opacity: 0, scaleY: isMobile ? 1 : 0 },
-        animate: {
-            opacity: 1,
-            scaleY: 1,
-            transition: { duration: 0.5, ease: [0.12, 0, 0.39, 0] as [number, number, number, number] }
-        },
-        exit: {
-            opacity: 0,
-            scaleY: isMobile ? 1 : 0,
-            transition: { delay: isMobile ? 0 : 0.5, duration: 0.5, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] },
-            transitionEnd: { display: "none" }
-        }
-    };
-
-    const containerVars = {
-        initial: { transition: { staggerChildren: 0.09, staggerDirection: -1 } },
-        open: { transition: { delayChildren: 0.3, staggerChildren: 0.09, staggerDirection: 1 } }
-    };
-
-    const linkVars = {
-        initial: { opacity: 0, y: isMobile ? 0 : "30vh", transition: { duration: 0.5, ease: [0.37, 0, 0.63, 1] as [number, number, number, number] } },
-        open: { opacity: 1, y: 0, transition: { duration: 0.7, ease: [0, 0.55, 0.45, 1] as [number, number, number, number] }, transitionEnd: { display: "block" } }
-    };
-
     return (
         <motion.div
-            variants={menuVars}
+            variants={getMenuVars(isMobile)}
             initial="initial"
             animate={shouldReduceMotion ? undefined : "animate"}
             exit="exit"
@@ -76,20 +101,17 @@ function MobileMenu({ closeMenu }: MobileMenuProps) {
                 style={shouldReduceMotion ? { opacity: 1, y: 0 } : undefined}
             >
                 {navLinks.map((link) => (
-                    <div key={link.name} className="overflow-hidden">
-                        <motion.div variants={linkVars} layout={!isMobile} style={shouldReduceMotion ? { opacity: 1, y: 0 } : undefined}>
-                            <Link
-                                href={link.href}
-                                onClick={closeMenu}
-                                className="text-foreground hover:text-purple-400 transition-colors"
-                            >
-                                {link.name}
-                            </Link>
-                        </motion.div>
-                    </div>
+                    <MobileMenuLink
+                        key={link.name}
+                        href={link.href}
+                        name={link.name}
+                        isMobile={isMobile}
+                        shouldReduceMotion={shouldReduceMotion}
+                        closeMenu={closeMenu}
+                    />
                 ))}
                 <div className="mt-8 flex flex-col items-center gap-6">
-                    <motion.div variants={linkVars} layout={!isMobile} style={shouldReduceMotion ? { opacity: 1, y: 0 } : undefined}>
+                    <motion.div variants={getLinkVars(isMobile)} layout={!isMobile} style={shouldReduceMotion ? { opacity: 1, y: 0 } : undefined}>
                         <Link
                             href="/resume.pdf"
                             target="_blank"
@@ -108,16 +130,7 @@ function MobileMenu({ closeMenu }: MobileMenuProps) {
 export default function MobileNav() {
     const [isOpen, setIsOpen] = useState(false);
 
-    useEffect(() => {
-        if (isOpen) {
-            document.body.style.overflow = 'hidden';
-        } else {
-            document.body.style.overflow = 'unset';
-        }
-        return () => {
-            document.body.style.overflow = 'unset';
-        };
-    }, [isOpen]);
+    useScrollLock(isOpen);
 
     return (
         <div className="md:hidden">
