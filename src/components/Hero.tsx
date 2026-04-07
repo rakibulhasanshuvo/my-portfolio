@@ -1,12 +1,13 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { useCallback, useState, useEffect } from 'react';
-import type { Application } from '@splinetool/runtime';
 import dynamic from 'next/dynamic';
 import AuroraBackground from './ui/AuroraBackground';
+import HeroHeading from './ui/HeroHeading';
+import HeroSkillMarquee from './ui/HeroSkillMarquee';
 import { profile } from '@/data/profile';
 import { useMobile } from '@/hooks/useMobile';
+import { useDeferredSplineMount } from '@/hooks/useDeferredSplineMount';
 import { duplicatedSkills } from '@/lib/constants';
 import { useOptimizedMotion } from '@/lib/motion';
 
@@ -20,61 +21,8 @@ export default function Hero() {
     // This might cause a hydration mismatch if loaded on desktop, but the visual pop-in
     // is better than a 20s lockup on mobile.
     const isMobile = useMobile(1024, true);
-    const [mountSpline, setMountSpline] = useState(false);
+    const { mountSpline, handleSplineLoad } = useDeferredSplineMount();
     const words = "Rakibul Hasan Shuvo".split(" ");
-
-    // Defer mounting the heavy Spline component until the main thread is idle
-    // This allows the initial UI and critical rendering path to complete instantly.
-    useEffect(() => {
-        let mounted = true;
-
-        // Use requestIdleCallback if available to only mount when CPU is not busy
-        if ('requestIdleCallback' in window) {
-            const idleId = window.requestIdleCallback(() => {
-                if (mounted) setMountSpline(true);
-            }, { timeout: 3000 }); // Force mount after 3s if never idle
-
-            return () => {
-                mounted = false;
-                window.cancelIdleCallback(idleId);
-            };
-        } else {
-            // Fallback for Safari
-            const timer = setTimeout(() => {
-                if (mounted) setMountSpline(true);
-            }, 1000);
-
-            return () => {
-                mounted = false;
-                clearTimeout(timer);
-            };
-        }
-    }, []);
-
-    const handleSplineLoad = useCallback((spline: Application) => {
-        // Find and hide all objects that appear to be text
-        // Based on the scene URL, it has "Clarity. Focus. Impact." and subtext
-        const objectsToHide = [
-            'Clarity. Focus. Impact.',
-            'A multidisciplinary creative designing the future with code and intuition.',
-            'Text',
-            'Text 2',
-            'Text 3'
-        ];
-
-        objectsToHide.forEach(objName => {
-            const obj = spline.findObjectByName(objName);
-            if (obj) {
-                obj.visible = false;
-            }
-        });
-
-        // Debug: log all object names to console if we still see text
-        if (process.env.NODE_ENV === 'development') {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            console.log(spline.getAllObjects().map((o: any) => o.name));
-        }
-    }, []);
 
     return (
         <section className="min-h-screen flex flex-col justify-center items-center px-4 relative overflow-hidden pt-32 animate-entry">
@@ -107,37 +55,7 @@ export default function Hero() {
             </motion.span>
 
             {/* Main Heading */}
-            <h1 className="text-6xl md:text-[120px] font-extrabold text-center leading-[0.9] tracking-tighter mb-8 z-10 relative text-foreground uppercase italic">
-                <span className="absolute inset-0 blur-3xl bg-purple-500/20 rounded-full -z-10" />
-                {words.map((word, wordIndex) => {
-                    // Calculate global character index for consistent staggered animation
-                    const prevWordsLength = words.slice(0, wordIndex).join("").length + wordIndex;
-
-                    return (
-                        <span key={wordIndex} className="inline-block whitespace-nowrap">
-                            {word.split("").map((char, charIndex) => (
-                                <motion.span
-                                    key={charIndex}
-                                    initial={shouldReduceMotion ? false : (isMobile ? { opacity: 0 } : { opacity: 0, y: 100, rotateX: -90 })}
-                                    animate={shouldReduceMotion ? undefined : { opacity: 1, y: 0, rotateX: 0 }}
-                                    transition={{
-                                        duration: 1,
-                                        delay: (prevWordsLength + charIndex) * 0.03,
-                                        ease: [0.16, 1, 0.3, 1]
-                                    }}
-                                    className="inline-block"
-                                    style={shouldReduceMotion ? { opacity: 1, y: 0, rotateX: 0 } : undefined}
-                                >
-                                    {char}
-                                </motion.span>
-                            ))}
-                            {wordIndex < words.length - 1 && (
-                                <span className="inline-block">&nbsp;</span>
-                            )}
-                        </span>
-                    );
-                })}
-            </h1>
+            <HeroHeading words={words} shouldReduceMotion={shouldReduceMotion} isMobile={isMobile} />
 
             {/* Subtext */}
             <motion.p
@@ -151,37 +69,7 @@ export default function Hero() {
             </motion.p>
 
             {/* Floating Skill Tags & Infinite Marquee */}
-            <div className="w-full max-w-4xl overflow-hidden relative z-10 mask-gradient py-10">
-                <motion.div
-                    className="flex gap-8 whitespace-nowrap"
-                    animate={shouldReduceMotion ? undefined : { x: [0, -1000] }}
-                    transition={{
-                        repeat: Infinity,
-                        ease: "linear",
-                        duration: 35
-                    }}
-                    style={shouldReduceMotion ? { x: 0 } : undefined}
-                >
-                    {duplicatedSkills.map((skill, index) => (
-                        <motion.div
-                            key={`${skill}-${index}`}
-                            animate={shouldReduceMotion || isMobile ? false : {
-                                y: [0, -10, 0]
-                            }}
-                            transition={{
-                                duration: 3 + (index % 3), // Deterministic duration based on index
-                                repeat: Infinity,
-                                ease: "easeInOut",
-                                delay: index * 0.2 // Deterministic delay
-                            }}
-                            className="px-6 py-3 rounded-full border border-foreground/10 bg-foreground/5 backdrop-blur-md text-sm font-medium text-foreground/80 hover:bg-foreground/10 transition-colors cursor-default hover:border-foreground/20"
-                            style={shouldReduceMotion || isMobile ? { y: 0 } : undefined}
-                        >
-                            {skill}
-                        </motion.div>
-                    ))}
-                </motion.div>
-            </div>
+            <HeroSkillMarquee skills={duplicatedSkills} shouldReduceMotion={shouldReduceMotion} isMobile={isMobile} />
 
         </section>
     );
