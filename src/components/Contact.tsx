@@ -3,15 +3,10 @@
 import { motion } from 'framer-motion';
 import { useState, FormEvent, useRef } from 'react';
 import { Send, CheckCircle, Loader2, AlertCircle } from 'lucide-react';
-import emailjs from '@emailjs/browser';
-
-// EmailJS Configuration using environment variables
-const EMAILJS_SERVICE_ID = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID || '';
-const EMAILJS_TEMPLATE_ID = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID || '';
-const EMAILJS_PUBLIC_KEY = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY || '';
 
 import { profile } from '@/data/profile';
 import { useOptimizedMotion } from '@/lib/motion';
+import { isEmailJSConfigured, handleMailtoFallback, sendEmailViaService } from '@/lib/email';
 
 const YOUR_EMAIL = profile.email;
 
@@ -29,34 +24,14 @@ export default function Contact() {
         setFormState('submitting');
         setErrorMessage('');
 
-        // Check if EmailJS is configured
-        const isEmailJSConfigured = EMAILJS_SERVICE_ID && EMAILJS_TEMPLATE_ID && EMAILJS_PUBLIC_KEY;
-
         if (!isEmailJSConfigured) {
-            // Fallback to mailto if EmailJS not configured
-            const formData = new FormData(formRef.current);
-            const name = formData.get('user_name') as string;
-            const email = formData.get('user_email') as string;
-            const message = formData.get('message') as string;
-
-            const subject = encodeURIComponent(`Portfolio Inquiry from ${name}`);
-            const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`);
-
-            await new Promise(resolve => setTimeout(resolve, 500));
-            window.location.href = `mailto:${YOUR_EMAIL}?subject=${subject}&body=${body}`;
+            await handleMailtoFallback(formRef.current);
             setFormState('success');
             return;
         }
 
         try {
-            await emailjs.sendForm(
-                EMAILJS_SERVICE_ID,
-                EMAILJS_TEMPLATE_ID,
-                formRef.current,
-                {
-                    publicKey: EMAILJS_PUBLIC_KEY,
-                }
-            );
+            await sendEmailViaService(formRef.current);
             setFormState('success');
         } catch (error) {
             console.error('EmailJS Error:', error);
