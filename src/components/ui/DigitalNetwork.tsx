@@ -14,6 +14,11 @@ interface Particle {
 
 import { useMobile } from '@/hooks/useMobile';
 
+const INTERACTION_RADIUS = 150;
+const INTERACTION_RADIUS_SQ = INTERACTION_RADIUS * INTERACTION_RADIUS;
+const CONNECTION_RADIUS = 150;
+const CONNECTION_RADIUS_SQ = CONNECTION_RADIUS * CONNECTION_RADIUS;
+
 const updateParticle = (p: Particle, canvasWidth: number, canvasHeight: number) => {
     // Movement
     p.x += p.vx;
@@ -28,9 +33,10 @@ const applyMouseInteraction = (p: Particle, currentMouse: { x: number; y: number
     // Mouse/Touch interaction (Push effect)
     const dx = currentMouse.x - p.x;
     const dy = currentMouse.y - p.y;
-    const dist = Math.sqrt(dx * dx + dy * dy);
-    if (dist < 150) {
-        const force = (150 - dist) / 150;
+    const distSq = dx * dx + dy * dy;
+    if (distSq < INTERACTION_RADIUS_SQ) {
+        const dist = Math.sqrt(distSq);
+        const force = (INTERACTION_RADIUS - dist) / INTERACTION_RADIUS;
         p.x -= dx * force * 0.05;
         p.y -= dy * force * 0.05;
     }
@@ -62,15 +68,16 @@ const drawConnections = (
         const dx = p.x - p2.x;
         const dy = p.y - p2.y;
 
-        // Strict distance threshold (150px) check before expensive math
-        if (Math.abs(dx) < 150 && Math.abs(dy) < 150) {
-            const dist = Math.sqrt(dx * dx + dy * dy);
-            if (dist < 150) {
+        // Strict distance threshold check before expensive math
+        if (Math.abs(dx) < CONNECTION_RADIUS && Math.abs(dy) < CONNECTION_RADIUS) {
+            const distSq = dx * dx + dy * dy;
+            if (distSq < CONNECTION_RADIUS_SQ) {
                 connections++;
+                const dist = Math.sqrt(distSq);
                 ctx.beginPath();
                 ctx.moveTo(p.x, p.y);
                 ctx.lineTo(p2.x, p2.y);
-                ctx.strokeStyle = `rgba(255, 255, 255, ${0.1 * (1 - dist / 150)})`;
+                ctx.strokeStyle = `rgba(255, 255, 255, ${0.1 * (1 - dist / CONNECTION_RADIUS)})`;
                 ctx.lineWidth = 0.5;
                 ctx.stroke();
             }
