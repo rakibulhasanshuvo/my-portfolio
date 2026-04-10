@@ -1,4 +1,4 @@
-import React from 'react';
+import { forwardRef } from 'react';
 import { render, fireEvent, screen } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import TiltCard from './TiltCard';
@@ -29,7 +29,7 @@ vi.mock('framer-motion', async () => {
         useSpring: vi.fn((val) => val),
         useTransform: vi.fn((val) => val),
         motion: {
-            div: React.forwardRef(({ children, onMouseMove, onMouseLeave, className, style, ...props }: any, ref) => (
+            div: forwardRef(({ children, onMouseMove, onMouseLeave, className, style, ...props }: any, ref) => (
                 <div
                     ref={ref}
                     onMouseMove={onMouseMove}

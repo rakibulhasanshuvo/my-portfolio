@@ -1,5 +1,3 @@
-import React from 'react';
-
 export const XIcon = ({ size = 18 }: { size?: number }) => (
     <svg
         viewBox="0 0 24 24"
