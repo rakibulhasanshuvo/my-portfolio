@@ -28,8 +28,9 @@ const applyMouseInteraction = (p: Particle, currentMouse: { x: number; y: number
     // Mouse/Touch interaction (Push effect)
     const dx = currentMouse.x - p.x;
     const dy = currentMouse.y - p.y;
-    const dist = Math.sqrt(dx * dx + dy * dy);
-    if (dist < 150) {
+    const distSq = dx * dx + dy * dy;
+    if (distSq < 22500) { // 150 * 150
+        const dist = Math.sqrt(distSq);
         const force = (150 - dist) / 150;
         p.x -= dx * force * 0.05;
         p.y -= dy * force * 0.05;
@@ -64,8 +65,9 @@ const drawConnections = (
 
         // Strict distance threshold (150px) check before expensive math
         if (Math.abs(dx) < 150 && Math.abs(dy) < 150) {
-            const dist = Math.sqrt(dx * dx + dy * dy);
-            if (dist < 150) {
+            const distSq = dx * dx + dy * dy;
+            if (distSq < 22500) { // 150 * 150
+                const dist = Math.sqrt(distSq);
                 connections++;
                 ctx.beginPath();
                 ctx.moveTo(p.x, p.y);
