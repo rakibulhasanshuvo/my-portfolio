@@ -97,7 +97,7 @@ export default function Hero() {
 
             {/* Overline label */}
             <motion.span
-                initial={shouldReduceMotion ? false : (isMobile ? { opacity: 0 } : { opacity: 0, y: 20 })}
+                initial={shouldReduceMotion ? false : { opacity: 0, y: 20 }}
                 animate={shouldReduceMotion ? undefined : { opacity: 1, y: 0 }}
                 transition={{ delay: 0.5, duration: 0.8 }}
                 className="overline-label z-10"
@@ -107,18 +107,18 @@ export default function Hero() {
             </motion.span>
 
             {/* Main Heading */}
-            <h1 className="text-6xl md:text-[120px] font-extrabold text-center leading-[0.9] tracking-tighter mb-8 z-10 relative text-foreground uppercase italic">
+            <h1 className="text-[12vw] sm:text-[10vw] md:text-[120px] font-extrabold text-center leading-[0.9] tracking-tighter mb-8 z-10 relative text-foreground uppercase italic w-full break-words">
                 <span className="absolute inset-0 blur-3xl bg-purple-500/20 rounded-full -z-10" />
                 {WORDS.map((word, wordIndex) => {
                     // Calculate global character index for consistent staggered animation
                     const prevWordsLength = WORDS.slice(0, wordIndex).join("").length + wordIndex;
 
                     return (
-                        <span key={wordIndex} className="inline-block whitespace-nowrap">
+                        <span key={wordIndex} className="inline-block">
                             {word.split("").map((char, charIndex) => (
                                 <motion.span
                                     key={charIndex}
-                                    initial={shouldReduceMotion ? false : (isMobile ? { opacity: 0 } : { opacity: 0, y: 100, rotateX: -90 })}
+                                    initial={shouldReduceMotion ? false : { opacity: 0, y: 100, rotateX: -90 }}
                                     animate={shouldReduceMotion ? undefined : { opacity: 1, y: 0, rotateX: 0 }}
                                     transition={{
                                         duration: 1,
@@ -141,7 +141,7 @@ export default function Hero() {
 
             {/* Subtext */}
             <motion.p
-                initial={shouldReduceMotion ? false : (isMobile ? { opacity: 0 } : { opacity: 0, y: 20 })}
+                initial={shouldReduceMotion ? false : { opacity: 0, y: 20 }}
                 animate={shouldReduceMotion ? undefined : { opacity: 1, y: 0 }}
                 transition={{ delay: 1.2, duration: 0.8 }}
                 className="text-lg md:text-2xl text-foreground/60 mb-16 text-center max-w-3xl px-6 z-10 font-medium leading-relaxed"

@@ -19,7 +19,7 @@ export default function Navbar() {
                 initial={{ y: -100, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-                className="glass rounded-full px-6 py-3 flex items-center justify-between md:gap-8 border border-foreground/10 w-full md:w-auto"
+                className="glass rounded-full px-6 py-3 flex items-center justify-between md:gap-8 border border-foreground/10 w-full md:w-auto max-md:opacity-100 max-md:translate-y-0"
             >
                 {/* Desktop Links */}
                 <div className="hidden md:flex gap-6">
