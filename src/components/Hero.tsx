@@ -97,7 +97,7 @@ export default function Hero() {
 
             {/* Overline label */}
             <motion.span
-                initial={shouldReduceMotion ? false : (isMobile ? { opacity: 0 } : { opacity: 0, y: 20 })}
+                initial={shouldReduceMotion ? false : { opacity: 0, y: 20 }}
                 animate={shouldReduceMotion ? undefined : { opacity: 1, y: 0 }}
                 transition={{ delay: 0.5, duration: 0.8 }}
                 className="overline-label z-10"
@@ -118,7 +118,7 @@ export default function Hero() {
                             {word.split("").map((char, charIndex) => (
                                 <motion.span
                                     key={charIndex}
-                                    initial={shouldReduceMotion ? false : (isMobile ? { opacity: 0 } : { opacity: 0, y: 100, rotateX: -90 })}
+                                    initial={shouldReduceMotion ? false : { opacity: 0, y: 100, rotateX: -90 }}
                                     animate={shouldReduceMotion ? undefined : { opacity: 1, y: 0, rotateX: 0 }}
                                     transition={{
                                         duration: 1,
@@ -141,7 +141,7 @@ export default function Hero() {
 
             {/* Subtext */}
             <motion.p
-                initial={shouldReduceMotion ? false : (isMobile ? { opacity: 0 } : { opacity: 0, y: 20 })}
+                initial={shouldReduceMotion ? false : { opacity: 0, y: 20 }}
                 animate={shouldReduceMotion ? undefined : { opacity: 1, y: 0 }}
                 transition={{ delay: 1.2, duration: 0.8 }}
                 className="text-lg md:text-2xl text-foreground/60 mb-16 text-center max-w-3xl px-6 z-10 font-medium leading-relaxed"
