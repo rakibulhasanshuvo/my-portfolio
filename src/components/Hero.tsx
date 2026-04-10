@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { useCallback, useState, useEffect } from 'react';
-import type { Application } from '@splinetool/runtime';
+import type { Application, SPEObject } from '@splinetool/runtime';
 import dynamic from 'next/dynamic';
 import AuroraBackground from './ui/AuroraBackground';
 import { profile } from '@/data/profile';
@@ -71,8 +71,7 @@ export default function Hero() {
         });
 
         if (process.env.NODE_ENV === 'development') {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            console.log(spline.getAllObjects().map((o: any) => ({ name: o.name, type: o.type })));
+            console.log(spline.getAllObjects().map((o: SPEObject & { type?: string }) => ({ name: o.name, type: o.type })));
         }
     }, []);
 
