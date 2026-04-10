@@ -3,13 +3,9 @@ import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { ShareButtons } from './ShareButtons';
 
 describe('ShareButtons', () => {
-    const originalLocation = window.location;
-
     beforeEach(() => {
         // Mock window.location.href to a known value
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        delete (window as any).location;
-        window.location = { ...originalLocation, href: 'https://test.com/project-x' };
+        vi.stubGlobal('location', { ...window.location, href: 'https://test.com/project-x' });
 
         // Mock navigator.clipboard
         Object.assign(navigator, {
@@ -26,7 +22,6 @@ describe('ShareButtons', () => {
     });
 
     afterEach(() => {
-        window.location = originalLocation;
         vi.unstubAllGlobals();
         vi.restoreAllMocks();
     });

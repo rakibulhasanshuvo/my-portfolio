@@ -28,15 +28,12 @@ vi.mock('@/data/profile', () => ({
 }));
 
 describe('Contact', () => {
-    const originalLocation = window.location;
-
     beforeEach(() => {
         // Reset DOM and mocks
         vi.clearAllMocks();
 
         // Mock window.location for mailto tests
-        delete (window as any).location;
-        window.location = { ...originalLocation, href: 'http://localhost' };
+        vi.stubGlobal('location', { ...window.location, href: 'http://localhost' });
 
         // Ensure intersection observer is mocked globally for framer-motion whileInView
         const mockIntersectionObserver = vi.fn();
@@ -49,7 +46,7 @@ describe('Contact', () => {
     });
 
     afterEach(() => {
-        window.location = originalLocation;
+        vi.unstubAllGlobals();
         vi.unstubAllEnvs();
     });
 
