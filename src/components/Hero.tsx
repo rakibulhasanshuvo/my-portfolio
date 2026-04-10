@@ -15,6 +15,14 @@ const SplineScene = dynamic(() => import('./ui/SplineScene'), {
 });
 
 const WORDS = "Rakibul Hasan Shuvo".split(" ");
+const PRECOMPUTED_WORDS = WORDS.map((word, wordIndex) => {
+    const prevWordsLength = WORDS.slice(0, wordIndex).join("").length + wordIndex;
+    return {
+        word,
+        chars: word.split(""),
+        prevWordsLength
+    };
+});
 
 export default function Hero() {
     const { shouldReduceMotion } = useOptimizedMotion();
@@ -109,13 +117,10 @@ export default function Hero() {
             {/* Main Heading */}
             <h1 className="text-[12vw] sm:text-[10vw] md:text-[120px] font-extrabold text-center leading-[0.9] tracking-tighter mb-8 z-10 relative text-foreground uppercase italic w-full break-words">
                 <span className="absolute inset-0 blur-3xl bg-purple-500/20 rounded-full -z-10" />
-                {WORDS.map((word, wordIndex) => {
-                    // Calculate global character index for consistent staggered animation
-                    const prevWordsLength = WORDS.slice(0, wordIndex).join("").length + wordIndex;
-
+                {PRECOMPUTED_WORDS.map(({ chars, prevWordsLength }, wordIndex) => {
                     return (
                         <span key={wordIndex} className="inline-block">
-                            {word.split("").map((char, charIndex) => (
+                            {chars.map((char, charIndex) => (
                                 <motion.span
                                     key={charIndex}
                                     initial={shouldReduceMotion ? false : { opacity: 0, y: 100, rotateX: -90 }}
