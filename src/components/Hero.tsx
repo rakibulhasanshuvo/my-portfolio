@@ -69,11 +69,6 @@ export default function Hero() {
                 obj.visible = false;
             }
         });
-
-        if (process.env.NODE_ENV === 'development') {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            console.log(spline.getAllObjects().map((o: any) => ({ name: o.name, type: o.type })));
-        }
     }, []);
 
     return (
