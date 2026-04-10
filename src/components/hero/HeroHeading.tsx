@@ -3,7 +3,17 @@
 import { motion } from 'framer-motion';
 import { useOptimizedMotion } from '@/lib/motion';
 
-const WORDS = "Rakibul Hasan Shuvo".split(" ");
+const RAW_WORDS = "Rakibul Hasan Shuvo".split(" ");
+const PRECOMPUTED_WORDS = RAW_WORDS.map((word, wordIndex) => {
+    const prevWordsLength = RAW_WORDS.slice(0, wordIndex).join("").length + wordIndex;
+    return {
+        word,
+        chars: word.split("").map((char, charIndex) => ({
+            char,
+            delay: (prevWordsLength + charIndex) * 0.03
+        }))
+    };
+});
 
 export default function HeroHeading() {
     const { shouldReduceMotion } = useOptimizedMotion();
@@ -11,29 +21,26 @@ export default function HeroHeading() {
     return (
         <h1 className="text-[12vw] sm:text-[10vw] md:text-[120px] font-extrabold text-center leading-[0.9] tracking-tighter mb-8 z-10 relative text-foreground uppercase italic w-full break-words">
             <span className="absolute inset-0 blur-3xl bg-purple-500/20 rounded-full -z-10" />
-            {WORDS.map((word, wordIndex) => {
-                // Calculate global character index for consistent staggered animation
-                const prevWordsLength = WORDS.slice(0, wordIndex).join("").length + wordIndex;
-
+            {PRECOMPUTED_WORDS.map((wordObj, wordIndex) => {
                 return (
                     <span key={wordIndex} className="inline-block">
-                        {word.split("").map((char, charIndex) => (
+                        {wordObj.chars.map((charObj, charIndex) => (
                             <motion.span
                                 key={charIndex}
                                 initial={shouldReduceMotion ? false : { opacity: 0, y: 100, rotateX: -90 }}
                                 animate={shouldReduceMotion ? undefined : { opacity: 1, y: 0, rotateX: 0 }}
                                 transition={{
                                     duration: 1,
-                                    delay: (prevWordsLength + charIndex) * 0.03,
+                                    delay: charObj.delay,
                                     ease: [0.16, 1, 0.3, 1]
                                 }}
                                 className="inline-block"
                                 style={shouldReduceMotion ? { opacity: 1, y: 0, rotateX: 0 } : undefined}
                             >
-                                {char}
+                                {charObj.char}
                             </motion.span>
                         ))}
-                        {wordIndex < WORDS.length - 1 && (
+                        {wordIndex < PRECOMPUTED_WORDS.length - 1 && (
                             <span className="inline-block">&nbsp;</span>
                         )}
                     </span>
