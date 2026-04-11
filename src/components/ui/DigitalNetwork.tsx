@@ -81,136 +81,20 @@ const drawConnections = (
 };
 
 export default function DigitalNetwork() {
-    const isMobile = useMobile(768, true);
-    const canvasRef = useRef<HTMLCanvasElement>(null);
-    const containerRef = useRef<HTMLDivElement>(null);
-
-    const mouse = useRef({ x: 0, y: 0 });
-    const particles = useRef<Particle[]>([]);
-    const animationFrameId = useRef<number | null>(null);
-
-    const initParticles = useCallback((width: number, height: number) => {
-        const isMobile = width < 768;
-        // On mobile, severely limit particle count to preserve the Matrix aesthetic without CPU strain
-        const baseDensity = isMobile ? 40000 : 15000;
-        const maxParticles = isMobile ? 15 : 75; // Reduced from 100 to save CPU
-        const particleCount = Math.min(Math.floor((width * height) / baseDensity), maxParticles);
-
-        particles.current = [];
-        for (let i = 0; i < particleCount; i++) {
-            const x = Math.random() * width;
-            const y = Math.random() * height;
-            particles.current.push({
-                x,
-                y,
-                baseX: x,
-                baseY: y,
-                vx: (Math.random() - 0.5) * (isMobile ? 0.2 : 0.5), // Slower on mobile
-                vy: (Math.random() - 0.5) * (isMobile ? 0.2 : 0.5),
-                size: Math.random() * 2 + 1,
-            });
-        }
-    }, []);
-
-    useEffect(() => {
-        if (isMobile) return;
-
-        const canvas = canvasRef.current;
-        if (!canvas) return;
-
-        const ctx = canvas.getContext('2d');
-        if (!ctx) return;
-
-        const handleResize = () => {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-            initParticles(canvas.width, canvas.height);
-        };
-
-        handleResize();
-        window.addEventListener('resize', handleResize);
-
-        const animate = () => {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-            const currentMouse = mouse.current;
-
-            // Update and draw particles
-            particles.current.forEach((p, i) => {
-                updateParticle(p, canvas.width, canvas.height);
-                applyMouseInteraction(p, currentMouse);
-                drawParticle(ctx, p);
-                drawConnections(ctx, p, i, particles.current, canvas.width);
-            });
-
-            animationFrameId.current = requestAnimationFrame(animate);
-        };
-
-        animate();
-
-        const handleMouseMove = (e: MouseEvent) => {
-            mouse.current = { x: e.clientX, y: e.clientY };
-        };
-
-        const handleTouchMove = (e: TouchEvent) => {
-            if (e.touches.length > 0) {
-                mouse.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
-            }
-        };
-
-        window.addEventListener('mousemove', handleMouseMove);
-        window.addEventListener('touchmove', handleTouchMove);
-
-        return () => {
-            window.removeEventListener('resize', handleResize);
-            window.removeEventListener('mousemove', handleMouseMove);
-            window.removeEventListener('touchmove', handleTouchMove);
-            if (animationFrameId.current) cancelAnimationFrame(animationFrameId.current);
-        };
-    }, [initParticles, isMobile]);
+    const { isMobile, canvasRef, containerRef } = useDigitalNetwork();
 
     if (isMobile) {
         return (
             <div ref={containerRef} className="fixed inset-0 pointer-events-none z-[-10] overflow-hidden">
-                <div
-                    className="absolute inset-0 opacity-[0.03] dark:opacity-[0.05]"
-                    style={{
-                        backgroundImage: `linear-gradient(to right, currentColor 1px, transparent 1px), linear-gradient(to bottom, currentColor 1px, transparent 1px)`,
-                        backgroundSize: '40px 40px',
-                        color: 'var(--foreground)'
-                    }}
-                />
+                <ArchitecturalGrid />
             </div>
         );
     }
 
     return (
         <div ref={containerRef} className="fixed inset-0 pointer-events-none z-[-10] overflow-hidden">
-            {/* Architectural Grid */}
-            <div
-                className="absolute inset-0 opacity-[0.03] dark:opacity-[0.05]"
-                style={{
-                    backgroundImage: `linear-gradient(to right, currentColor 1px, transparent 1px), linear-gradient(to bottom, currentColor 1px, transparent 1px)`,
-                    backgroundSize: '40px 40px',
-                    color: 'var(--foreground)'
-                }}
-            />
-
-            {/* Aurora Gradients - Hidden on mobile. Replaced Framer Motion with CSS parallax wrappers */}
-            <div className="hidden md:block">
-                <div className="absolute inset-0 pointer-events-none -z-10" style={{ perspective: '1000px' }}>
-                    <div
-                        className="absolute top-[-20%] left-[-10%] w-[70vw] h-[70vw] bg-purple-600/10 rounded-full blur-[120px] animate-pulse"
-                        style={{ transform: 'translateZ(-100px) scale(1.1)', willChange: 'transform' }}
-                    />
-                    <div
-                        className="absolute bottom-[-10%] right-[-10%] w-[60vw] h-[60vw] bg-blue-600/10 rounded-full blur-[120px] animate-pulse"
-                        style={{ transform: 'translateZ(-200px) scale(1.2)', willChange: 'transform' }}
-                    />
-                    <div className="absolute top-[20%] right-[10%] w-[40vw] h-[40vw] bg-indigo-600/5 rounded-full blur-[100px] animate-pulse" style={{ animationDelay: '2s' }} />
-                    <div className="absolute bottom-[10%] left-[10%] w-[50vw] h-[50vw] bg-fuchsia-600/5 rounded-full blur-[100px] animate-pulse" style={{ animationDelay: '4s' }} />
-                </div>
-            </div>
+            <ArchitecturalGrid />
+            <AuroraGradients />
 
             {/* Particle Canvas */}
             <canvas

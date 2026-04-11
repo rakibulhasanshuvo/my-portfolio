@@ -14,7 +14,16 @@ import { blogPosts } from '@/data/blog';
 
 // Projects Constants
 export const projects = profile.projects;
-export const categories = ['All', ...Array.from(new Set(projects.map(p => p.category)))];
+export const categories = projects.reduce(
+  (acc, p) => {
+    if (!acc.seen.has(p.category)) {
+      acc.seen.add(p.category);
+      acc.result.push(p.category);
+    }
+    return acc;
+  },
+  { seen: new Set<string>(), result: ['All'] as string[] }
+).result;
 
 // Lookups Maps for O(1) Access
 export const projectMap = Object.fromEntries(projects.map(p => [p.id, p]));

@@ -19,7 +19,6 @@ export async function handleMailtoFallback(form: HTMLFormElement) {
     const subject = encodeURIComponent(`Portfolio Inquiry from ${name}`);
     const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`);
 
-    await new Promise(resolve => setTimeout(resolve, 500));
     window.location.href = `mailto:${YOUR_EMAIL}?subject=${subject}&body=${body}`;
 }
 
