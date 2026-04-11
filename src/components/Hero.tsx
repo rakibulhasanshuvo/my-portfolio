@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { useCallback, useState, useEffect } from 'react';
-import type { Application, SPEObject } from '@splinetool/runtime';
+import type { Application } from '@splinetool/runtime';
 import dynamic from 'next/dynamic';
 import AuroraBackground from './ui/AuroraBackground';
 import { profile } from '@/data/profile';
@@ -79,10 +79,6 @@ export default function Hero() {
                 obj.visible = false;
             }
         });
-
-        if (process.env.NODE_ENV === 'development') {
-            console.log(spline.getAllObjects().map((o: SPEObject & { type?: string }) => ({ name: o.name, type: o.type })));
-        }
     }, []);
 
     return (
