@@ -2,6 +2,7 @@
 
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import { useRef, MouseEvent, ReactNode } from 'react';
+import { cn } from '@/lib/utils';
 
 interface TiltCardProps {
     children: ReactNode;
@@ -41,7 +42,7 @@ export default function TiltCard({ children, className = '' }: TiltCardProps) {
     return (
         <motion.div
             ref={ref}
-            className={`relative ${className}`}
+            className={cn('relative', className)}
             onMouseMove={handleMouse}
             onMouseLeave={handleMouseLeave}
             style={{
