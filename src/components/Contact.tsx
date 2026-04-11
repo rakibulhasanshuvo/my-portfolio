@@ -1,50 +1,19 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { useState, FormEvent, useRef } from 'react';
-import { Send, CheckCircle, Loader2, AlertCircle } from 'lucide-react';
 
 import { profile } from '@/data/profile';
 import { useOptimizedMotion } from '@/lib/motion';
-import { isEmailJSConfigured, handleMailtoFallback, sendEmailViaService } from '@/lib/email';
+import { useContactForm } from '@/hooks/useContactForm';
+import { ContactSuccess } from '@/components/contact/ContactSuccess';
+import { ContactError } from '@/components/contact/ContactError';
+import { ContactForm } from '@/components/contact/ContactForm';
 
 const YOUR_EMAIL = profile.email;
 
 export default function Contact() {
     const { isMobile, shouldReduceMotion, transition } = useOptimizedMotion();
-    const formRef = useRef<HTMLFormElement>(null);
-    const [formState, setFormState] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
-    const [errorMessage, setErrorMessage] = useState('');
-
-    async function handleSubmit(e: FormEvent) {
-        e.preventDefault();
-
-        if (!formRef.current) return;
-
-        setFormState('submitting');
-        setErrorMessage('');
-
-        if (!isEmailJSConfigured) {
-            await handleMailtoFallback(formRef.current);
-            setFormState('success');
-            return;
-        }
-
-        try {
-            await sendEmailViaService(formRef.current);
-            setFormState('success');
-        } catch (error) {
-            console.error('EmailJS Error:', error);
-            setErrorMessage('Failed to send message. Please try again or email directly.');
-            setFormState('error');
-        }
-    }
-
-    function resetForm() {
-        setFormState('idle');
-        setErrorMessage('');
-        formRef.current?.reset();
-    }
+    const { formRef, formState, errorMessage, handleSubmit, resetForm } = useContactForm();
 
     return (
         <section id="contact" className="py-32 px-6 max-w-4xl mx-auto">
@@ -84,110 +53,27 @@ export default function Contact() {
                 style={shouldReduceMotion ? { opacity: 1, y: 0 } : undefined}
             >
                 {formState === 'success' ? (
-                    <div className="flex flex-col items-center justify-center h-[300px] text-center">
-                        <motion.div
-                            initial={shouldReduceMotion ? false : (isMobile ? { opacity: 0 } : { scale: 0 })}
-                            animate={shouldReduceMotion ? undefined : { opacity: 1, scale: 1 }}
-                            layout={!isMobile}
-                            transition={{ ...transition }}
-                            className="bg-green-500/20 p-4 rounded-full text-green-400 mb-6"
-                            style={shouldReduceMotion ? { opacity: 1, scale: 1 } : undefined}
-                        >
-                            <CheckCircle size={48} />
-                        </motion.div>
-                        <h3 className="text-2xl font-bold mb-2 text-foreground">Message Sent!</h3>
-                        <p className="text-foreground/60">I&apos;ll get back to you as soon as possible.</p>
-                        <button
-                            onClick={resetForm}
-                            className="mt-8 text-sm text-foreground/40 hover:text-foreground transition-colors"
-                        >
-                            Send another message
-                        </button>
-                    </div>
+                    <ContactSuccess
+                        shouldReduceMotion={shouldReduceMotion}
+                        isMobile={isMobile}
+                        transition={transition}
+                        resetForm={resetForm}
+                    />
                 ) : formState === 'error' ? (
-                    <div className="flex flex-col items-center justify-center h-[300px] text-center">
-                        <motion.div
-                            initial={shouldReduceMotion ? false : (isMobile ? { opacity: 0 } : { scale: 0 })}
-                            animate={shouldReduceMotion ? undefined : { opacity: 1, scale: 1 }}
-                            layout={!isMobile}
-                            transition={{ ...transition }}
-                            className="bg-red-500/20 p-4 rounded-full text-red-400 mb-6"
-                            style={shouldReduceMotion ? { opacity: 1, scale: 1 } : undefined}
-                        >
-                            <AlertCircle size={48} />
-                        </motion.div>
-                        <h3 className="text-2xl font-bold mb-2 text-foreground">Something Went Wrong</h3>
-                        <p className="text-foreground/60 mb-4">{errorMessage}</p>
-                        <a
-                            href={`mailto:${YOUR_EMAIL}`}
-                            className="text-purple-400 hover:text-purple-300 transition-colors"
-                        >
-                            Email me directly
-                        </a>
-                        <button
-                            onClick={resetForm}
-                            className="mt-4 text-sm text-foreground/40 hover:text-foreground transition-colors"
-                        >
-                            Try again
-                        </button>
-                    </div>
+                    <ContactError
+                        shouldReduceMotion={shouldReduceMotion}
+                        isMobile={isMobile}
+                        transition={transition}
+                        errorMessage={errorMessage}
+                        resetForm={resetForm}
+                        email={YOUR_EMAIL}
+                    />
                 ) : (
-                    <form ref={formRef} onSubmit={handleSubmit} className="flex flex-col gap-6">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div className="flex flex-col gap-2">
-                                <label htmlFor="user_name" className="text-sm font-medium text-foreground/60 ml-1">Name</label>
-                                <input
-                                    type="text"
-                                    id="user_name"
-                                    name="user_name"
-                                    required
-                                    className="bg-foreground/5 border border-foreground/10 rounded-xl px-4 py-3 focus:outline-none focus:border-purple-500/50 focus:bg-foreground/10 text-foreground transition-all"
-                                    placeholder="John Doe"
-                                />
-                            </div>
-                            <div className="flex flex-col gap-2">
-                                <label htmlFor="user_email" className="text-sm font-medium text-foreground/60 ml-1">Email</label>
-                                <input
-                                    type="email"
-                                    id="user_email"
-                                    name="user_email"
-                                    required
-                                    className="bg-foreground/5 border border-foreground/10 rounded-xl px-4 py-3 focus:outline-none focus:border-purple-500/50 focus:bg-foreground/10 text-foreground transition-all"
-                                    placeholder="john@example.com"
-                                />
-                            </div>
-                        </div>
-
-                        <div className="flex flex-col gap-2">
-                            <label htmlFor="message" className="text-sm font-medium text-foreground/60 ml-1">Message</label>
-                            <textarea
-                                id="message"
-                                name="message"
-                                required
-                                rows={5}
-                                className="bg-foreground/5 border border-foreground/10 rounded-xl px-4 py-3 focus:outline-none focus:border-purple-500/50 focus:bg-foreground/10 text-foreground transition-all resize-none"
-                                placeholder="Tell me about your project..."
-                            />
-                        </div>
-
-                        <button
-                            type="submit"
-                            disabled={formState === 'submitting'}
-                            className="mt-2 bg-foreground text-background font-bold py-4 rounded-xl hover:opacity-90 transition-opacity flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
-                        >
-                            {formState === 'submitting' ? (
-                                <>
-                                    <Loader2 size={20} className="animate-spin" />
-                                    Sending...
-                                </>
-                            ) : (
-                                <>
-                                    Send Message
-                                    <Send size={20} />
-                                </>
-                            )}
-                        </button>
-                    </form>
+                    <ContactForm
+                        formRef={formRef}
+                        handleSubmit={handleSubmit}
+                        formState={formState}
+                    />
                 )}
             </motion.div>
         </section>
