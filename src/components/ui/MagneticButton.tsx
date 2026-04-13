@@ -1,14 +1,14 @@
 'use client';
 
 import { motion, useMotionValue, useSpring } from 'framer-motion';
-import { useRef, MouseEvent } from 'react';
+import { useRef, MouseEvent, ReactNode, RefObject } from 'react';
 import Link from 'next/link';
 
 // Create the motion component once, outside the render cycle
 const MotionLink = motion.create(Link);
 
 interface MagneticButtonProps {
-    children: React.ReactNode;
+    children: ReactNode;
     className?: string;
     onClick?: () => void;
     href?: string;
@@ -64,7 +64,7 @@ export default function MagneticButton({ children, className, onClick, href }: M
                     target={href.startsWith('http') ? "_blank" : undefined}
                     rel={href.startsWith('http') ? "noopener noreferrer" : undefined}
                     {...commonProps}
-                    ref={ref as React.RefObject<HTMLAnchorElement>}
+                    ref={ref as RefObject<HTMLAnchorElement>}
                 >
                     {children}
                 </motion.a>
@@ -72,7 +72,7 @@ export default function MagneticButton({ children, className, onClick, href }: M
         }
         // Internal link
         return (
-            <MotionLink href={href} {...commonProps} ref={ref as React.RefObject<HTMLAnchorElement>}>
+            <MotionLink href={href} {...commonProps} ref={ref as RefObject<HTMLAnchorElement>}>
                 {children}
             </MotionLink>
         );
@@ -83,7 +83,7 @@ export default function MagneticButton({ children, className, onClick, href }: M
     return (
         <motion.button
             {...commonProps}
-            ref={ref as React.RefObject<HTMLButtonElement>}
+            ref={ref as RefObject<HTMLButtonElement>}
         >
             {children}
         </motion.button>

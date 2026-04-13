@@ -198,12 +198,12 @@ describe('Contact', () => {
         vi.stubEnv('NEXT_PUBLIC_EMAILJS_TEMPLATE_ID', 'test_template');
         vi.stubEnv('NEXT_PUBLIC_EMAILJS_PUBLIC_KEY', 'test_public_key');
 
-        const React = await vi.importActual('react') as any;
+        const reactExports = await vi.importActual('react') as any;
 
         let shouldMock = true;
         vi.doMock('react', () => {
             return {
-                ...React,
+                ...reactExports,
                 useRef: (initValue: any) => {
                     if (shouldMock && initValue === null) {
                         return {
@@ -211,7 +211,7 @@ describe('Contact', () => {
                             set current(val) { /* do nothing */ }
                         };
                     }
-                    return React.useRef(initValue);
+                    return reactExports.useRef(initValue);
                 }
             };
         });
