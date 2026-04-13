@@ -1,10 +1,11 @@
 'use client';
 
-import { motion, useMotionTemplate, useMotionValue, AnimatePresence } from 'framer-motion';
-import { MouseEvent, useState, useMemo } from 'react';
+import { motion, useMotionTemplate, useTransform, AnimatePresence } from 'framer-motion';
+import { useState, useMemo, useRef } from 'react';
 import { ExternalLink, Github, Play } from 'lucide-react';
 
 import { useOptimizedMotion } from '@/lib/motion';
+import { useMousePosition } from '@/hooks/useMousePosition';
 import { projects, categories } from '@/lib/constants';
 
 import Link from 'next/link';
@@ -12,17 +13,24 @@ import Image from 'next/image';
 
 function Card({ project }: { project: typeof projects[0] }) {
     const { isMobile, shouldReduceMotion } = useOptimizedMotion();
-    const mouseX = useMotionValue(0);
-    const mouseY = useMotionValue(0);
+    const { clientX, clientY, handleMouseMove } = useMousePosition();
+    const ref = useRef<HTMLDivElement>(null);
 
-    function handleMouseMove({ currentTarget, clientX, clientY }: MouseEvent) {
-        const { left, top } = currentTarget.getBoundingClientRect();
-        mouseX.set(clientX - left);
-        mouseY.set(clientY - top);
-    }
+    const mouseX = useTransform(clientX, (cx) => {
+        if (!ref.current) return 0;
+        const { left } = ref.current.getBoundingClientRect();
+        return cx - left;
+    });
+
+    const mouseY = useTransform(clientY, (cy) => {
+        if (!ref.current) return 0;
+        const { top } = ref.current.getBoundingClientRect();
+        return cy - top;
+    });
 
     return (
         <motion.div
+            ref={ref}
             layout={!isMobile}
             initial={shouldReduceMotion ? false : (isMobile ? { opacity: 0 } : { opacity: 0, scale: 0.9 })}
             animate={shouldReduceMotion ? undefined : { opacity: 1, scale: 1 }}
