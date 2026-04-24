@@ -1,15 +1,17 @@
 import Hero from '@/components/Hero';
-import Projects from '@/components/Projects';
-import Services from '@/components/Services';
-import About from '@/components/About';
-import TechStack from '@/components/TechStack';
-import Workflow from '@/components/Workflow';
-import Experience from '@/components/Experience';
-import FAQ from '@/components/FAQ';
-import Testimonials from '@/components/Testimonials';
-import Contact from '@/components/Contact';
 import Footer from '@/components/Footer';
 import DigitalNetwork from '@/components/ui/DigitalNetwork';
+import dynamic from 'next/dynamic';
+
+const Projects = dynamic(() => import('@/components/Projects'), { ssr: true });
+const Services = dynamic(() => import('@/components/Services'), { ssr: true });
+const About = dynamic(() => import('@/components/About'), { ssr: true });
+const TechStack = dynamic(() => import('@/components/TechStack'), { ssr: true });
+const Workflow = dynamic(() => import('@/components/Workflow'), { ssr: true });
+const Experience = dynamic(() => import('@/components/Experience'), { ssr: true });
+const FAQ = dynamic(() => import('@/components/FAQ'), { ssr: true });
+const Testimonials = dynamic(() => import('@/components/Testimonials'), { ssr: true });
+const Contact = dynamic(() => import('@/components/Contact'), { ssr: true });
 
 export default function Home() {
   return (
