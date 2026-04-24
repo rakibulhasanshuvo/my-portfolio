@@ -116,7 +116,7 @@ export default function Hero() {
                 <span className="absolute inset-0 blur-3xl bg-purple-500/20 rounded-full -z-10" />
                 {PRECOMPUTED_WORDS.map((wordObj, wordIndex) => {
                     return (
-                        <span key={wordIndex} className="inline-block">
+                        <span key={wordIndex} className="inline-block whitespace-nowrap">
                             {wordObj.chars.map((charObj, charIndex) => (
                                 <motion.span
                                     key={charIndex}
@@ -127,14 +127,14 @@ export default function Hero() {
                                         delay: charObj.delay,
                                         ease: [0.16, 1, 0.3, 1]
                                     }}
-                                    className="inline-block"
+                                    className="inline-block max-md:!opacity-100 max-md:!translate-y-0 max-md:!rotate-x-0"
                                     style={shouldReduceMotion ? { opacity: 1, y: 0, rotateX: 0 } : undefined}
                                 >
                                     {charObj.char}
                                 </motion.span>
                             ))}
                             {wordIndex < PRECOMPUTED_WORDS.length - 1 && (
-                                <span className="inline-block">&nbsp;</span>
+                                <span>&nbsp;</span>
                             )}
                         </span>
                     );

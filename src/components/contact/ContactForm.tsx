@@ -2,7 +2,7 @@ import { FormEvent, RefObject } from 'react';
 import { Send, Loader2 } from 'lucide-react';
 
 interface ContactFormProps {
-    formRef: RefObject<HTMLFormElement>;
+    formRef: RefObject<HTMLFormElement | null>;
     handleSubmit: (e: FormEvent) => void;
     formState: 'idle' | 'submitting' | 'success' | 'error';
 }

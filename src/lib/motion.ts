@@ -8,6 +8,7 @@ export const useOptimizedMotion = () => {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true);
   }, []);
 
@@ -17,7 +18,7 @@ export const useOptimizedMotion = () => {
 
   return {
     isMobile: mounted ? isMobile : false,
-    shouldReduceMotion: mounted ? shouldReduceMotion : false,
+    shouldReduceMotion: mounted ? (shouldReduceMotion ?? false) : false,
     transition,
     mounted
   };
