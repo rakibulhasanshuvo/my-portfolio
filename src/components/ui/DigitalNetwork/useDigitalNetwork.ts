@@ -1,6 +1,9 @@
 import { useEffect, useRef, useCallback } from 'react';
 import { useMobile } from '@/hooks/useMobile';
 
+const CONNECTION_DISTANCE = 150;
+const CONNECTION_DISTANCE_SQ = CONNECTION_DISTANCE * CONNECTION_DISTANCE;
+
 export interface Particle {
     x: number;
     y: number;
@@ -25,9 +28,10 @@ const applyMouseInteraction = (p: Particle, currentMouse: { x: number; y: number
     // Mouse/Touch interaction (Push effect)
     const dx = currentMouse.x - p.x;
     const dy = currentMouse.y - p.y;
-    const dist = Math.sqrt(dx * dx + dy * dy);
-    if (dist < 150) {
-        const force = (150 - dist) / 150;
+    const distSq = dx * dx + dy * dy;
+    if (distSq < CONNECTION_DISTANCE_SQ) {
+        const dist = Math.sqrt(distSq);
+        const force = (CONNECTION_DISTANCE - dist) / CONNECTION_DISTANCE;
         p.x -= dx * force * 0.05;
         p.y -= dy * force * 0.05;
     }
@@ -60,14 +64,15 @@ const drawConnections = (
         const dy = p.y - p2.y;
 
         // Strict distance threshold (150px) check before expensive math
-        if (Math.abs(dx) < 150 && Math.abs(dy) < 150) {
-            const dist = Math.sqrt(dx * dx + dy * dy);
-            if (dist < 150) {
+        if (Math.abs(dx) < CONNECTION_DISTANCE && Math.abs(dy) < CONNECTION_DISTANCE) {
+            const distSq = dx * dx + dy * dy;
+            if (distSq < CONNECTION_DISTANCE_SQ) {
+                const dist = Math.sqrt(distSq);
                 connections++;
                 ctx.beginPath();
                 ctx.moveTo(p.x, p.y);
                 ctx.lineTo(p2.x, p2.y);
-                ctx.strokeStyle = `rgba(255, 255, 255, ${0.1 * (1 - dist / 150)})`;
+                ctx.strokeStyle = `rgba(255, 255, 255, ${0.1 * (1 - dist / CONNECTION_DISTANCE)})`;
                 ctx.lineWidth = 0.5;
                 ctx.stroke();
             }
