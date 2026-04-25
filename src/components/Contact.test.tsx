@@ -1,14 +1,17 @@
+import { type HTMLAttributes } from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import emailjs from '@emailjs/browser';
 
 // Mock Framer Motion to avoid animation issues and console warnings
 vi.mock('framer-motion', async () => {
-    const actual = await vi.importActual('framer-motion');
+    const actual = await vi.importActual('framer-motion') as typeof import('framer-motion');
     return {
-        ...actual as any,
+        ...actual,
         motion: {
-            div: ({ children, whileInView, initial, animate, viewport, transition, transitionEnd, layout, ...props }: any) => <div {...props}>{children}</div>,
+            div: ({ children, whileInView, initial, animate, viewport, transition, transitionEnd, layout, ...props }: HTMLAttributes<HTMLDivElement> & { [key: string]: unknown }) => (
+                <div {...props}>{children}</div>
+            ),
         },
     };
 });
