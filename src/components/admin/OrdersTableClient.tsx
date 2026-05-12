@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { cn } from "@/lib/utils";
+import { cn, formatDate } from "@/lib/utils";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 
@@ -50,7 +50,7 @@ export default function OrdersTableClient({ initialOrders }: { initialOrders: Or
           </thead>
           <tbody className="text-[15px] text-zinc-800">
             {orders.map((order) => {
-              const dateStr = new Date(order.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+              const dateStr = formatDate(order.createdAt);
               const initials = order.customerName.split(" ").map(n => n[0]).join("").substring(0, 2).toUpperCase();
               
               return (
