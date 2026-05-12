@@ -3,24 +3,32 @@ import { prisma } from "@/lib/db";
 import { cn, formatDate } from "@/lib/utils";
 
 export default async function AdminOverview() {
-  // Fetch some real stats
-  const productCount = await prisma.product.count();
-  const recentProducts = await prisma.product.findMany({
-    take: 3,
-    orderBy: { createdAt: "desc" },
-  });
+  // Fetch some real stats in parallel
+  const [
+    productCount,
+    recentProducts,
+    orderCount,
+    customersCount,
+    revenueObj,
+    recentOrders
+  ] = await Promise.all([
+    prisma.product.count(),
+    prisma.product.findMany({
+      take: 3,
+      orderBy: { createdAt: "desc" },
+    }),
+    prisma.order.count(),
+    prisma.customer.count(),
+    prisma.order.aggregate({
+      _sum: { totalAmount: true }
+    }),
+    prisma.order.findMany({
+      take: 4,
+      orderBy: { createdAt: "desc" },
+    }),
+  ]);
 
-  const orderCount = await prisma.order.count();
-  const customersCount = await prisma.customer.count();
-  const revenueObj = await prisma.order.aggregate({
-    _sum: { totalAmount: true }
-  });
   const totalRevenue = revenueObj._sum.totalAmount || 0;
-
-  const recentOrders = await prisma.order.findMany({
-    take: 4,
-    orderBy: { createdAt: "desc" },
-  });
 
   return (
     <div className="space-y-10 animate-in fade-in duration-700">
