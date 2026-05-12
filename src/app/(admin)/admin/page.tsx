@@ -1,6 +1,6 @@
 import React from "react";
 import { prisma } from "@/lib/db";
-import { cn } from "@/lib/utils";
+import { cn, formatDate } from "@/lib/utils";
 
 export default async function AdminOverview() {
   // Fetch some real stats
@@ -71,7 +71,7 @@ export default async function AdminOverview() {
               </thead>
               <tbody className="text-[15px] text-zinc-800">
                 {recentOrders.map((order, i) => {
-                  const dateStr = new Date(order.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+                  const dateStr = formatDate(order.createdAt);
                   return (
                     <tr key={order.id} className={cn("group transition-colors", i % 2 === 0 ? "bg-zinc-50/50" : "bg-transparent")}>
                       <td className="py-5 px-4 pl-0 font-medium text-zinc-900 rounded-l-2xl group-hover:text-primary transition-colors">#{order.id.slice(-6).toUpperCase()}</td>
