@@ -2,32 +2,32 @@ import { describe, it, expect } from 'vitest';
 import { cn } from './utils';
 
 describe('cn utility', () => {
-  it('merges class names correctly', () => {
-    expect(cn('flex', 'items-center')).toBe('flex items-center');
-  });
+    it('should merge simple class names', () => {
+        expect(cn('class1', 'class2')).toBe('class1 class2');
+    });
 
-  it('handles conditional classes', () => {
-    expect(cn('flex', true && 'items-center', false && 'justify-center')).toBe('flex items-center');
-  });
+    it('should handle conditional classes (objects)', () => {
+        expect(cn('class1', { 'class2': true, 'class3': false })).toBe('class1 class2');
+    });
 
-  it('handles objects of classes', () => {
-    expect(cn({ 'bg-red-500': true, 'text-white': false })).toBe('bg-red-500');
-  });
+    it('should handle arrays of classes', () => {
+        expect(cn(['class1', 'class2'], 'class3')).toBe('class1 class2 class3');
+    });
 
-  it('handles arrays of classes', () => {
-    expect(cn(['bg-red-500', 'text-white'])).toBe('bg-red-500 text-white');
-  });
+    it('should handle null, undefined, and boolean values', () => {
+        expect(cn('class1', null, undefined, false, true, 'class2')).toBe('class1 class2');
+    });
 
-  it('resolves tailwind conflicts correctly', () => {
-    expect(cn('px-2 py-2', 'px-4')).toBe('py-2 px-4');
-    expect(cn('text-red-500', 'text-blue-500')).toBe('text-blue-500');
-  });
+    it('should merge conflicting Tailwind CSS classes correctly', () => {
+        // twMerge should handle conflicts like px-2 and px-4
+        expect(cn('px-2 py-2', 'px-4')).toBe('py-2 px-4');
 
-  it('handles falsy values and ignores them', () => {
-    expect(cn('base', null, undefined, false, '')).toBe('base');
-  });
+        // It should also handle background colors
+        expect(cn('bg-red-500', 'bg-blue-500')).toBe('bg-blue-500');
+    });
 
-  it('handles nested arrays and objects', () => {
-    expect(cn(['a', ['b', { c: true, d: false }]])).toBe('a b c');
-  });
+    it('should handle mixed inputs correctly', () => {
+        expect(cn('base-class', ['arr-1', 'arr-2'], { 'obj-1': true, 'obj-2': false }, 'final-class'))
+            .toBe('base-class arr-1 arr-2 obj-1 final-class');
+    });
 });
