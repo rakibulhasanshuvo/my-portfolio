@@ -2,9 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { withAuth } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 
-export const GET = withAuth(async function GET(req: NextRequest) {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const _url = req.url;
+export const GET = withAuth(async function GET(_req: NextRequest) {
   try {
     const products = await prisma.product.findMany({
       orderBy: { updatedAt: "desc" },

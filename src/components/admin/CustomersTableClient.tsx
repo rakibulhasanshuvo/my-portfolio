@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { cn } from "@/lib/utils";
+import { cn, formatDate } from "@/lib/utils";
 
 import { Customer } from "@/generated/client";
 
@@ -71,7 +71,7 @@ export default function CustomersTableClient({ initialCustomers }: { initialCust
             </thead>
             <tbody className="text-[15px] text-zinc-800">
               {customers.map((customer) => {
-                const joinDate = new Date(customer.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+                const joinDate = formatDate(customer.createdAt);
                 const initials = customer.name.split(" ").map(n => n[0]).join("").substring(0, 2).toUpperCase();
                 
                 return (
